@@ -1,12 +1,12 @@
 // sections
-import { HomeView } from 'src/sections/home/view';
+import { KanbanView } from 'src/sections/kanban/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Minimal: The starting point for your next project',
+  title: 'Dashboard: Kanban',
 };
 
-export default function HomePage() {
-  return <HomeView />;
+export default function KanbanPage() {
+  return <KanbanView />;
 }
