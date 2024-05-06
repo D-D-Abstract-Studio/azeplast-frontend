@@ -114,16 +114,9 @@ export default function KanbanView() {
       maxWidth={false}
       sx={{
         height: 1,
+        pt: 2,
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
-      >
-        Kanban
-      </Typography>
 
       {boardLoading && renderSkeleton}
 
