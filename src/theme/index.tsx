@@ -6,7 +6,6 @@ import { useMemo } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider as MuiThemeProvider, ThemeOptions } from '@mui/material/styles'
 
-import { useSettingsContext } from '@/components/settings'
 // system
 import { palette } from './palette'
 import { shadows } from './shadows'
@@ -20,6 +19,7 @@ import { contrast } from './options/contrast'
 import RTL, { direction } from './options/right-to-left'
 //
 import NextAppDirEmotionCacheProvider from './next-emotion-cache'
+import { useSettingsContext } from '../components/settings/context/settings-context'
 
 // ----------------------------------------------------------------------
 

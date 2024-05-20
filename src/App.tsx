@@ -18,16 +18,17 @@ import ThemeProvider from './theme'
 import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './components/snackbar/snackbar-provider'
-import { SettingsProvider, SettingsDrawer } from './components/settings'
-import { AuthProvider, AuthConsumer } from './auth/context/jwt'
+
 import { KanbanView } from './sections/kanban/view/kanban-view'
+import { SettingsContext } from './components/settings/context/settings-context'
+import { AuthProvider } from './auth/context/jwt/auth-provider'
 
 export const App = () => {
   return (
     <AuthProvider>
-      <SettingsProvider
-        defaultSettings={{
-          themeMode: 'light',
+      <SettingsContext.Provider
+        value={{
+          themeMode: 'dark',
           themeDirection: 'ltr',
           themeContrast: 'default',
           themeLayout: 'vertical',
@@ -38,15 +39,12 @@ export const App = () => {
         <ThemeProvider>
           <MotionLazy>
             <SnackbarProvider>
-              <SettingsDrawer />
               <ProgressBar />
-              <AuthConsumer>
-                <KanbanView />
-              </AuthConsumer>
+              <KanbanView />
             </SnackbarProvider>
           </MotionLazy>
         </ThemeProvider>
-      </SettingsProvider>
+      </SettingsContext.Provider>
     </AuthProvider>
   )
 }
