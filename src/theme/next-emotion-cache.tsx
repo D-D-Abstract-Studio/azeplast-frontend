@@ -41,6 +41,7 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
           isGlobal: !selector,
         })
       }
+      /* @ts-ignore */
       return prevInsert(...args)
     }
 

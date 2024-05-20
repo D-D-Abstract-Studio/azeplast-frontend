@@ -18,7 +18,7 @@ import { KanbanColumnSkeleton } from '../kanban-skeleton'
 
 // ----------------------------------------------------------------------
 
-export default function KanbanView() {
+export const KanbanView = () => {
   const { board, boardLoading, boardEmpty } = useGetBoard()
 
   const onDragEnd = useCallback(

@@ -20,7 +20,7 @@ import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './components/snackbar/snackbar-provider'
 import { SettingsProvider, SettingsDrawer } from './components/settings'
 import { AuthProvider, AuthConsumer } from './auth/context/jwt'
-import { KanbanView } from './sections/kanban/view'
+import { KanbanView } from './sections/kanban/view/kanban-view'
 
 export const App = () => {
   return (

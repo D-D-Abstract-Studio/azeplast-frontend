@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 // @mui
 import Collapse from '@mui/material/Collapse'
-// routes
-import { usePathname } from '@/routes/hooks'
+
 import { useActiveLink } from '@/routes/hooks/use-active-link'
 //
 import { NavListProps, NavConfigProps } from '../types'
@@ -18,7 +17,7 @@ type NavListRootProps = {
 }
 
 export default function NavList({ data, depth, hasChild, config }: NavListRootProps) {
-  const pathname = usePathname()
+  const pathname = location.pathname
 
   const active = useActiveLink(data.path, hasChild)
 

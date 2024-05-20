@@ -1,27 +1,27 @@
 // @mui
-import { alpha } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import ButtonBase from '@mui/material/ButtonBase'
+import { alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 // theme
-import { primaryPresets } from '@/theme/options/presets'
+import { primaryPresets } from 'src/theme/options/presets';
 
 // ----------------------------------------------------------------------
 
 type PresetsOptionsProps = {
-  value: string
-  onChange: (newValue: string) => void
-}
+  value: string;
+  onChange: (newValue: string) => void;
+};
 
 export default function PresetsOptions({ value, onChange }: PresetsOptionsProps) {
   const options = primaryPresets.map((color) => ({
     name: color.name,
     value: color.main,
-  }))
+  }));
 
   return (
     <Box columnGap={2} rowGap={1.5} display="grid" gridTemplateColumns="repeat(3, 1fr)">
       {options.map((option) => {
-        const selected = value === option.name
+        const selected = value === option.name;
 
         return (
           <ButtonBase
@@ -53,8 +53,8 @@ export default function PresetsOptions({ value, onChange }: PresetsOptionsProps)
               }}
             />
           </ButtonBase>
-        )
+        );
       })}
     </Box>
-  )
+  );
 }

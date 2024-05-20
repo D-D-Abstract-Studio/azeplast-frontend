@@ -1,17 +1,17 @@
 // @mui
-import { alpha } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import ButtonBase from '@mui/material/ButtonBase'
+import { alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import ButtonBase from '@mui/material/ButtonBase';
 //
-import Iconify from '../../iconify'
+import Iconify from '../../iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  value: boolean
-  onChange: VoidFunction
-}
+  value: boolean;
+  onChange: VoidFunction;
+};
 
 export default function StretchOptions({ value, onChange }: Props) {
   return (
@@ -65,5 +65,5 @@ export default function StretchOptions({ value, onChange }: Props) {
         />
       </Stack>
     </ButtonBase>
-  )
+  );
 }

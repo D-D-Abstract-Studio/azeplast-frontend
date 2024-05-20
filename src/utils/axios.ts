@@ -1,8 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
-// config
-import { HOST_API } from '@/config-global'
 
-// ----------------------------------------------------------------------
+import { HOST_API } from '@/constants/config'
 
 const axiosInstance = axios.create({ baseURL: HOST_API })
 
@@ -13,8 +11,6 @@ axiosInstance.interceptors.response.use(
 
 export default axiosInstance
 
-// ----------------------------------------------------------------------
-
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
 
@@ -22,8 +18,6 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
   return res.data
 }
-
-// ----------------------------------------------------------------------
 
 export const endpoints = {
   chat: '/api/chat',

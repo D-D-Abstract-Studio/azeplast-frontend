@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import Stack from '@mui/material/Stack'
 import Popover from '@mui/material/Popover'
 import { appBarClasses } from '@mui/material/AppBar'
-// routes
-import { usePathname } from '@/routes/hooks'
+
 import { useActiveLink } from '@/routes/hooks/use-active-link'
 //
 import { NavListProps, NavConfigProps } from '../types'
@@ -22,7 +21,7 @@ type NavListRootProps = {
 export default function NavList({ data, depth, hasChild, config }: NavListRootProps) {
   const navRef = useRef(null)
 
-  const pathname = usePathname()
+  const pathname = location.pathname
 
   const active = useActiveLink(data.path, hasChild)
 

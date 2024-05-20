@@ -1,25 +1,25 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react';
 // @mui
-import { alpha } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import ButtonBase from '@mui/material/ButtonBase'
+import { alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 //
-import SvgColor from '../../svg-color'
+import SvgColor from '../../svg-color';
 
 // ----------------------------------------------------------------------
 
 export default function FullScreenOption() {
-  const [fullscreen, setFullscreen] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false);
 
   const onToggleFullScreen = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen()
-      setFullscreen(true)
+      document.documentElement.requestFullscreen();
+      setFullscreen(true);
     } else if (document.exitFullscreen) {
-      document.exitFullscreen()
-      setFullscreen(false)
+      document.exitFullscreen();
+      setFullscreen(false);
     }
-  }, [])
+  }, []);
 
   return (
     <Box sx={{ p: 2.5 }}>
@@ -53,5 +53,5 @@ export default function FullScreenOption() {
         {fullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
       </ButtonBase>
     </Box>
-  )
+  );
 }

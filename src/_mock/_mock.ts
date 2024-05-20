@@ -1,6 +1,6 @@
 import { sub } from 'date-fns'
 // config
-import { ASSETS_API } from '@/config-global'
+
 //
 import {
   _id,
@@ -28,6 +28,7 @@ import {
   _descriptions,
   _phoneNumbers,
 } from './assets'
+import { ASSETS_API } from '../constants/config'
 
 // ----------------------------------------------------------------------
 
