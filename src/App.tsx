@@ -13,15 +13,15 @@ import 'slick-carousel/slick/slick-theme.css'
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
-import ThemeProvider from '../theme'
-import { primaryFont } from '../theme/typography'
+import ThemeProvider from './theme'
+import { primaryFont } from './theme/typography'
 
-import ProgressBar from '../components/progress-bar'
-import { MotionLazy } from '../components/animate/motion-lazy'
-import SnackbarProvider from '../components/snackbar/snackbar-provider'
-import { SettingsProvider, SettingsDrawer } from '../components/settings'
-import { AuthProvider, AuthConsumer } from '../auth/context/jwt'
-import { KanbanView } from '../sections/kanban/view'
+import ProgressBar from './components/progress-bar'
+import { MotionLazy } from './components/animate/motion-lazy'
+import SnackbarProvider from './components/snackbar/snackbar-provider'
+import { SettingsProvider, SettingsDrawer } from './components/settings'
+import { AuthProvider, AuthConsumer } from './auth/context/jwt'
+import { KanbanView } from './sections/kanban/view'
 
 export const App = () => {
   return (
