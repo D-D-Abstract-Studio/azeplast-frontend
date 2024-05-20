@@ -5,16 +5,10 @@
   "description": "Next & TypeScript",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "start": "next start",
+    "dev": "next dev",
     "build": "next build",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-    "clear-all": "rm -rf node_modules .next out dist build",
-    "re-start": "rm -rf node_modules .next out dist build && yarn install && yarn dev",
-    "re-build": "rm -rf node_modules .next out dist build && yarn install && yarn build",
-    "re-build-test": "rm -rf node_modules .next out dist build && npm install && npm run build"
+    "export": "next export",
+    "start": "next start"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
