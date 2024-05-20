@@ -4,11 +4,11 @@ import { Theme, SxProps } from '@mui/material/styles'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user'
+import { useMockedUser } from '@/hooks/use-mocked-user'
 // assets
-import { ForbiddenIllustration } from 'src/assets/illustrations'
+import { ForbiddenIllustration } from '@/assets/illustrations'
 // components
-import { MotionContainer, varBounce } from 'src/components/animate'
+import { MotionContainer, varBounce } from '@/components/animate'
 
 // ----------------------------------------------------------------------
 

@@ -3,12 +3,12 @@ import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 // utils
-import { fToNow } from 'src/utils/format-time'
+import { fToNow } from '@/utils/format-time'
 // types
-import { IKanbanComment } from 'src/types/kanban'
+import { IKanbanComment } from '@/types/kanban'
 // components
-import Image from 'src/components/image'
-import Lightbox, { useLightBox } from 'src/components/lightbox'
+import Image from '@/components/image'
+import Lightbox, { useLightBox } from '@/components/lightbox'
 
 // ----------------------------------------------------------------------
 

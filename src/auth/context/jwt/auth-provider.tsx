@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useCallback, useMemo } from 'react'
 // utils
-import axios, { endpoints } from 'src/utils/axios'
+import axios, { endpoints } from '@/utils/axios'
 //
 import { AuthContext } from './auth-context'
 import { isValidToken, setSession } from './utils'

@@ -1,4 +1,4 @@
-import { _mock } from 'src/_mock'
+import { _mock } from '@/_mock'
 
 export function useMockedUser() {
   const user = {

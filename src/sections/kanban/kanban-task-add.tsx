@@ -4,11 +4,11 @@ import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
 // _mock
-import { _mock } from 'src/_mock'
+import { _mock } from '@/_mock'
 // utils
-import uuidv4 from 'src/utils/uuidv4'
+import uuidv4 from '@/utils/uuidv4'
 // types
-import { IKanbanTask } from 'src/types/kanban'
+import { IKanbanTask } from '@/types/kanban'
 
 // ----------------------------------------------------------------------
 

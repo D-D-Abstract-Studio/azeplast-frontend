@@ -6,11 +6,11 @@ import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
 
-import { hideScroll } from 'src/theme/css'
+import { hideScroll } from '@/theme/css'
 // api
-import { useGetBoard, moveColumn, moveTask } from 'src/api/kanban'
+import { useGetBoard, moveColumn, moveTask } from '@/api/kanban'
 // components
-import EmptyContent from 'src/components/empty-content'
+import EmptyContent from '@/components/empty-content'
 //
 import KanbanColumn from '../kanban-column'
 import KanbanColumnAdd from '../kanban-column-add'
