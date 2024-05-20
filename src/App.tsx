@@ -14,7 +14,6 @@ import 'slick-carousel/slick/slick-theme.css'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
 import ThemeProvider from './theme'
-import { primaryFont } from './theme/typography'
 
 import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
@@ -25,33 +24,29 @@ import { KanbanView } from './sections/kanban/view'
 
 export const App = () => {
   return (
-    <html lang="en" className={primaryFont.className}>
-      <body>
-        <AuthProvider>
-          <SettingsProvider
-            defaultSettings={{
-              themeMode: 'light',
-              themeDirection: 'ltr',
-              themeContrast: 'default',
-              themeLayout: 'vertical',
-              themeColorPresets: 'default',
-              themeStretch: false,
-            }}
-          >
-            <ThemeProvider>
-              <MotionLazy>
-                <SnackbarProvider>
-                  <SettingsDrawer />
-                  <ProgressBar />
-                  <AuthConsumer>
-                    <KanbanView />
-                  </AuthConsumer>
-                </SnackbarProvider>
-              </MotionLazy>
-            </ThemeProvider>
-          </SettingsProvider>
-        </AuthProvider>
-      </body>
-    </html>
+    <AuthProvider>
+      <SettingsProvider
+        defaultSettings={{
+          themeMode: 'light',
+          themeDirection: 'ltr',
+          themeContrast: 'default',
+          themeLayout: 'vertical',
+          themeColorPresets: 'default',
+          themeStretch: false,
+        }}
+      >
+        <ThemeProvider>
+          <MotionLazy>
+            <SnackbarProvider>
+              <SettingsDrawer />
+              <ProgressBar />
+              <AuthConsumer>
+                <KanbanView />
+              </AuthConsumer>
+            </SnackbarProvider>
+          </MotionLazy>
+        </ThemeProvider>
+      </SettingsProvider>
+    </AuthProvider>
   )
 }

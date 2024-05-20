@@ -1,11 +1,7 @@
-import { usePathname } from 'next/navigation'
-
-// ----------------------------------------------------------------------
-
 type ReturnType = boolean
 
 export function useActiveLink(path: string, deep = true): ReturnType {
-  const pathname = usePathname()
+  const pathname = location.pathname
 
   const checkPath = path.startsWith('#')
 

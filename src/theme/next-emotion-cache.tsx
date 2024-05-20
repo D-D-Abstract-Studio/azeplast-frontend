@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import createCache from '@emotion/cache'
-import { useServerInsertedHTML } from 'next/navigation'
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react'
 import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache'
 
@@ -23,12 +22,18 @@ export type NextAppDirEmotionCacheProviderProps = {
 export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionCacheProviderProps) {
   const { options, CacheProvider = DefaultCacheProvider, children } = props
 
-  const [registry] = React.useState(() => {
+  const [cache] = React.useState(() => {
     const cache = createCache(options)
     cache.compat = true
+    return cache
+  })
+
+  const [insertedStyles, setInsertedStyles] = React.useState<string[]>([])
+
+  React.useEffect(() => {
     const prevInsert = cache.insert
     let inserted: { name: string; isGlobal: boolean }[] = []
-    cache.insert = (...args) => {
+    cache.insert = (...args: [any, any]) => {
       const [selector, serialized] = args
       if (cache.inserted[serialized.name] === undefined) {
         inserted.push({
@@ -38,60 +43,36 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
       }
       return prevInsert(...args)
     }
+
     const flush = () => {
       const prevInserted = inserted
       inserted = []
       return prevInserted
     }
-    return { cache, flush }
-  })
 
-  useServerInsertedHTML(() => {
-    const inserted = registry.flush()
-    if (inserted.length === 0) {
-      return null
-    }
-    let styles = ''
-    let dataEmotionAttribute = registry.cache.key
-
-    const globals: {
-      name: string
-      style: string
-    }[] = []
-
-    inserted.forEach(({ name, isGlobal }) => {
-      const style = registry.cache.inserted[name]
-
-      if (typeof style !== 'boolean') {
-        if (isGlobal) {
-          globals.push({ name, style })
-        } else {
-          styles += style
-          dataEmotionAttribute += ` ${name}`
+    const styles = flush()
+      .map(({ name, isGlobal }) => {
+        const style = cache.inserted[name]
+        if (typeof style !== 'boolean') {
+          if (isGlobal) {
+            return `<style data-emotion="${cache.key}-global ${name}">${style}</style>`
+          } else {
+            return `<style data-emotion="${cache.key} ${name}">${style}</style>`
+          }
         }
-      }
-    })
+        return null
+      })
+      .filter(Boolean)
 
-    return (
-      <>
-        {globals.map(({ name, style }) => (
-          <style
-            key={name}
-            data-emotion={`${registry.cache.key}-global ${name}`}
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: style }}
-          />
-        ))}
-        {styles && (
-          <style
-            data-emotion={dataEmotionAttribute}
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: styles }}
-          />
-        )}
-      </>
-    )
-  })
+    setInsertedStyles(styles as string[])
+  }, [cache])
 
-  return <CacheProvider value={registry.cache}>{children}</CacheProvider>
+  return (
+    <CacheProvider value={cache}>
+      {children}
+      {insertedStyles.map((style, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: style }} />
+      ))}
+    </CacheProvider>
+  )
 }

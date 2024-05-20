@@ -1,7 +1,3 @@
-import { Public_Sans, Barlow } from 'next/font/google'
-
-// ----------------------------------------------------------------------
-
 export function remToPx(value: string) {
   return Math.round(parseFloat(value) * 16)
 }
@@ -29,19 +25,6 @@ declare module '@mui/material/styles' {
     fontWeightSemiBold: React.CSSProperties['fontWeight']
   }
 }
-export const primaryFont = Public_Sans({
-  weight: ['400', '500', '600', '700', '800'],
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['Helvetica', 'Arial', 'sans-serif'],
-})
-
-export const secondaryFont = Barlow({
-  weight: ['900'],
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['Helvetica', 'Arial', 'sans-serif'],
-})
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +32,7 @@ export const secondaryFont = Barlow({
 // https://nextjs.org/docs/basic-features/font-optimization#google-fonts
 
 export const typography = {
-  fontFamily: primaryFont.style.fontFamily,
+  fontFamily: 'Inter, sans-serif',
   fontWeightRegular: 400,
   fontWeightMedium: 500,
   fontWeightSemiBold: 600,
