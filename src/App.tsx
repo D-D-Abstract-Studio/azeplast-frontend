@@ -19,7 +19,7 @@ import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './components/snackbar/snackbar-provider'
 
-import { KanbanView } from './sections/kanban/view/kanban-view'
+import { KanbanView } from './sections/kanban/kanban-view'
 import { SettingsContext } from './components/settings/context/settings-context'
 import { AuthProvider } from './auth/context/jwt/auth-provider'
 

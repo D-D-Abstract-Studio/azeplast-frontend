@@ -12,9 +12,9 @@ import { useGetBoard, moveColumn, moveTask } from '@/api/kanban'
 // components
 import EmptyContent from '@/components/empty-content'
 //
-import KanbanColumn from '../kanban-column'
-import KanbanColumnAdd from '../kanban-column-add'
-import { KanbanColumnSkeleton } from '../kanban-skeleton'
+import KanbanColumn from './components/kanban-column'
+import KanbanColumnAdd from './components/kanban-column-add'
+import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 
 // ----------------------------------------------------------------------
 
