@@ -14,11 +14,24 @@ export default axiosInstance
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
 
-  const res = await axiosInstance.get(url, { ...config })
+  const user = localStorage.getItem('userName') || 'anonymous'
+
+  const params = { ...(config?.params || {}), user }
+
+  const res = await axiosInstance.get(url, { ...config, params })
 
   return res.data
 }
 
+type Id = string | number
+
 export const endpoints = {
-  kanban: '/api/kanban',
+  kanban: {
+    getAllTasks: '/tasks',
+    createTask: '/tasks',
+    archiveTask: (id: Id) => `/tasks/${id}/archive`,
+    getTask: (id: Id) => `/tasks/${id}`,
+    updateTask: (id: Id) => `/tasks/${id}`,
+    deleteTask: (id: Id) => `/tasks/${id}`,
+  },
 }

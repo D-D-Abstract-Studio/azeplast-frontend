@@ -5,7 +5,7 @@ import { fetcher, endpoints } from '@/utils/axios'
 // types
 import { IKanbanColumn, IKanbanTask, IKanban } from '@/types/kanban'
 
-const URL = endpoints.kanban
+const URL = endpoints.kanban.getAllTasks
 
 const options = {
   revalidateIfStale: false,
@@ -14,17 +14,17 @@ const options = {
 }
 
 export function useGetBoard() {
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, options)
+  const { data, isLoading, error, isValidating } = useSWR<IKanban>(URL, fetcher, options)
 
   const memoizedValue = useMemo(
     () => ({
-      board: data?.board as IKanban,
+      board: data,
       boardLoading: isLoading,
       boardError: error,
       boardValidating: isValidating,
-      boardEmpty: !isLoading && !data?.board.ordered.length,
+      boardEmpty: !isLoading && Boolean(data?.ordered?.length),
     }),
-    [data?.board, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   )
 
   return memoizedValue
