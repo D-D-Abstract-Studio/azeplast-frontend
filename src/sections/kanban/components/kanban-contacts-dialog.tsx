@@ -20,6 +20,8 @@ import { IKanbanAssignee } from '@/types/kanban'
 import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import SearchNotFound from '@/components/search-not-found'
+import { COLORS } from '../../../constants/config'
+import { getRandomNumber } from '../../../utils/get-random-number'
 
 const ITEM_HEIGHT = 64
 
@@ -94,13 +96,18 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                         />
                       }
                     >
-                      {checked ? 'Assigned' : 'Assign'}
+                      {checked ? 'Atribuído' : 'Atribuir'}
                     </Button>
                   }
                   sx={{ height: ITEM_HEIGHT }}
                 >
                   <ListItemAvatar>
-                    <Avatar src={contact.avatarUrl} />
+                    <Avatar
+                      alt={contact.name}
+                      color={COLORS[getRandomNumber(0, COLORS.length - 1)]}
+                    >
+                      {contact.name[0].toUpperCase()}
+                    </Avatar>
                   </ListItemAvatar>
 
                   <ListItemText
@@ -110,7 +117,6 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                     }}
                     secondaryTypographyProps={{ typography: 'caption' }}
                     primary={contact.name}
-                    secondary={contact.email}
                   />
                 </ListItem>
               )
@@ -125,9 +131,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
 function applyFilter({ inputData, query }: { inputData: IKanbanAssignee[]; query: string }) {
   if (query) {
     inputData = inputData.filter(
-      (contact) =>
-        contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
-        contact.email.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (contact) => contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     )
   }
 

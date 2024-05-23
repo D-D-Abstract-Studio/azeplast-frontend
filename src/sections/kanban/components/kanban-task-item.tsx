@@ -8,8 +8,6 @@ import Typography from '@mui/material/Typography'
 import Paper, { PaperProps } from '@mui/material/Paper'
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup'
 
-import { getRandomNumber } from '@/utils/get-random-number'
-
 import { useBoolean } from '@/hooks/use-boolean'
 
 import Iconify from '@/components/iconify'
@@ -19,6 +17,7 @@ import KanbanDetails from './kanban-details'
 import { bgBlur } from '@/theme/css'
 
 import { IKanbanTask } from '@/types/kanban'
+import { COLORS } from '@/constants/config'
 
 type Props = PaperProps & {
   index: number
@@ -26,8 +25,6 @@ type Props = PaperProps & {
   onUpdateTask: (updateTask: IKanbanTask) => void
   onDeleteTask: VoidFunction
 }
-
-const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 export default function KanbanTaskItem({
   task,
@@ -109,11 +106,7 @@ export default function KanbanTaskItem({
                   }}
                 >
                   {task.assignee.map((user, index) => (
-                    <Avatar
-                      alt={user.name}
-                      key={index}
-                      color={COLORS[getRandomNumber(0, COLORS.length - 1)]}
-                    >
+                    <Avatar alt={user.name} key={index} color={COLORS[index]}>
                       {user.name[0].toUpperCase()}
                     </Avatar>
                   ))}

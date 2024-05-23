@@ -23,6 +23,10 @@ import KanbanDetailsToolbar from './kanban-details-toolbar'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
+import { COLORS } from '@/constants/config'
+
+import { getRandomNumber } from '@/utils/get-random-number'
+
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
   width: 100,
@@ -86,137 +90,6 @@ export default function KanbanDetails({
     setPriority(newValue)
   }, [])
 
-  const renderHead = (
-    <KanbanDetailsToolbar
-      taskName={task.name}
-      onDelete={onDeleteTask}
-      taskStatus={task.status}
-      onCloseDetails={onCloseDetails}
-    />
-  )
-
-  const renderName = (
-    <KanbanInputName
-      placeholder="Task name"
-      value={taskName}
-      onChange={handleChangeTaskName}
-      onKeyUp={handleUpdateTask}
-    />
-  )
-
-  const renderReporter = (
-    <Stack direction="row" alignItems="center">
-      <StyledLabel>Reporter</StyledLabel>
-      <Avatar alt={task.reporter.name} src={task.reporter.avatarUrl} />
-    </Stack>
-  )
-
-  const renderAssignee = (
-    <Stack direction="row">
-      <StyledLabel sx={{ height: 40, lineHeight: '40px' }}>Assignee</StyledLabel>
-
-      <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-        {task.assignee.map((user) => (
-          <Avatar key={user.id} alt={user.name} src={user.avatarUrl} />
-        ))}
-
-        <Tooltip title="Add assignee">
-          <IconButton
-            onClick={contacts.onTrue}
-            sx={{
-              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-              border: (theme) => `dashed 1px ${theme.palette.divider}`,
-            }}
-          >
-            <Iconify icon="mingcute:add-line" />
-          </IconButton>
-        </Tooltip>
-
-        <KanbanContactsDialog
-          assignee={task.assignee}
-          open={contacts.value}
-          onClose={contacts.onFalse}
-        />
-      </Stack>
-    </Stack>
-  )
-
-  const renderLabel = (
-    <Stack direction="row">
-      <StyledLabel sx={{ height: 24, lineHeight: '24px' }}>Labels</StyledLabel>
-
-      {!!task.labels.length && (
-        <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-          {task.labels.map((label) => (
-            <Chip key={label} color="info" label={label} size="small" variant="soft" />
-          ))}
-        </Stack>
-      )}
-    </Stack>
-  )
-
-  const renderDueDate = (
-    <Stack direction="row" alignItems="center">
-      <StyledLabel> Due date </StyledLabel>
-
-      {rangePicker.selected ? (
-        <Button size="small" onClick={rangePicker.onOpen}>
-          {rangePicker.shortLabel}
-        </Button>
-      ) : (
-        <Tooltip title="Add due date">
-          <IconButton
-            onClick={rangePicker.onOpen}
-            sx={{
-              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-              border: (theme) => `dashed 1px ${theme.palette.divider}`,
-            }}
-          >
-            <Iconify icon="mingcute:add-line" />
-          </IconButton>
-        </Tooltip>
-      )}
-
-      <CustomDateRangePicker
-        variant="calendar"
-        title="Choose due date"
-        startDate={rangePicker.startDate}
-        endDate={rangePicker.endDate}
-        onChangeStartDate={rangePicker.onChangeStartDate}
-        onChangeEndDate={rangePicker.onChangeEndDate}
-        open={rangePicker.open}
-        onClose={rangePicker.onClose}
-        selected={rangePicker.selected}
-        error={rangePicker.error}
-      />
-    </Stack>
-  )
-
-  const renderPriority = (
-    <Stack direction="row" alignItems="center">
-      <StyledLabel>Priority</StyledLabel>
-
-      <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
-    </Stack>
-  )
-
-  const renderDescription = (
-    <Stack direction="row">
-      <StyledLabel> Description </StyledLabel>
-
-      <TextField
-        fullWidth
-        multiline
-        size="small"
-        value={taskDescription}
-        onChange={handleChangeTaskDescription}
-        InputProps={{
-          sx: { typography: 'body2' },
-        }}
-      />
-    </Stack>
-  )
-
   return (
     <Drawer
       open={openDetails}
@@ -234,7 +107,12 @@ export default function KanbanDetails({
         },
       }}
     >
-      {renderHead}
+      <KanbanDetailsToolbar
+        taskName={task.name}
+        onDelete={onDeleteTask}
+        taskStatus={task.status}
+        onCloseDetails={onCloseDetails}
+      />
 
       <Divider />
 
@@ -256,19 +134,118 @@ export default function KanbanDetails({
             px: 2.5,
           }}
         >
-          {renderName}
+          <KanbanInputName
+            placeholder="Task name"
+            value={taskName}
+            onChange={handleChangeTaskName}
+            onKeyUp={handleUpdateTask}
+          />
 
-          {renderReporter}
+          <Stack direction="row" alignItems="center">
+            <StyledLabel>Criado por</StyledLabel>
 
-          {renderAssignee}
+            <Avatar alt={task.reporter.name} color="secondary">
+              {task.reporter.name[0].toUpperCase()}
+            </Avatar>
+          </Stack>
 
-          {renderLabel}
+          <Stack direction="row">
+            <StyledLabel sx={{ height: 40, lineHeight: '40px' }}>Responsáveis</StyledLabel>
 
-          {renderDueDate}
+            <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+              {task.assignee.map((user, index) => (
+                <Avatar alt={user.name} key={index} color={COLORS[index]}>
+                  {user.name[0].toUpperCase()}
+                </Avatar>
+              ))}
 
-          {renderPriority}
+              <Tooltip title="Add assignee">
+                <IconButton
+                  onClick={contacts.onTrue}
+                  sx={{
+                    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+                    border: (theme) => `dashed 1px ${theme.palette.divider}`,
+                  }}
+                >
+                  <Iconify icon="mingcute:add-line" />
+                </IconButton>
+              </Tooltip>
 
-          {renderDescription}
+              <KanbanContactsDialog
+                assignee={task.assignee}
+                open={contacts.value}
+                onClose={contacts.onFalse}
+              />
+            </Stack>
+          </Stack>
+
+          <Stack direction="row">
+            <StyledLabel sx={{ height: 24, lineHeight: '24px' }}>Labels</StyledLabel>
+
+            {!!task.labels.length && (
+              <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                {task.labels.map((label) => (
+                  <Chip key={label} color="info" label={label} size="small" variant="soft" />
+                ))}
+              </Stack>
+            )}
+          </Stack>
+
+          <Stack direction="row" alignItems="center">
+            <StyledLabel> Due date </StyledLabel>
+
+            {rangePicker.selected ? (
+              <Button size="small" onClick={rangePicker.onOpen}>
+                {rangePicker.shortLabel}
+              </Button>
+            ) : (
+              <Tooltip title="Add due date">
+                <IconButton
+                  onClick={rangePicker.onOpen}
+                  sx={{
+                    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+                    border: (theme) => `dashed 1px ${theme.palette.divider}`,
+                  }}
+                >
+                  <Iconify icon="mingcute:add-line" />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            <CustomDateRangePicker
+              variant="calendar"
+              title="Choose due date"
+              startDate={rangePicker.startDate}
+              endDate={rangePicker.endDate}
+              onChangeStartDate={rangePicker.onChangeStartDate}
+              onChangeEndDate={rangePicker.onChangeEndDate}
+              open={rangePicker.open}
+              onClose={rangePicker.onClose}
+              selected={rangePicker.selected}
+              error={rangePicker.error}
+            />
+          </Stack>
+
+          <Stack direction="row" alignItems="center">
+            <StyledLabel>Priority</StyledLabel>
+
+            <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
+          </Stack>
+
+          <Stack direction="row">
+            <StyledLabel> Description </StyledLabel>
+
+            <TextField
+              fullWidth
+              multiline
+              size="small"
+              value={taskDescription}
+              onChange={handleChangeTaskDescription}
+              InputProps={{
+                sx: { typography: 'body2' },
+              }}
+            />
+          </Stack>
         </Stack>
       </Scrollbar>
     </Drawer>

@@ -2,8 +2,6 @@ export type IKanbanComment = {
   id: string
   name: string
   message: string
-  avatarUrl: string
-  messageType: 'image' | 'text'
   createdAt: Date
 }
 
@@ -12,10 +10,6 @@ export type IKanbanAssignee = {
   name: string
   role: string
   email: string
-  status: string
-  address: string
-  phoneNumber: string
-  lastActivity: Date
 }
 
 export type IKanbanTask = {
@@ -30,7 +24,6 @@ export type IKanbanTask = {
   reporter: {
     id: string
     name: string
-    avatarUrl: string
   }
 }
 
