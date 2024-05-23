@@ -3,7 +3,6 @@ import { memo, useState, useCallback } from 'react'
 import List from '@mui/material/List'
 import Stack from '@mui/material/Stack'
 import Collapse from '@mui/material/Collapse'
-//
 import { NavSectionProps, NavListProps, NavConfigProps } from '../types'
 import { navVerticalConfig } from '../config'
 import { StyledSubheader } from './styles'

@@ -10,22 +10,17 @@ import DialogContent from '@mui/material/DialogContent'
 import FormHelperText from '@mui/material/FormHelperText'
 
 import { useResponsive } from '@/hooks/use-responsive'
-//
 import { DateRangePickerProps } from './types'
 
 export default function CustomDateRangePicker({
   title = 'Select date range',
   variant = 'input',
-  //
   startDate,
   endDate,
-  //
   onChangeStartDate,
   onChangeEndDate,
-  //
   open,
   onClose,
-  //
   error,
 }: DateRangePickerProps) {
   const mdUp = useResponsive('up', 'md')

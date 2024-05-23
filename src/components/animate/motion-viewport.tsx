@@ -3,7 +3,6 @@ import { m, MotionProps } from 'framer-motion'
 import Box, { BoxProps } from '@mui/material/Box'
 
 import { useResponsive } from '@/hooks/use-responsive'
-//
 import { varContainer } from './variants'
 
 type IProps = BoxProps & MotionProps

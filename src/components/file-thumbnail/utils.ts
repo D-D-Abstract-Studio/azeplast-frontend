@@ -1,4 +1,3 @@
-//
 import { ExtendFile } from './types'
 
 // Define more types here

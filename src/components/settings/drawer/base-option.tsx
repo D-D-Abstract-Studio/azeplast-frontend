@@ -1,7 +1,6 @@
 import { alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import ButtonBase from '@mui/material/ButtonBase'
-//
 import SvgColor from '../../svg-color'
 
 type Props = {

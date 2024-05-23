@@ -5,7 +5,6 @@ import Popover from '@mui/material/Popover'
 import { appBarClasses } from '@mui/material/AppBar'
 
 import { useActiveLink } from '@/routes/hooks/use-active-link'
-//
 import { NavListProps, NavConfigProps } from '../types'
 import NavItem from './nav-item'
 

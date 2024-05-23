@@ -14,7 +14,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 // _mock
 import { _contacts } from '@/_mock'
-// types
+
 import { IKanbanAssignee } from '@/types/kanban'
 
 import Iconify from '@/components/iconify'

@@ -2,7 +2,6 @@ import { Theme, SxProps } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-//
 import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './download-button'
 

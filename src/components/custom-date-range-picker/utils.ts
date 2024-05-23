@@ -1,5 +1,5 @@
 import { isSameDay, isSameMonth, getYear } from 'date-fns'
-// utils
+
 import { fDate } from '@/utils/format-time'
 
 export function shortDateLabel(startDate: Date | null, endDate: Date | null) {

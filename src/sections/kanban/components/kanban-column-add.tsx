@@ -7,7 +7,7 @@ import { inputBaseClasses } from '@mui/material/InputBase'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 import { useBoolean } from '@/hooks/use-boolean'
-// utils
+
 import uuidv4 from '@/utils/uuidv4'
 // api
 import { createColumn } from '@/api/kanban'

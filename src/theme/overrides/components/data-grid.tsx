@@ -4,7 +4,6 @@ import { paperClasses } from '@mui/material/Paper'
 import { buttonClasses } from '@mui/material/Button'
 import { listItemIconClasses } from '@mui/material/ListItemIcon'
 import { tablePaginationClasses } from '@mui/material/TablePagination'
-//
 import { paper } from '../../css'
 
 export function dataGrid(theme: Theme) {

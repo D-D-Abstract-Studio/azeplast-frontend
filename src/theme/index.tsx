@@ -17,7 +17,6 @@ import { presets } from './options/presets'
 import { darkMode } from './options/dark-mode'
 import { contrast } from './options/contrast'
 import RTL, { direction } from './options/right-to-left'
-//
 import NextAppDirEmotionCacheProvider from './next-emotion-cache'
 import { useSettingsContext } from '../components/settings/context/settings-context'
 

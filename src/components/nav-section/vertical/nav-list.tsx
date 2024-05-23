@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react'
 import Collapse from '@mui/material/Collapse'
 
 import { useActiveLink } from '@/routes/hooks/use-active-link'
-//
 import { NavListProps, NavConfigProps } from '../types'
 import NavItem from './nav-item'
 

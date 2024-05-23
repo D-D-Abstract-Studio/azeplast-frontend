@@ -2,7 +2,6 @@ import { alpha, styled } from '@mui/material/styles'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import ListItemButton from '@mui/material/ListItemButton'
-//
 import { NavItemProps, NavConfigProps } from '../types'
 
 type StyledItemProps = Omit<NavItemProps, 'item'> & {

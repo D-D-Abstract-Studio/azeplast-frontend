@@ -9,7 +9,6 @@ const dateList = [
   'StaticDatePicker',
   'DesktopDatePicker',
   'DesktopDateTimePicker',
-  //
   'MobileDatePicker',
   'MobileDateTimePicker',
 ]

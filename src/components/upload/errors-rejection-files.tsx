@@ -4,9 +4,8 @@ import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-// utils
+
 import { fData } from '@/utils/format-number'
-//
 import { fileData } from '../file-thumbnail'
 
 type Props = {

@@ -1,7 +1,6 @@
 import { alpha, Theme } from '@mui/material/styles'
 import { autocompleteClasses } from '@mui/material/Autocomplete'
 import { svgIconClasses } from '@mui/material/SvgIcon'
-//
 import { paper, menuItem } from '../../css'
 
 export function autocomplete(theme: Theme) {

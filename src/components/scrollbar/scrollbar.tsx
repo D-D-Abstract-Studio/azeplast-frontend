@@ -1,7 +1,6 @@
 import { memo, forwardRef } from 'react'
 
 import Box from '@mui/material/Box'
-//
 import { StyledRootScrollbar, StyledScrollbar } from './styles'
 import { ScrollbarProps } from './types'
 

@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider'
 import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-// types
+
 import { IKanbanTask } from '@/types/kanban'
 
 import { useBoolean } from '@/hooks/use-boolean'
@@ -18,7 +18,6 @@ import { useBoolean } from '@/hooks/use-boolean'
 import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import CustomDateRangePicker, { useDateRangePicker } from '@/components/custom-date-range-picker'
-//
 import KanbanInputName from './kanban-input-name'
 import KanbanDetailsToolbar from './kanban-details-toolbar'
 import KanbanContactsDialog from './kanban-contacts-dialog'
@@ -36,7 +35,6 @@ type Props = {
   task: IKanbanTask
   openDetails: boolean
   onCloseDetails: VoidFunction
-  //
   onUpdateTask: (updateTask: IKanbanTask) => void
   onDeleteTask: VoidFunction
 }
@@ -45,7 +43,6 @@ export default function KanbanDetails({
   task,
   openDetails,
   onCloseDetails,
-  //
   onUpdateTask,
   onDeleteTask,
 }: Props) {

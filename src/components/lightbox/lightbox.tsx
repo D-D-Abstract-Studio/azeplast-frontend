@@ -7,9 +7,7 @@ import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 
 import Box from '@mui/material/Box'
-//
 import Iconify from '../iconify'
-//
 import { LightBoxProps } from './types'
 import StyledLightbox from './styles'
 

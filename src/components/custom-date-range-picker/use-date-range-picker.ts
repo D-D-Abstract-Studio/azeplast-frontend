@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react'
-// utils
+
 import { fDate } from '@/utils/format-time'
-//
 import { shortDateLabel } from './utils'
 import { DateRangePickerProps } from './types'
 
@@ -48,18 +47,14 @@ export default function useDateRangePicker(start: Date | null, end: Date | null)
     endDate,
     onChangeStartDate,
     onChangeEndDate,
-    //
     open,
     onOpen,
     onClose,
     onReset,
-    //
     selected: !!startDate && !!endDate,
     error,
-    //
     label: `${fDate(startDate)} - ${fDate(endDate)}`,
     shortLabel: shortDateLabel(startDate, endDate),
-    //
     setStartDate,
     setEndDate,
   }

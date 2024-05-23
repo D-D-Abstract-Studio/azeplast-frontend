@@ -4,13 +4,11 @@ import { alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
-// utils
+
 import { fData } from '@/utils/format-number'
-//
 import Iconify from '../iconify'
 import { varFade } from '../animate'
 import FileThumbnail, { fileData } from '../file-thumbnail'
-//
 import { UploadProps } from './types'
 
 export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {

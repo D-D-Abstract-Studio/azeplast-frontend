@@ -1,5 +1,4 @@
 import { VariantsType } from '../types'
-//
 import { varTranEnter, varTranExit } from './transition'
 
 export const varFlip = (props?: VariantsType) => {
