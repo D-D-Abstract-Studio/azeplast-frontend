@@ -23,7 +23,7 @@ import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { ConfirmDialog } from '../../../components/custom-dialog'
 
 const StyledLabel = styled('span')(({ theme }) => ({
@@ -231,16 +231,18 @@ export default function KanbanDetails({
               }}
             />
           </Stack>
-
-          <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-              <Typography variant="caption">Delete</Typography>
-
-              <Iconify icon="solar:trash-bin-trash-bold" />
-            </Stack>
-          </Button>
         </Stack>
       </Scrollbar>
+
+      <Box p={2}>
+        <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+            <Typography variant="button">Deletar</Typography>
+
+            <Iconify icon="solar:trash-bin-trash-bold" />
+          </Stack>
+        </Button>
+      </Box>
 
       <ConfirmDialog
         open={confirm.value}

@@ -9,6 +9,9 @@ import SnackbarProvider from './contexts/snackbar/snackbar-provider'
 import { KanbanView } from './sections/kanban/kanban-view'
 import { SettingsContext } from './components/settings/context/settings-context'
 
+import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+
 export const App = () => {
   return (
     <SettingsContext.Provider
@@ -25,7 +28,9 @@ export const App = () => {
         <MotionLazy>
           <SnackbarProvider>
             <ProgressBar />
-            <KanbanView />
+            <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
+              <KanbanView />
+            </MuiLocalizationProvider>
           </SnackbarProvider>
         </MotionLazy>
       </ThemeProvider>

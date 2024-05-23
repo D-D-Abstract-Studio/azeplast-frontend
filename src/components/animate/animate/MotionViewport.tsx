@@ -5,9 +5,9 @@ import { ReactNode } from 'react'
 
 import { BoxProps } from '@mui/material'
 import { Box } from '@mui/material'
-// hooks
-import useResponsive from '../../hooks/useResponsive'
-//
+
+import { useResponsive } from '@/hooks/use-responsive'
+
 import { varContainer } from '.'
 
 type IProps = BoxProps & MotionProps
