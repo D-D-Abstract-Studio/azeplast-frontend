@@ -14,7 +14,6 @@ export type IKanbanAssignee = {
   email: string
   status: string
   address: string
-  avatarUrl: string
   phoneNumber: string
   lastActivity: Date
 }

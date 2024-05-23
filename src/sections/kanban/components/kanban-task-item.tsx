@@ -8,15 +8,17 @@ import Typography from '@mui/material/Typography'
 import Paper, { PaperProps } from '@mui/material/Paper'
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup'
 
+import { getRandomNumber } from '@/utils/get-random-number'
+
 import { useBoolean } from '@/hooks/use-boolean'
-
-import { bgBlur } from '@/theme/css'
-
-import { IKanbanTask } from '@/types/kanban'
 
 import Iconify from '@/components/iconify'
 
 import KanbanDetails from './kanban-details'
+
+import { bgBlur } from '@/theme/css'
+
+import { IKanbanTask } from '@/types/kanban'
 
 type Props = PaperProps & {
   index: number
@@ -24,6 +26,8 @@ type Props = PaperProps & {
   onUpdateTask: (updateTask: IKanbanTask) => void
   onDeleteTask: VoidFunction
 }
+
+const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 export default function KanbanTaskItem({
   task,
@@ -55,23 +59,6 @@ export default function KanbanTaskItem({
         }),
       }}
     />
-  )
-
-  const renderInfo = (
-    <Stack direction="row" alignItems="center">
-      <AvatarGroup
-        sx={{
-          [`& .${avatarGroupClasses.avatar}`]: {
-            width: 24,
-            height: 24,
-          },
-        }}
-      >
-        {task.assignee.map((user) => (
-          <Avatar key={user.id} alt={user.name} src={user.avatarUrl} />
-        ))}
-      </AvatarGroup>
-    </Stack>
   )
 
   return (
@@ -112,7 +99,26 @@ export default function KanbanTaskItem({
 
               <Typography variant="subtitle2">{task.name}</Typography>
 
-              {renderInfo}
+              <Stack direction="row" alignItems="center">
+                <AvatarGroup
+                  sx={{
+                    [`& .${avatarGroupClasses.avatar}`]: {
+                      width: 24,
+                      height: 24,
+                    },
+                  }}
+                >
+                  {task.assignee.map((user, index) => (
+                    <Avatar
+                      alt={user.name}
+                      key={index}
+                      color={COLORS[getRandomNumber(0, COLORS.length - 1)]}
+                    >
+                      {user.name[0].toUpperCase()}
+                    </Avatar>
+                  ))}
+                </AvatarGroup>
+              </Stack>
             </Stack>
           </Paper>
         )}
