@@ -1,8 +1,6 @@
 import { alpha, Theme } from '@mui/material/styles'
 import { FabProps, fabClasses } from '@mui/material/Fab'
 
-// ----------------------------------------------------------------------
-
 const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 // NEW VARIANT
@@ -14,8 +12,6 @@ declare module '@mui/material/Fab' {
     softExtended: true
   }
 }
-
-// ----------------------------------------------------------------------
 
 export function fab(theme: Theme) {
   const lightMode = theme.palette.mode === 'light'

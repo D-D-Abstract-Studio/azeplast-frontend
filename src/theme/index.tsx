@@ -2,7 +2,7 @@
 
 import merge from 'lodash/merge'
 import { useMemo } from 'react'
-// @mui
+
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider as MuiThemeProvider, ThemeOptions } from '@mui/material/styles'
 
@@ -20,8 +20,6 @@ import RTL, { direction } from './options/right-to-left'
 //
 import NextAppDirEmotionCacheProvider from './next-emotion-cache'
 import { useSettingsContext } from '../components/settings/context/settings-context'
-
-// ----------------------------------------------------------------------
 
 type Props = {
   children: React.ReactNode

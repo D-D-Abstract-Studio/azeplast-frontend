@@ -1,24 +1,22 @@
 import { Draggable } from '@hello-pangea/dnd'
-// @mui
+
 import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+
 import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Paper, { PaperProps } from '@mui/material/Paper'
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup'
-// hooks
-import { useBoolean } from '@/hooks/use-boolean'
-// theme
-import { bgBlur } from '@/theme/css'
-// types
-import { IKanbanTask } from '@/types/kanban'
-// components
-import Iconify from '@/components/iconify'
-//
-import KanbanDetails from './kanban-details'
 
-// ----------------------------------------------------------------------
+import { useBoolean } from '@/hooks/use-boolean'
+
+import { bgBlur } from '@/theme/css'
+
+import { IKanbanTask } from '@/types/kanban'
+
+import Iconify from '@/components/iconify'
+
+import KanbanDetails from './kanban-details'
 
 type Props = PaperProps & {
   index: number
@@ -41,11 +39,7 @@ export default function KanbanTaskItem({
 
   const renderPriority = (
     <Iconify
-      icon={
-        (task.priority === 'low' && 'solar:double-alt-arrow-down-bold-duotone') ||
-        (task.priority === 'medium' && 'solar:double-alt-arrow-right-bold-duotone') ||
-        'solar:double-alt-arrow-up-bold-duotone'
-      }
+      icon="solar:double-alt-arrow-down-bold-duotone"
       sx={{
         position: 'absolute',
         top: 4,
@@ -63,46 +57,8 @@ export default function KanbanTaskItem({
     />
   )
 
-  const renderImg = (
-    <Box
-      sx={{
-        p: theme.spacing(1, 1, 0, 1),
-      }}
-    >
-      <Box
-        component="img"
-        alt={task.attachments[0]}
-        src={task.attachments[0]}
-        sx={{
-          borderRadius: 1.5,
-          ...(openDetails.value && {
-            opacity: 0.8,
-          }),
-        }}
-      />
-    </Box>
-  )
-
   const renderInfo = (
     <Stack direction="row" alignItems="center">
-      <Stack
-        flexGrow={1}
-        direction="row"
-        alignItems="center"
-        sx={{
-          typography: 'caption',
-          color: 'text.disabled',
-        }}
-      >
-        <Iconify width={16} icon="solar:chat-round-dots-bold" sx={{ mr: 0.25 }} />
-        <Box component="span" sx={{ mr: 1 }}>
-          {task.comments.length}
-        </Box>
-
-        <Iconify width={16} icon="eva:attach-2-fill" sx={{ mr: 0.25 }} />
-        <Box component="span">{task.attachments.length}</Box>
-      </Stack>
-
       <AvatarGroup
         sx={{
           [`& .${avatarGroupClasses.avatar}`]: {
@@ -151,8 +107,6 @@ export default function KanbanTaskItem({
             }}
             {...other}
           >
-            {!!task.attachments.length && renderImg}
-
             <Stack spacing={2} sx={{ px: 2, py: 2.5, position: 'relative' }}>
               {renderPriority}
 

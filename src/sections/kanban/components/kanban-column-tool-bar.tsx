@@ -1,20 +1,18 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-// @mui
+
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
-// hooks
+
 import { useBoolean } from '@/hooks/use-boolean'
-// components
+
 import Iconify from '@/components/iconify'
 import { ConfirmDialog } from '@/components/custom-dialog'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 //
 import KanbanInputName from './kanban-input-name'
-
-// ----------------------------------------------------------------------
 
 type Props = {
   columnName: string

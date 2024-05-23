@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-// hooks
+
 import { useBoolean } from '@/hooks/use-boolean'
 // api
 import {
@@ -16,7 +16,7 @@ import {
   updateTask,
   deleteTask,
 } from '@/api/kanban'
-// components
+
 import Iconify from '@/components/iconify'
 import { useSnackbar } from '@/components/snackbar'
 // types
@@ -25,8 +25,6 @@ import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import KanbanTaskAdd from './kanban-task-add'
 import KanbanTaskItem from './kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
-
-// ----------------------------------------------------------------------
 
 type Props = {
   column: IKanbanColumn

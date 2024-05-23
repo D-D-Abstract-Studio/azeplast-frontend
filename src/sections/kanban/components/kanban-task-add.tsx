@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-// @mui
+
 import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
@@ -9,8 +9,6 @@ import { _mock } from '@/_mock'
 import uuidv4 from '@/utils/uuidv4'
 // types
 import { IKanbanTask } from '@/types/kanban'
-
-// ----------------------------------------------------------------------
 
 type Props = {
   status: string

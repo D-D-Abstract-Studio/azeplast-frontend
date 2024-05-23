@@ -1,8 +1,6 @@
 import { alpha, Theme } from '@mui/material/styles'
 import { ButtonProps, buttonClasses } from '@mui/material/Button'
 
-// ----------------------------------------------------------------------
-
 const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 // NEW VARIANT
@@ -11,8 +9,6 @@ declare module '@mui/material/Button' {
     soft: true
   }
 }
-
-// ----------------------------------------------------------------------
 
 export function button(theme: Theme) {
   const lightMode = theme.palette.mode === 'light'

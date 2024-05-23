@@ -5,15 +5,13 @@ import Captions from 'yet-another-react-lightbox/plugins/captions'
 import Slideshow from 'yet-another-react-lightbox/plugins/slideshow'
 import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
-// @mui
+
 import Box from '@mui/material/Box'
 //
 import Iconify from '../iconify'
 //
 import { LightBoxProps } from './types'
 import StyledLightbox from './styles'
-
-// ----------------------------------------------------------------------
 
 const ICON_SIZE = 24
 
@@ -78,8 +76,6 @@ export default function Lightbox({
   )
 }
 
-// ----------------------------------------------------------------------
-
 export function getPlugins({
   disabledZoom,
   disabledVideo,
@@ -111,8 +107,6 @@ export function getPlugins({
 
   return plugins
 }
-
-// ----------------------------------------------------------------------
 
 type DisplayTotalProps = {
   totalItems: number

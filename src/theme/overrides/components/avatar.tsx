@@ -2,8 +2,6 @@ import { alpha, Theme } from '@mui/material/styles'
 import { AvatarProps } from '@mui/material/Avatar'
 import { avatarGroupClasses, AvatarGroupProps } from '@mui/material/AvatarGroup'
 
-// ----------------------------------------------------------------------
-
 const COLORS = ['default', 'primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 const colorByName = (name: string) => {
@@ -24,8 +22,6 @@ declare module '@mui/material/AvatarGroup' {
     compact: true
   }
 }
-
-// ----------------------------------------------------------------------
 
 export function avatar(theme: Theme) {
   return {

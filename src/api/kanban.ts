@@ -5,9 +5,7 @@ import { fetcher, endpoints } from '@/utils/axios'
 // types
 import { IKanbanColumn, IKanbanTask, IKanban } from '@/types/kanban'
 
-// ----------------------------------------------------------------------
-
-const URL = endpoints.kanban
+const URL = endpoints.kanban.getAllTasks
 
 const options = {
   revalidateIfStale: false,
@@ -31,8 +29,6 @@ export function useGetBoard() {
 
   return memoizedValue
 }
-
-// ----------------------------------------------------------------------
 
 export async function createColumn(columnData: IKanbanColumn) {
   /**
@@ -70,8 +66,6 @@ export async function createColumn(columnData: IKanbanColumn) {
     false
   )
 }
-
-// ----------------------------------------------------------------------
 
 export async function updateColumn(columnId: string, columnName: string) {
   /**
@@ -112,8 +106,6 @@ export async function updateColumn(columnId: string, columnName: string) {
   )
 }
 
-// ----------------------------------------------------------------------
-
 export async function moveColumn(newOrdered: string[]) {
   /**
    * Work in local
@@ -143,8 +135,6 @@ export async function moveColumn(newOrdered: string[]) {
   // const data = { newOrdered };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-column' } });
 }
-
-// ----------------------------------------------------------------------
 
 export async function clearColumn(columnId: string) {
   /**
@@ -193,8 +183,6 @@ export async function clearColumn(columnId: string) {
   )
 }
 
-// ----------------------------------------------------------------------
-
 export async function deleteColumn(columnId: string) {
   /**
    * Work on server
@@ -239,8 +227,6 @@ export async function deleteColumn(columnId: string) {
     false
   )
 }
-
-// ----------------------------------------------------------------------
 
 export async function createTask(columnId: string, taskData: IKanbanTask) {
   /**
@@ -288,8 +274,6 @@ export async function createTask(columnId: string, taskData: IKanbanTask) {
   )
 }
 
-// ----------------------------------------------------------------------
-
 export async function updateTask(taskData: IKanbanTask) {
   /**
    * Work on server
@@ -323,8 +307,6 @@ export async function updateTask(taskData: IKanbanTask) {
   )
 }
 
-// ----------------------------------------------------------------------
-
 export async function moveTask(updateColumns: Record<string, IKanbanColumn>) {
   /**
    * Work in local
@@ -354,8 +336,6 @@ export async function moveTask(updateColumns: Record<string, IKanbanColumn>) {
   // const data = { updateColumns };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-task' } });
 }
-
-// ----------------------------------------------------------------------
 
 export async function deleteTask(columnId: string, taskId: string) {
   /**

@@ -1,4 +1,3 @@
-// @mui
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import Tooltip from '@mui/material/Tooltip'
@@ -10,8 +9,6 @@ import Iconify from '../../iconify'
 //
 import { NavItemProps, NavConfigProps } from '../types'
 import { StyledItem, StyledIcon, StyledDotIcon } from './styles'
-
-// ----------------------------------------------------------------------
 
 type Props = NavItemProps & {
   config: NavConfigProps

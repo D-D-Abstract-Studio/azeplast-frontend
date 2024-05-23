@@ -1,12 +1,10 @@
 import { m, MotionProps } from 'framer-motion'
-// @mui
+
 import Box, { BoxProps } from '@mui/material/Box'
-// hooks
+
 import { useResponsive } from '@/hooks/use-responsive'
 //
 import { varContainer } from './variants'
-
-// ----------------------------------------------------------------------
 
 type IProps = BoxProps & MotionProps
 

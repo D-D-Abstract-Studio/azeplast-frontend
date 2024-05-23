@@ -1,7 +1,5 @@
 import { Theme } from '@mui/material/styles'
 
-// ----------------------------------------------------------------------
-
 export function timeline(theme: Theme) {
   return {
     MuiTimelineDot: {

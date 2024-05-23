@@ -1,9 +1,7 @@
 import { useFormContext, Controller } from 'react-hook-form'
-// @mui
+
 import FormHelperText from '@mui/material/FormHelperText'
 import Slider, { SliderProps } from '@mui/material/Slider'
-
-// ----------------------------------------------------------------------
 
 type Props = SliderProps & {
   name: string

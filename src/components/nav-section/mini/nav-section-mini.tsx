@@ -5,8 +5,6 @@ import { NavSectionProps, NavListProps, NavConfigProps } from '../types'
 import { navMiniConfig } from '../config'
 import NavList from './nav-list'
 
-// ----------------------------------------------------------------------
-
 function NavSectionMini({ data, config, sx, ...other }: NavSectionProps) {
   return (
     <Stack sx={sx} {...other}>
@@ -18,8 +16,6 @@ function NavSectionMini({ data, config, sx, ...other }: NavSectionProps) {
 }
 
 export default memo(NavSectionMini)
-
-// ----------------------------------------------------------------------
 
 type GroupProps = {
   items: NavListProps[]

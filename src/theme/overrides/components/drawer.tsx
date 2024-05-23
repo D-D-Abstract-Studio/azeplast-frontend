@@ -3,8 +3,6 @@ import { DrawerProps, drawerClasses } from '@mui/material/Drawer'
 //
 import { paper } from '../../css'
 
-// ----------------------------------------------------------------------
-
 export function drawer(theme: Theme) {
   const lightMode = theme.palette.mode === 'light'
 

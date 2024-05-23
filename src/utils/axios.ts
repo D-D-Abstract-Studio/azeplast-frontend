@@ -14,34 +14,24 @@ export default axiosInstance
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
 
-  const res = await axiosInstance.get(url, { ...config })
+  const user = localStorage.getItem('userName') || 'anonymous'
+
+  const params = { ...(config?.params || {}), user }
+
+  const res = await axiosInstance.get(url, { ...config, params })
 
   return res.data
 }
 
+type Id = string | number
+
 export const endpoints = {
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
-  auth: {
-    me: '/api/auth/me',
-    login: '/api/auth/login',
-    register: '/api/auth/register',
-  },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
-  },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
-  },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
+  kanban: {
+    getAllTasks: '/tasks',
+    createTask: '/tasks',
+    archiveTask: (id: Id) => `/tasks/${id}/archive`,
+    getTask: (id: Id) => `/tasks/${id}`,
+    updateTask: (id: Id) => `/tasks/${id}`,
+    deleteTask: (id: Id) => `/tasks/${id}`,
   },
 }

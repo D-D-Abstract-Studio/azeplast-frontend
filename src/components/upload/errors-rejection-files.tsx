@@ -1,5 +1,5 @@
 import { FileRejection } from 'react-dropzone'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
@@ -8,8 +8,6 @@ import Typography from '@mui/material/Typography'
 import { fData } from '@/utils/format-number'
 //
 import { fileData } from '../file-thumbnail'
-
-// ----------------------------------------------------------------------
 
 type Props = {
   fileRejections: FileRejection[]

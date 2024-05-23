@@ -1,11 +1,8 @@
-// @mui
 import { alpha, styled } from '@mui/material/styles'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
 //
 import { NavItemProps, NavConfigProps } from '../types'
-
-// ----------------------------------------------------------------------
 
 type StyledItemProps = Omit<NavItemProps, 'item'> & {
   config: NavConfigProps
@@ -72,8 +69,6 @@ export const StyledItem = styled(ListItemButton, {
       }),
   }
 })
-
-// ----------------------------------------------------------------------
 
 type StyledIconProps = {
   size?: number

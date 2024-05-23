@@ -1,8 +1,6 @@
 import Typography from '@mui/material/Typography'
 import Paper, { PaperProps } from '@mui/material/Paper'
 
-// ----------------------------------------------------------------------
-
 interface Props extends PaperProps {
   query?: string
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-// @mui
+
 import Stack from '@mui/material/Stack'
 import Popover from '@mui/material/Popover'
 import { appBarClasses } from '@mui/material/AppBar'
@@ -8,8 +8,6 @@ import { useActiveLink } from '@/routes/hooks/use-active-link'
 //
 import { NavListProps, NavConfigProps } from '../types'
 import NavItem from './nav-item'
-
-// ----------------------------------------------------------------------
 
 type NavListRootProps = {
   data: NavListProps
@@ -109,8 +107,6 @@ export default function NavList({ data, depth, hasChild, config }: NavListRootPr
     </>
   )
 }
-
-// ----------------------------------------------------------------------
 
 type NavListSubProps = {
   data: NavListProps[]

@@ -4,8 +4,6 @@ import { svgIconClasses } from '@mui/material/SvgIcon'
 //
 import { paper, menuItem } from '../../css'
 
-// ----------------------------------------------------------------------
-
 export function autocomplete(theme: Theme) {
   return {
     MuiAutocomplete: {

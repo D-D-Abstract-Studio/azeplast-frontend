@@ -26,8 +26,6 @@ declare module '@mui/material/styles' {
   }
 }
 
-// ----------------------------------------------------------------------
-
 // LEARN MORE
 // https://nextjs.org/docs/basic-features/font-optimization#google-fonts
 

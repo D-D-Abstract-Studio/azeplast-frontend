@@ -2,8 +2,6 @@
 
 import { LazyMotion, m, domMax } from 'framer-motion'
 
-// ----------------------------------------------------------------------
-
 type Props = {
   children: React.ReactNode
 }

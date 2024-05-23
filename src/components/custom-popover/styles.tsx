@@ -1,11 +1,8 @@
-// @mui
 import { styled, alpha } from '@mui/material/styles'
 // theme
 import { bgBlur } from '@/theme/css'
 //
 import { MenuPopoverArrowValue } from './types'
-
-// ----------------------------------------------------------------------
 
 export const StyledArrow = styled('span')<{ arrow: MenuPopoverArrowValue }>(({ arrow, theme }) => {
   const SIZE = 14

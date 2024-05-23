@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export * from './variants'
 
 export { default as MotionViewport } from './motion-viewport'

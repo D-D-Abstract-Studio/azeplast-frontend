@@ -3,8 +3,6 @@
 import { useScroll } from 'framer-motion'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 
-// ----------------------------------------------------------------------
-
 type ReturnType = boolean
 
 interface UseScrollOptions extends Omit<ScrollOptions, 'container' | 'target'> {

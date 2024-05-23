@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export type IKanbanComment = {
   id: string
   name: string
@@ -28,8 +26,6 @@ export type IKanbanTask = {
   priority: string
   labels: string[]
   description?: string
-  attachments: string[]
-  comments: IKanbanComment[]
   assignee: IKanbanAssignee[]
   due: [Date | null, Date | null]
   reporter: {

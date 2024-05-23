@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from 'react-hook-form'
-// @mui
+
 import { Theme, SxProps } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
@@ -11,8 +11,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import FormHelperText from '@mui/material/FormHelperText'
 import Select, { SelectProps } from '@mui/material/Select'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-
-// ----------------------------------------------------------------------
 
 type RHFSelectProps = TextFieldProps & {
   name: string
@@ -66,8 +64,6 @@ export function RHFSelect({
     />
   )
 }
-
-// ----------------------------------------------------------------------
 
 type RHFMultiSelectProps = SelectProps & {
   name: string

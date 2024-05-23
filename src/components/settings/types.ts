@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export type SettingsValueProps = {
   themeStretch: boolean
   themeMode: 'light' | 'dark'

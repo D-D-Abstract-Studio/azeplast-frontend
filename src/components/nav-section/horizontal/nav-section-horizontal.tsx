@@ -1,5 +1,5 @@
 import { memo } from 'react'
-// @mui
+
 import Stack from '@mui/material/Stack'
 // theme
 import { hideScroll } from '@/theme/css'
@@ -7,8 +7,6 @@ import { hideScroll } from '@/theme/css'
 import { NavSectionProps, NavListProps, NavConfigProps } from '../types'
 import { navHorizontalConfig } from '../config'
 import NavList from './nav-list'
-
-// ----------------------------------------------------------------------
 
 function NavSectionHorizontal({ data, config, sx, ...other }: NavSectionProps) {
   return (
@@ -33,8 +31,6 @@ function NavSectionHorizontal({ data, config, sx, ...other }: NavSectionProps) {
 }
 
 export default memo(NavSectionHorizontal)
-
-// ----------------------------------------------------------------------
 
 type GroupProps = {
   items: NavListProps[]

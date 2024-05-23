@@ -5,8 +5,6 @@ import createCache from '@emotion/cache'
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react'
 import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache'
 
-// ----------------------------------------------------------------------
-
 export type NextAppDirEmotionCacheProviderProps = {
   /** This is the options passed to createCache() from 'import createCache from "@emotion/cache"' */
   options: Omit<OptionsOfCreateCache, 'insertionPoint'>

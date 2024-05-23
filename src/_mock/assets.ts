@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export const _id = [...Array(40)].map(
   (_, index) => `e99f09a7-dd88-49d5-b1c8-1daf80c2d7b${index + 1}`
 )
@@ -31,8 +29,6 @@ export const _fullAddress = [
   '4373 Emelia Valley Suite 596 - Columbia, NM / 42586',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _booleans = [
   true,
   true,
@@ -60,8 +56,6 @@ export const _booleans = [
   true,
 ]
 
-// ----------------------------------------------------------------------
-
 export const _emails = [
   'nannie_abernathy70@yahoo.com',
   'ashlynn_ohara62@gmail.com',
@@ -88,8 +82,6 @@ export const _emails = [
   'genevieve.powlowski@hotmail.com',
   'louie.kuphal39@gmail.com',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _fullNames = [
   'Jayvion Simon',
@@ -172,8 +164,6 @@ export const _lastNames = [
   'Parisian',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _prices = [
   83.74, 97.14, 68.71, 85.21, 52.17, 25.18, 43.84, 60.98, 98.42, 53.37, 72.75, 56.61, 64.55, 77.32,
   60.62, 79.81, 93.68, 47.44, 76.24, 92.87, 72.91, 20.54, 94.25, 37.51,
@@ -207,8 +197,6 @@ export const _nativeL = [
   2405, 3127, 6843, 4672, 6995, 6053, 5192, 9686,
 ]
 
-// ----------------------------------------------------------------------
-
 export const _phoneNumbers = [
   '365-374-4961',
   '904-966-2836',
@@ -235,8 +223,6 @@ export const _phoneNumbers = [
   '353-801-5212',
   '606-285-8928',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _roles = [
   'HR Manager',
@@ -265,8 +251,6 @@ export const _roles = [
   'CTO',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _postTitles = [
   '10 Essential Tips for Healthy Living',
   'The Ultimate Guide to Productivity Hacks',
@@ -293,8 +277,6 @@ export const _postTitles = [
   'The Influence of Music on Mood and Emotions',
   'Travel Photography Tips: Capturing Memories Around the World',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _productNames = [
   'Nike Air Force 1 NDESTRUKT',
@@ -323,8 +305,6 @@ export const _productNames = [
   'Run Star Hike Platform Sneaker',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _tourNames = [
   'Adventure Seekers Expedition',
   'Historic Heritage Tour',
@@ -351,8 +331,6 @@ export const _tourNames = [
   'Surfing and Beach Adventure',
   'Nightlife and Entertainment Tour',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _jobTitles = [
   'Software Engineer',
@@ -381,8 +359,6 @@ export const _jobTitles = [
   'Event Planner',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _companyNames = [
   'Lueilwitz and Sons',
   'Gleichner, Mueller and Tromp',
@@ -409,8 +385,6 @@ export const _companyNames = [
   'Schimmel - Raynor',
   'Tremblay LLC',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _tags = [
   'Technology',
@@ -439,8 +413,6 @@ export const _tags = [
   'Writing',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _taskNames = [
   'Complete Project Proposal',
   'Conduct Market Research',
@@ -468,8 +440,6 @@ export const _taskNames = [
   'Coordinate Project Meetings',
 ]
 
-// ----------------------------------------------------------------------
-
 export const _sentences = [
   'The sun slowly set over the horizon, painting the sky in vibrant hues of orange and pink.',
   'She eagerly opened the gift, her eyes sparkling with excitement.',
@@ -496,8 +466,6 @@ export const _sentences = [
   'The artist dipped the brush into vibrant paint, bringing the canvas to life with bold strokes and vivid colors.',
   'The laughter of children echoed through the playground, filling the atmosphere with pure joy.',
 ]
-
-// ----------------------------------------------------------------------
 
 export const _descriptions = [
   `Occaecati est et illo quibusdam accusamus qui. Incidunt aut et molestiae ut facere aut. Est quidem iusto praesentium excepturi harum nihil tenetur facilis. Ut omnis voluptates nihil accusantium doloribus eaque debitis.`,

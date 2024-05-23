@@ -1,5 +1,5 @@
 import { useDropzone } from 'react-dropzone'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -10,8 +10,6 @@ import Image from '../image'
 //
 import { UploadProps } from './types'
 import RejectionFiles from './errors-rejection-files'
-
-// ----------------------------------------------------------------------
 
 export default function UploadAvatar({
   error,

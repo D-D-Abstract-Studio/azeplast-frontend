@@ -1,8 +1,6 @@
 import { MaterialDesignContent } from 'notistack'
-// @mui
-import { styled, alpha } from '@mui/material/styles'
 
-// ----------------------------------------------------------------------
+import { styled, alpha } from '@mui/material/styles'
 
 export const StyledNotistack = styled(MaterialDesignContent)(({ theme }) => {
   const isLight = theme.palette.mode === 'light'
@@ -32,8 +30,6 @@ export const StyledNotistack = styled(MaterialDesignContent)(({ theme }) => {
     // '&.notistack-MuiContent-error': {},
   }
 })
-
-// ----------------------------------------------------------------------
 
 type StyledIconProps = {
   color: 'info' | 'success' | 'warning' | 'error'

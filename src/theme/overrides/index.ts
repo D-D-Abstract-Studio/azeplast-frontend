@@ -46,8 +46,6 @@ import { autocomplete } from './components/autocomplete'
 import { toggleButton } from './components/toggle-button'
 import { loadingButton } from './components/loading-button'
 
-// ----------------------------------------------------------------------
-
 export function componentsOverrides(theme: Theme) {
   const components = merge(
     defaultProps(theme),

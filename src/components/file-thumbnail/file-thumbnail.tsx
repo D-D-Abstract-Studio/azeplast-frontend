@@ -6,8 +6,6 @@ import Tooltip from '@mui/material/Tooltip'
 import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './download-button'
 
-// ----------------------------------------------------------------------
-
 type FileIconProps = {
   file: File | string
   tooltip?: boolean

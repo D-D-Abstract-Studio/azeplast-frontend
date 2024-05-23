@@ -1,7 +1,4 @@
-// @mui
 import InputBase, { InputBaseProps, inputBaseClasses } from '@mui/material/InputBase'
-
-// ----------------------------------------------------------------------
 
 export default function KanbanInputName({ sx, ...other }: InputBaseProps) {
   return (

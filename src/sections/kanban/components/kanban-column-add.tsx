@@ -1,20 +1,18 @@
 import { useState, useCallback } from 'react'
-// @mui
+
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { inputBaseClasses } from '@mui/material/InputBase'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-// hooks
+
 import { useBoolean } from '@/hooks/use-boolean'
 // utils
 import uuidv4 from '@/utils/uuidv4'
 // api
 import { createColumn } from '@/api/kanban'
-// components
-import Iconify from '@/components/iconify'
 
-// ----------------------------------------------------------------------
+import Iconify from '@/components/iconify'
 
 export default function KanbanColumnAdd() {
   const [columnName, setColumnName] = useState('')

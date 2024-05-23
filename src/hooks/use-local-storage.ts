@@ -1,7 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
 
-// ----------------------------------------------------------------------
-
 export function useLocalStorage(key: string, initialState: any) {
   const [state, setState] = useState(initialState)
 
@@ -53,8 +51,6 @@ export function useLocalStorage(key: string, initialState: any) {
     reset,
   }
 }
-
-// ----------------------------------------------------------------------
 
 export const getStorage = (key: string) => {
   let value = null

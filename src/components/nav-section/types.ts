@@ -1,8 +1,6 @@
 import { StackProps } from '@mui/material/Stack'
 import { ListItemButtonProps } from '@mui/material/ListItemButton'
 
-// ----------------------------------------------------------------------
-
 export type NavConfigProps = {
   hiddenLabel?: boolean
   itemGap?: number

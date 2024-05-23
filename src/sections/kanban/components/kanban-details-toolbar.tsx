@@ -1,32 +1,26 @@
 import { useState, useCallback } from 'react'
-// @mui
+
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
-// hooks
+
 import { useBoolean } from '@/hooks/use-boolean'
 import { useResponsive } from '@/hooks/use-responsive'
-// components
+
 import Iconify from '@/components/iconify'
 import { ConfirmDialog } from '@/components/custom-dialog'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 
-// ----------------------------------------------------------------------
-
 type Props = {
-  liked: boolean
   taskName: string
   taskStatus: string
-  onLike: VoidFunction
   onDelete: VoidFunction
   onCloseDetails: VoidFunction
 }
 
 export default function KanbanDetailsToolbar({
-  liked,
-  onLike,
   taskName,
   onDelete,
   taskStatus,
@@ -75,21 +69,11 @@ export default function KanbanDetailsToolbar({
         </Button>
 
         <Stack direction="row" justifyContent="flex-end" flexGrow={1}>
-          <Tooltip title="Like">
-            <IconButton color={liked ? 'default' : 'primary'} onClick={onLike}>
-              <Iconify icon="ic:round-thumb-up" />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Delete task">
+          <Tooltip title="Delete">
             <IconButton onClick={confirm.onTrue}>
               <Iconify icon="solar:trash-bin-trash-bold" />
             </IconButton>
           </Tooltip>
-
-          <IconButton>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
         </Stack>
       </Stack>
 

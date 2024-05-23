@@ -1,5 +1,5 @@
 import { useDropzone } from 'react-dropzone'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -15,8 +15,6 @@ import { UploadProps } from './types'
 import RejectionFiles from './errors-rejection-files'
 import MultiFilePreview from './preview-multi-file'
 import SingleFilePreview from './preview-single-file'
-
-// ----------------------------------------------------------------------
 
 export default function Upload({
   disabled,

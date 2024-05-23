@@ -1,7 +1,5 @@
 import { Theme } from '@mui/material/styles'
 
-// ----------------------------------------------------------------------
-
 export function typography(theme: Theme) {
   return {
     MuiTypography: {

@@ -1,8 +1,6 @@
 import { alpha, Theme } from '@mui/material/styles'
 import { ChipProps, chipClasses } from '@mui/material/Chip'
 
-// ----------------------------------------------------------------------
-
 const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
 
 // NEW VARIANT
@@ -11,8 +9,6 @@ declare module '@mui/material/Chip' {
     soft: true
   }
 }
-
-// ----------------------------------------------------------------------
 
 export function chip(theme: Theme) {
   const lightMode = theme.palette.mode === 'light'

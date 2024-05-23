@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export function getPosition(arrow: string) {
   let props
 

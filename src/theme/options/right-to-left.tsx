@@ -5,8 +5,6 @@ import rtlPlugin from 'stylis-plugin-rtl'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 
-// ----------------------------------------------------------------------
-
 type Props = {
   themeDirection: 'rtl' | 'ltr'
   children: React.ReactNode
@@ -31,8 +29,6 @@ export default function RTL({ children, themeDirection }: Props) {
 
   return <>{children}</>
 }
-
-// ----------------------------------------------------------------------
 
 export function direction(themeDirection: 'rtl' | 'ltr') {
   const theme = {

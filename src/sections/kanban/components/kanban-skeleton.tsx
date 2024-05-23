@@ -1,10 +1,7 @@
-// @mui
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { BoxProps } from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
-
-// ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   index?: number

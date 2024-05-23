@@ -21,30 +21,27 @@ import SnackbarProvider from './components/snackbar/snackbar-provider'
 
 import { KanbanView } from './sections/kanban/kanban-view'
 import { SettingsContext } from './components/settings/context/settings-context'
-import { AuthProvider } from './auth/context/jwt/auth-provider'
 
 export const App = () => {
   return (
-    <AuthProvider>
-      <SettingsContext.Provider
-        value={{
-          themeMode: 'dark',
-          themeDirection: 'ltr',
-          themeContrast: 'default',
-          themeLayout: 'vertical',
-          themeColorPresets: 'default',
-          themeStretch: false,
-        }}
-      >
-        <ThemeProvider>
-          <MotionLazy>
-            <SnackbarProvider>
-              <ProgressBar />
-              <KanbanView />
-            </SnackbarProvider>
-          </MotionLazy>
-        </ThemeProvider>
-      </SettingsContext.Provider>
-    </AuthProvider>
+    <SettingsContext.Provider
+      value={{
+        themeMode: 'dark',
+        themeDirection: 'ltr',
+        themeContrast: 'default',
+        themeLayout: 'vertical',
+        themeColorPresets: 'default',
+        themeStretch: false,
+      }}
+    >
+      <ThemeProvider>
+        <MotionLazy>
+          <SnackbarProvider>
+            <ProgressBar />
+            <KanbanView />
+          </SnackbarProvider>
+        </MotionLazy>
+      </ThemeProvider>
+    </SettingsContext.Provider>
   )
 }

@@ -1,7 +1,5 @@
 import { useCallback, useState } from 'react'
 
-// ----------------------------------------------------------------------
-
 type ReturnType = {
   onClose: VoidFunction
   open: HTMLElement | null

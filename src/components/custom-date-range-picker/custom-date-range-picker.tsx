@@ -1,4 +1,3 @@
-// @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import Paper from '@mui/material/Paper'
@@ -9,12 +8,10 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import FormHelperText from '@mui/material/FormHelperText'
-// hooks
+
 import { useResponsive } from '@/hooks/use-responsive'
 //
 import { DateRangePickerProps } from './types'
-
-// ----------------------------------------------------------------------
 
 export default function CustomDateRangePicker({
   title = 'Select date range',

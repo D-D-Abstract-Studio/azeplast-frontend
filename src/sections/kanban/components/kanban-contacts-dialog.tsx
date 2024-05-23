@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-// @mui
+
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
@@ -16,12 +16,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import { _contacts } from '@/_mock'
 // types
 import { IKanbanAssignee } from '@/types/kanban'
-// components
+
 import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import SearchNotFound from '@/components/search-not-found'
-
-// ----------------------------------------------------------------------
 
 const ITEM_HEIGHT = 64
 
@@ -123,8 +121,6 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
     </Dialog>
   )
 }
-
-// ----------------------------------------------------------------------
 
 function applyFilter({ inputData, query }: { inputData: IKanbanAssignee[]; query: string }) {
   if (query) {

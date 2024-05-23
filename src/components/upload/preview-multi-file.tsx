@@ -1,5 +1,5 @@
 import { m, AnimatePresence } from 'framer-motion'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
@@ -12,8 +12,6 @@ import { varFade } from '../animate'
 import FileThumbnail, { fileData } from '../file-thumbnail'
 //
 import { UploadProps } from './types'
-
-// ----------------------------------------------------------------------
 
 export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {
   return (
