@@ -16,8 +16,8 @@ import { IKanbanTask } from '@/types/kanban'
 import { useBoolean } from '@/hooks/use-boolean'
 
 import Iconify from '@/components/iconify'
+import dayjs, { Dayjs } from 'dayjs'
 
-import CustomDateRangePicker, { useDateRangePicker } from '@/components/custom-date-range-picker'
 import KanbanInputName from './kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
@@ -25,6 +25,7 @@ import KanbanDetailsPriority from './kanban-details-priority'
 import { COLORS } from '@/constants/config'
 import { Autocomplete, Box, Chip, Typography } from '@mui/material'
 import { ConfirmDialog } from '../../../components/custom-dialog'
+import { DesktopDatePicker } from '@mui/x-date-pickers'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -58,8 +59,6 @@ export default function KanbanDetails({
   const contacts = useBoolean()
 
   const [taskDescription, setTaskDescription] = useState(task.description)
-
-  const rangePicker = useDateRangePicker(task.due[0], task.due[1])
 
   const handleChangeTaskName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value)
@@ -174,26 +173,20 @@ export default function KanbanDetails({
             </Stack>
           </Stack>
 
-          <Stack direction="column" alignItems="left" spacing={1}>
-            <StyledLabel>Data de vencimento</StyledLabel>
-
-            <Button size="small" onClick={rangePicker.onOpen}>
-              {rangePicker.shortLabel}
-            </Button>
-
-            <CustomDateRangePicker
-              variant="calendar"
-              title="Choose due date"
-              startDate={rangePicker.startDate}
-              endDate={rangePicker.endDate}
-              onChangeStartDate={rangePicker.onChangeStartDate}
-              onChangeEndDate={rangePicker.onChangeEndDate}
-              open={rangePicker.open}
-              onClose={rangePicker.onClose}
-              selected={rangePicker.selected}
-              error={rangePicker.error}
-            />
-          </Stack>
+          <DesktopDatePicker<Date>
+            disablePast
+            label="Data de vencimento"
+            value={new Date(task.dueDate)} // 2024-05-22T18:43:37.043Z
+            onChange={(newValue) => {
+              console.log(dayjs(newValue))
+            }}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                margin: 'normal',
+              },
+            }}
+          />
 
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Prioridade</StyledLabel>

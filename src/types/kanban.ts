@@ -11,7 +11,7 @@ export type IKanbanTask = {
   categories: string[]
   description?: string
   assignee: IKanbanAssignee[]
-  due: [Date | null, Date | null]
+  dueDate: Date
   reporter: {
     id: string
     name: string
