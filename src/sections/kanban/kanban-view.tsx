@@ -8,7 +8,7 @@ import Container from '@mui/material/Container'
 
 import { hideScroll } from '@/theme/css'
 
-import { useGetBoard, moveColumn, moveTask } from '@/api/kanban'
+import { moveColumn, moveTask } from '@/api/kanban'
 
 import EmptyContent from '@/components/empty-content'
 
@@ -16,8 +16,24 @@ import KanbanColumn from './components/kanban-column'
 import KanbanColumnAdd from './components/kanban-column-add'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 
+import { useRequest } from '@/hooks/use-request'
+
+import { endpoints } from '@/constants/config'
+
+import { IKanban } from '@/types/kanban'
+
+const boardDefault = {
+  tasks: {},
+  columns: {},
+  ordered: [],
+} as IKanban
+
 export const KanbanView = () => {
-  const { board, boardLoading, boardEmpty } = useGetBoard()
+  const { data: board = boardDefault, isLoading } = useRequest<IKanban>({
+    url: endpoints.kanban.getAllTasks,
+  })
+
+  const boardEmpty = !isLoading && Boolean(!board?.ordered?.length)
 
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
@@ -114,7 +130,7 @@ export const KanbanView = () => {
         pt: 2,
       }}
     >
-      {boardLoading && renderSkeleton}
+      {isLoading && renderSkeleton}
 
       {boardEmpty && (
         <EmptyContent
@@ -127,7 +143,7 @@ export const KanbanView = () => {
         />
       )}
 
-      {!!board?.ordered.length && (
+      {!!board?.ordered?.length && (
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="board" type="COLUMN" direction="horizontal">
             {(provided) => (

@@ -1,36 +1,9 @@
-import { useMemo } from 'react'
-import useSWR, { mutate } from 'swr'
-
-import { fetcher, endpoints } from '@/utils/axios'
+import { mutate } from 'swr'
 
 import { IKanbanColumn, IKanbanTask, IKanban } from '@/types/kanban'
+import { endpoints } from '../constants/config'
 
 const URL = endpoints.kanban.getAllTasks
-
-const options = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-}
-
-export const useGetBoard = () => {
-  const { data, isLoading, error, isValidating } = useSWR<{ board: IKanban }>(URL, fetcher, options)
-
-  const memoizedValue = useMemo(
-    () => ({
-      board: data?.board as IKanban,
-      boardLoading: isLoading,
-      boardError: error,
-      boardValidating: isValidating,
-      boardEmpty: !isLoading && Boolean(!data?.board?.ordered?.length),
-    }),
-    [data?.board, error, isLoading, isValidating]
-  )
-
-  console.log(memoizedValue)
-
-  return memoizedValue
-}
 
 export async function createColumn(columnData: IKanbanColumn) {
   // const data = { columnData };

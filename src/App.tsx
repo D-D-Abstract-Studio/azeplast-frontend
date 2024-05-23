@@ -4,7 +4,7 @@ import ThemeProvider from './theme'
 
 import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
-import SnackbarProvider from './components/snackbar/snackbar-provider'
+import SnackbarProvider from './contexts/snackbar/snackbar-provider'
 
 import { KanbanView } from './sections/kanban/kanban-view'
 import { SettingsContext } from './components/settings/context/settings-context'

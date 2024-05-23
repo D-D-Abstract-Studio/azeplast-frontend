@@ -18,12 +18,12 @@ import {
 } from '@/api/kanban'
 
 import Iconify from '@/components/iconify'
-import { useSnackbar } from '@/components/snackbar'
 
 import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import KanbanTaskAdd from './kanban-task-add'
 import KanbanTaskItem from './kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
+import { useSnackbar } from 'notistack'
 
 type Props = {
   column: IKanbanColumn
