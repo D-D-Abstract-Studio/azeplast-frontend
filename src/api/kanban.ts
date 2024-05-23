@@ -97,46 +97,6 @@ export async function moveColumn(newOrdered: string[]) {
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-column' } });
 }
 
-export async function clearColumn(columnId: string) {
-  // const data = { columnId };
-  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'clear-column' } });
-
-  mutate(
-    URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-      const { tasks } = board
-
-      // current column
-      const column = board.columns[columnId]
-
-      // delete tasks in board.tasks
-      column.taskIds?.forEach((key: string) => {
-        delete tasks[key]
-      })
-
-      const columns = {
-        ...board.columns,
-        [column.id]: {
-          ...column,
-          // delete task in column
-          taskIds: [],
-        },
-      }
-
-      return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-          tasks,
-        },
-      }
-    },
-    false
-  )
-}
-
 export async function deleteColumn(columnId: string) {
   // const data = { columnId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-column' } });

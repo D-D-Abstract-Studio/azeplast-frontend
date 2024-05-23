@@ -8,14 +8,7 @@ import Button from '@mui/material/Button'
 
 import { useBoolean } from '@/hooks/use-boolean'
 // api
-import {
-  updateColumn,
-  clearColumn,
-  deleteColumn,
-  createTask,
-  updateTask,
-  deleteTask,
-} from '@/api/kanban'
+import { updateColumn, deleteColumn, createTask, updateTask, deleteTask } from '@/api/kanban'
 
 import Iconify from '@/components/iconify'
 
@@ -52,14 +45,6 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
     },
     [column.id, column.name, enqueueSnackbar]
   )
-
-  const handleClearColumn = useCallback(async () => {
-    try {
-      clearColumn(column.id)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [column.id])
 
   const handleDeleteColumn = useCallback(async () => {
     try {
@@ -162,7 +147,6 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
             <KanbanColumnToolBar
               columnName={column.name}
               onUpdateColumn={handleUpdateColumn}
-              onClearColumn={handleClearColumn}
               onDeleteColumn={handleDeleteColumn}
             />
 

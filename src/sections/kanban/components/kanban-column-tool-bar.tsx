@@ -16,16 +16,10 @@ import KanbanInputName from './kanban-input-name'
 type Props = {
   columnName: string
   onDeleteColumn: VoidFunction
-  onClearColumn: VoidFunction
   onUpdateColumn: (inputName: string) => void
 }
 
-export default function KanbanColumnToolBar({
-  columnName,
-  onDeleteColumn,
-  onClearColumn,
-  onUpdateColumn,
-}: Props) {
+export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpdateColumn }: Props) {
   const renameRef = useRef<HTMLInputElement>(null)
 
   const popover = usePopover()
@@ -90,17 +84,7 @@ export default function KanbanColumnToolBar({
       >
         <MenuItem onClick={popover.onClose}>
           <Iconify icon="solar:pen-bold" />
-          Rename
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onClearColumn()
-            popover.onClose()
-          }}
-        >
-          <Iconify icon="solar:eraser-bold" />
-          Clear
+          Editar
         </MenuItem>
 
         <MenuItem
@@ -111,7 +95,7 @@ export default function KanbanColumnToolBar({
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Deletar
         </MenuItem>
       </CustomPopover>
 
