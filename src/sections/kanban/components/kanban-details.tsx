@@ -131,12 +131,19 @@ export default function KanbanDetails({
             px: 2.5,
           }}
         >
-          <KanbanInputName
-            placeholder="Task name"
-            value={taskName}
-            onChange={handleChangeTaskName}
-            onKeyUp={handleUpdateTask}
-          />
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <KanbanInputName
+              fullWidth
+              placeholder="Task name"
+              value={taskName}
+              onChange={handleChangeTaskName}
+              onKeyUp={handleUpdateTask}
+            />
+
+            <IconButton color="default" onClick={onCloseDetails}>
+              <Iconify icon="eva:close-fill" size={2.5} />
+            </IconButton>
+          </Stack>
 
           <Stack direction="row" alignItems="center">
             <StyledLabel>Criado por</StyledLabel>
