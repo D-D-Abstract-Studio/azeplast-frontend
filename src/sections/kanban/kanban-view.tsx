@@ -7,11 +7,11 @@ import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
 
 import { hideScroll } from '@/theme/css'
-// api
+
 import { useGetBoard, moveColumn, moveTask } from '@/api/kanban'
 
 import EmptyContent from '@/components/empty-content'
-//
+
 import KanbanColumn from './components/kanban-column'
 import KanbanColumnAdd from './components/kanban-column-add'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'

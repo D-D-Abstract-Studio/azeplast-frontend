@@ -14,36 +14,34 @@ const options = {
 }
 
 export function useGetBoard() {
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, options)
+  const { data, isLoading, error, isValidating } = useSWR<IKanban>(URL, fetcher, options)
 
   const memoizedValue = useMemo(
     () => ({
-      board: data?.board as IKanban,
+      board: data,
       boardLoading: isLoading,
       boardError: error,
       boardValidating: isValidating,
-      boardEmpty: !isLoading && !data?.board.ordered.length,
+      boardEmpty: !isLoading && Boolean(data?.ordered?.length),
     }),
-    [data?.board, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   )
 
   return memoizedValue
 }
 
 export async function createColumn(columnData: IKanbanColumn) {
-  /**
-   * Work on server
-   */
   // const data = { columnData };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-column' } });
 
-  /**
-   * Work in local
-   */
+  console.log(columnData)
+
   mutate(
     URL,
     (currentData: any) => {
       const board = currentData.board as IKanban
+
+      console.log(board)
 
       const columns = {
         ...board.columns,
@@ -68,15 +66,9 @@ export async function createColumn(columnData: IKanbanColumn) {
 }
 
 export async function updateColumn(columnId: string, columnName: string) {
-  /**
-   * Work on server
-   */
   // const data = { columnId, columnName };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'update-column' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
@@ -107,9 +99,6 @@ export async function updateColumn(columnId: string, columnName: string) {
 }
 
 export async function moveColumn(newOrdered: string[]) {
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
@@ -129,28 +118,18 @@ export async function moveColumn(newOrdered: string[]) {
     false
   )
 
-  /**
-   * Work on server
-   */
   // const data = { newOrdered };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-column' } });
 }
 
 export async function clearColumn(columnId: string) {
-  /**
-   * Work on server
-   */
   // const data = { columnId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'clear-column' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
       const board = currentData.board as IKanban
-
       const { tasks } = board
 
       // current column
@@ -184,22 +163,15 @@ export async function clearColumn(columnId: string) {
 }
 
 export async function deleteColumn(columnId: string) {
-  /**
-   * Work on server
-   */
   // const data = { columnId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-column' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
       const board = currentData.board as IKanban
 
       const { columns, tasks } = board
-
       // current column
       const column = columns[columnId]
 
@@ -229,15 +201,9 @@ export async function deleteColumn(columnId: string) {
 }
 
 export async function createTask(columnId: string, taskData: IKanbanTask) {
-  /**
-   * Work on server
-   */
   // const data = { columnId, taskData };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-task' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
@@ -275,15 +241,9 @@ export async function createTask(columnId: string, taskData: IKanbanTask) {
 }
 
 export async function updateTask(taskData: IKanbanTask) {
-  /**
-   * Work on server
-   */
   // const data = { taskData };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'update-task' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
@@ -294,7 +254,6 @@ export async function updateTask(taskData: IKanbanTask) {
         // add task in board.tasks
         [taskData.id]: taskData,
       }
-
       return {
         ...currentData,
         board: {
@@ -308,12 +267,10 @@ export async function updateTask(taskData: IKanbanTask) {
 }
 
 export async function moveTask(updateColumns: Record<string, IKanbanColumn>) {
-  /**
-   * Work in local
-   */
+  /* @ts-ignore */
   mutate(
     URL,
-    (currentData) => {
+    (currentData: { board: IKanban }) => {
       const board = currentData.board as IKanban
 
       // update board.columns
@@ -330,23 +287,14 @@ export async function moveTask(updateColumns: Record<string, IKanbanColumn>) {
     false
   )
 
-  /**
-   * Work on server
-   */
   // const data = { updateColumns };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-task' } });
 }
 
 export async function deleteTask(columnId: string, taskId: string) {
-  /**
-   * Work on server
-   */
   // const data = { columnId, taskId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-task' } });
 
-  /**
-   * Work in local
-   */
   mutate(
     URL,
     (currentData: any) => {
@@ -361,8 +309,7 @@ export async function deleteTask(columnId: string, taskId: string) {
         ...board.columns,
         [column.id]: {
           ...column,
-          // delete tasks in column
-          taskIds: column.taskIds.filter((id: string) => id !== taskId),
+          // delete tasks in column          taskIds: column.taskIds.filter((id: string) => id !== taskId),
         },
       }
 
