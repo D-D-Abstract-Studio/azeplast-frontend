@@ -1,15 +1,6 @@
-export type IKanbanComment = {
-  id: string
-  name: string
-  message: string
-  createdAt: Date
-}
-
 export type IKanbanAssignee = {
   id: string
   name: string
-  role: string
-  email: string
 }
 
 export type IKanbanTask = {
@@ -17,7 +8,6 @@ export type IKanbanTask = {
   name: string
   status: string
   priority: string
-  labels: string[]
   description?: string
   assignee: IKanbanAssignee[]
   due: [Date | null, Date | null]

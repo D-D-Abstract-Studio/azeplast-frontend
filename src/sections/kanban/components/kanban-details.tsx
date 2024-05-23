@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 import { styled, alpha } from '@mui/material/styles'
-import Chip from '@mui/material/Chip'
+
 import Stack from '@mui/material/Stack'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
@@ -24,8 +24,6 @@ import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
-
-import { getRandomNumber } from '@/utils/get-random-number'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -179,20 +177,8 @@ export default function KanbanDetails({
             </Stack>
           </Stack>
 
-          <Stack direction="row">
-            <StyledLabel sx={{ height: 24, lineHeight: '24px' }}>Labels</StyledLabel>
-
-            {!!task.labels.length && (
-              <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                {task.labels.map((label) => (
-                  <Chip key={label} color="info" label={label} size="small" variant="soft" />
-                ))}
-              </Stack>
-            )}
-          </Stack>
-
           <Stack direction="row" alignItems="center">
-            <StyledLabel> Due date </StyledLabel>
+            <StyledLabel>Data de vencimento</StyledLabel>
 
             {rangePicker.selected ? (
               <Button size="small" onClick={rangePicker.onOpen}>
@@ -227,13 +213,13 @@ export default function KanbanDetails({
           </Stack>
 
           <Stack direction="row" alignItems="center">
-            <StyledLabel>Priority</StyledLabel>
+            <StyledLabel>Prioridade</StyledLabel>
 
             <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
           </Stack>
 
           <Stack direction="row">
-            <StyledLabel> Description </StyledLabel>
+            <StyledLabel>Descrição </StyledLabel>
 
             <TextField
               fullWidth
