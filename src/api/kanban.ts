@@ -11,29 +11,22 @@ export async function createColumn(columnData: IKanbanColumn) {
 
   console.log(columnData)
 
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-
-      console.log(board)
-
+    (currentData) => {
       const columns = {
-        ...board.columns,
+        ...currentData?.columns,
         // add new column in board.columns
         [columnData.id]: columnData,
       }
 
       // add new column in board.ordered
-      const ordered = [...board.ordered, columnData.id]
+      const ordered = [...(currentData?.ordered ?? []), columnData.id]
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-          ordered,
-        },
+        tasks: currentData?.tasks || {},
+        columns,
+        ordered,
       }
     },
     false
@@ -44,29 +37,25 @@ export async function updateColumn(columnId: string, columnName: string) {
   // const data = { columnId, columnName };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'update-column' } });
 
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-
+    (currentData) => {
       // current column
-      const column = board.columns[columnId]
+      const column = currentData?.columns[columnId]
 
       const columns = {
-        ...board.columns,
+        ...currentData?.columns,
         // update column in board.columns
-        [column.id]: {
+        [column?.id || '']: {
           ...column,
           name: columnName,
         },
-      }
+      } as Record<string, IKanbanColumn>
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-        },
+        columns,
+        tasks: currentData?.tasks || {},
+        ordered: currentData?.ordered || [],
       }
     },
     false
@@ -74,20 +63,16 @@ export async function updateColumn(columnId: string, columnName: string) {
 }
 
 export async function moveColumn(newOrdered: string[]) {
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-
+    (currentData) => {
       // update ordered in board.ordered
       const ordered = newOrdered
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          ordered,
-        },
+        tasks: currentData?.tasks || {},
+        columns: currentData?.columns || {},
+        ordered,
       }
     },
     false
@@ -104,7 +89,6 @@ export async function deleteColumn(columnId: string) {
   mutate<IKanban>(
     URL,
     (currentData) => {
-      console.log(currentData)
       // current column
       const column = currentData?.columns[columnId]
 
@@ -120,8 +104,6 @@ export async function deleteColumn(columnId: string) {
       const boardOrdered = currentData?.ordered.filter((id: string) => id !== columnId)
 
       return {
-        ...currentData,
-        ...boardOrdered,
         columns: currentData?.columns || {},
         tasks: currentData?.tasks || {},
         ordered: boardOrdered || [],
@@ -198,21 +180,16 @@ export async function updateTask(taskData: IKanbanTask) {
 }
 
 export async function moveTask(updateColumns: Record<string, IKanbanColumn>) {
-  /* @ts-ignore */
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: { board: IKanban }) => {
-      const board = currentData.board as IKanban
-
+    (currentData) => {
       // update board.columns
       const columns = updateColumns
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-        },
+        columns,
+        tasks: currentData?.tasks || {},
+        ordered: currentData?.ordered || [],
       }
     },
     false
@@ -226,34 +203,28 @@ export async function deleteTask(columnId: string, taskId: string) {
   // const data = { columnId, taskId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-task' } });
 
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-
-      const { tasks } = board
-
+    (currentData) => {
       // current column
-      const column = board.columns[columnId]
+      const column = currentData?.columns[columnId]
 
       const columns = {
-        ...board.columns,
-        [column.id]: {
+        ...currentData?.columns,
+        [column?.id || '']: {
           ...column,
-          // delete tasks in column          taskIds: column.taskIds.filter((id: string) => id !== taskId),
-        },
+          // delete tasks in column
+          taskIds: column?.taskIds.filter((id: string) => id !== taskId),
+        } as IKanbanColumn,
       }
 
       // delete tasks in board.tasks
-      delete tasks[taskId]
+      delete currentData?.tasks[taskId]
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-          tasks,
-        },
+        columns,
+        tasks: currentData?.tasks || {},
+        ordered: currentData?.ordered || [],
       }
     },
     false
