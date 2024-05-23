@@ -32,11 +32,7 @@ export default function KanbanDetailsPriority({ priority, onChangePriority }: Pr
           }}
         >
           <Iconify
-            icon={
-              (option === 'low' && 'solar:double-alt-arrow-down-bold-duotone') ||
-              (option === 'medium' && 'solar:double-alt-arrow-right-bold-duotone') ||
-              'solar:double-alt-arrow-up-bold-duotone'
-            }
+            icon="solar:double-alt-arrow-down-bold-duotone"
             sx={{
               mr: 0.5,
               ...(option === 'low' && {

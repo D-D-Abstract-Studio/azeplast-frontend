@@ -8,6 +8,7 @@ export type IKanbanTask = {
   name: string
   status: string
   priority: string
+  categories: string[]
   description?: string
   assignee: IKanbanAssignee[]
   due: [Date | null, Date | null]

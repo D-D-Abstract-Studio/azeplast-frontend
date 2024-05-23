@@ -20,8 +20,10 @@ import { IKanbanAssignee } from '@/types/kanban'
 import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import SearchNotFound from '@/components/search-not-found'
-import { COLORS } from '../../../constants/config'
-import { getRandomNumber } from '../../../utils/get-random-number'
+
+import { COLORS } from '@/constants/config'
+
+import { getRandomNumber } from '@/utils/get-random-number'
 
 const ITEM_HEIGHT = 64
 

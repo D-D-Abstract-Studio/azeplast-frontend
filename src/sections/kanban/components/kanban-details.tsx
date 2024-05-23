@@ -23,7 +23,7 @@ import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
-import { Box, Typography } from '@mui/material'
+import { Autocomplete, Box, Chip, Typography } from '@mui/material'
 import { ConfirmDialog } from '../../../components/custom-dialog'
 
 const StyledLabel = styled('span')(({ theme }) => ({
@@ -222,6 +222,58 @@ export default function KanbanDetails({
             <StyledLabel>Prioridade</StyledLabel>
 
             <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
+          </Stack>
+
+          <Stack direction="row" alignItems="center">
+            <StyledLabel>Categorias</StyledLabel>
+
+            <Autocomplete
+              multiple
+              fullWidth
+              options={[
+                'Gestão',
+                'Informática',
+                'Logística',
+                'Financeiro',
+                'Comercial',
+                'Marketing',
+              ]}
+              renderInput={(params) => (
+                <TextField {...params} label="Categorias" placeholder="Digite para adicionar" />
+              )}
+              onChange={(_, newValue) => {
+                console.log(newValue)
+              }}
+              filterOptions={(options, params) => {
+                const filtered = options.filter((option) =>
+                  option.toLowerCase().includes(params.inputValue.toLowerCase())
+                )
+
+                if (params.inputValue !== '') {
+                  filtered.push(params.inputValue)
+                }
+
+                return filtered
+              }}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    variant="outlined"
+                    label={option}
+                    color="default"
+                    {...getTagProps({ index })}
+                    sx={{
+                      borderColor: 'background.neutral',
+                      backgroundColor: 'background.neutral',
+                      borderRadius: 1,
+                      alignItems: 'center',
+                    }}
+                    deleteIcon={<Iconify icon="eva:close-fill" />}
+                    key={Math.random()}
+                  />
+                ))
+              }
+            />
           </Stack>
 
           <Stack direction="row">
