@@ -4,7 +4,7 @@ import { m } from 'framer-motion'
 
 import { forwardRef, ReactNode } from 'react'
 
-import { Box, Fab, Tooltip } from '@/components/mui'
+import { Box, Fab, Tooltip } from '@mui/material'
 
 import NextLink from 'next/link'
 
@@ -25,7 +25,20 @@ interface Props extends Omit<FabProps, 'color'> {
 }
 
 export const FabButtonAnimate = forwardRef<HTMLButtonElement, Props>(
-  ({ color = 'primary', size = 'large', children, href, sx, sxWrap, title = 'novo', permission, ...other }, ref) => {
+  (
+    {
+      color = 'primary',
+      size = 'large',
+      children,
+      href,
+      sx,
+      sxWrap,
+      title = 'novo',
+      permission,
+      ...other
+    },
+    ref
+  ) => {
     const theme = useTheme()
     const { havePermission, readOnly } = useAuth() || {}
     if (!havePermission) return null
@@ -36,7 +49,12 @@ export const FabButtonAnimate = forwardRef<HTMLButtonElement, Props>(
       return null
     }
 
-    if (color === 'default' || color === 'inherit' || color === 'primary' || color === 'secondary') {
+    if (
+      color === 'default' ||
+      color === 'inherit' ||
+      color === 'primary' ||
+      color === 'secondary'
+    ) {
       return (
         <AnimateWrap {...animateProps}>
           <Fab ref={ref} size={size} color={color} sx={sx} {...other}>
@@ -56,9 +74,9 @@ export const FabButtonAnimate = forwardRef<HTMLButtonElement, Props>(
             color: theme.palette[color].contrastText,
             bgcolor: theme.palette[color].main,
             '&:hover': {
-              bgcolor: theme.palette[color].dark
+              bgcolor: theme.palette[color].dark,
             },
-            ...sx
+            ...sx,
           }}
           {...other}
         >
@@ -79,17 +97,17 @@ type AnimateWrapProp = {
 
 const varSmall = {
   hover: { scale: 1.07 },
-  tap: { scale: 0.97 }
+  tap: { scale: 0.97 },
 }
 
 const varMedium = {
   hover: { scale: 1.06 },
-  tap: { scale: 0.98 }
+  tap: { scale: 0.98 },
 }
 
 const varLarge = {
   hover: { scale: 1.05 },
-  tap: { scale: 0.99 }
+  tap: { scale: 0.99 },
 }
 
 function AnimateWrap({ size, href, sxWrap, title, ...rest }: AnimateWrapProp) {
@@ -104,7 +122,7 @@ function AnimateWrap({ size, href, sxWrap, title, ...rest }: AnimateWrapProp) {
       variants={(isSmall && varSmall) || (isLarge && varLarge) || varMedium}
       sx={{
         display: 'inline-flex',
-        ...sxWrap
+        ...sxWrap,
       }}
     >
       {rest.children}

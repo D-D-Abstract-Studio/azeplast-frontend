@@ -3,7 +3,7 @@
 import { m } from 'framer-motion'
 import { forwardRef, ReactNode } from 'react'
 
-import { Box, IconButton } from '@/components/mui'
+import { Box, IconButton } from '@mui/material'
 
 import { IconButtonProps } from '@mui/material'
 
@@ -26,17 +26,17 @@ type AnimateWrapProp = {
 
 const varSmall = {
   hover: { scale: 1.1 },
-  tap: { scale: 0.95 }
+  tap: { scale: 0.95 },
 }
 
 const varMedium = {
   hover: { scale: 1.09 },
-  tap: { scale: 0.97 }
+  tap: { scale: 0.97 },
 }
 
 const varLarge = {
   hover: { scale: 1.08 },
-  tap: { scale: 0.99 }
+  tap: { scale: 0.99 },
 }
 
 function AnimateWrap({ size, children }: AnimateWrapProp) {

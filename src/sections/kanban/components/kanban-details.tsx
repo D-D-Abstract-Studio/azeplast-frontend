@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
-import Divider from '@mui/material/Divider'
+
 import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
@@ -19,11 +19,12 @@ import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import CustomDateRangePicker, { useDateRangePicker } from '@/components/custom-date-range-picker'
 import KanbanInputName from './kanban-input-name'
-import KanbanDetailsToolbar from './kanban-details-toolbar'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
+import { Typography } from '@mui/material'
+import { ConfirmDialog } from '../../../components/custom-dialog'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -48,6 +49,8 @@ export default function KanbanDetails({
   onUpdateTask,
   onDeleteTask,
 }: Props) {
+  const confirm = useBoolean()
+
   const [priority, setPriority] = useState(task.priority)
 
   const [taskName, setTaskName] = useState(task.name)
@@ -88,6 +91,11 @@ export default function KanbanDetails({
     setPriority(newValue)
   }, [])
 
+  const onDelete = useCallback(() => {
+    onDeleteTask()
+    onCloseDetails()
+  }, [confirm, onDeleteTask])
+
   return (
     <Drawer
       open={openDetails}
@@ -105,15 +113,6 @@ export default function KanbanDetails({
         },
       }}
     >
-      <KanbanDetailsToolbar
-        taskName={task.name}
-        onDelete={onDeleteTask}
-        taskStatus={task.status}
-        onCloseDetails={onCloseDetails}
-      />
-
-      <Divider />
-
       <Scrollbar
         sx={{
           height: 1,
@@ -232,8 +231,32 @@ export default function KanbanDetails({
               }}
             />
           </Stack>
+
+          <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
+            <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+              <Typography variant="caption">Delete</Typography>
+
+              <Iconify icon="solar:trash-bin-trash-bold" />
+            </Stack>
+          </Button>
         </Stack>
       </Scrollbar>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {taskName} </strong>?
+          </>
+        }
+        action={
+          <Button variant="contained" color="error" onClick={onDelete}>
+            Delete
+          </Button>
+        }
+      />
     </Drawer>
   )
 }

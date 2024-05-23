@@ -1,5 +1,3 @@
-
-
 import { HOST_API } from '@/constants/config'
 
 import axiosInstance, { AxiosResponse, AxiosRequestConfig } from 'axios'
@@ -31,7 +29,7 @@ export const serverColorsError = (status: number) => {
     500: 'error',
     502: 'error',
     503: 'error',
-    504: 'error'
+    504: 'error',
   }
 
   return statusColor[status]
@@ -39,19 +37,23 @@ export const serverColorsError = (status: number) => {
 
 const axios = axiosInstance.create({
   timeout: 60 * 1000, // 1 minute
-  timeoutErrorMessage: 'Tempo limite excedido. Verifique sua conexão com a internet e tente novamente.',
-  baseURL: HOST_API
+  timeoutErrorMessage:
+    'Tempo limite excedido. Verifique sua conexão com a internet e tente novamente.',
+  baseURL: HOST_API,
 })
 
 axios.interceptors.response.use(
-  response => response,
+  (response) => response,
   ({ response }) => {
     const responseAxios = response as AxiosResponse<ErrorAPI> | undefined
 
     const textDefault = 'Verifique sua conexão com a internet e tente novamente.'
 
     const message = responseAxios?.data.errors?.map((error: string = textDefault) => {
-      enqueueSnackbar(error, { variant: serverColorsError(responseAxios?.status ?? 500), preventDuplicate: true })
+      enqueueSnackbar(error, {
+        variant: serverColorsError(responseAxios?.status ?? 500),
+        preventDuplicate: true,
+      })
 
       return error
     }) || [textDefault]
@@ -76,4 +78,3 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
   return res.data
 }
-

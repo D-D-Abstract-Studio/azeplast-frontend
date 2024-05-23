@@ -15,26 +15,26 @@ export const varFlip = (props?: VariantsType) => {
       animate: {
         rotateX: 0,
         opacity: 1,
-        transition: varTranEnter({ durationIn, easeIn })
+        transition: varTranEnter({ durationIn, easeIn }),
       },
       exit: {
         rotateX: -180,
         opacity: 0,
-        transition: varTranExit({ durationOut, easeOut })
-      }
+        transition: varTranExit({ durationOut, easeOut }),
+      },
     },
     inY: {
       initial: { rotateY: -180, opacity: 0 },
       animate: {
         rotateY: 0,
         opacity: 1,
-        transition: varTranEnter({ durationIn, easeIn })
+        transition: varTranEnter({ durationIn, easeIn }),
       },
       exit: {
         rotateY: -180,
         opacity: 0,
-        transition: varTranExit({ durationOut, easeOut })
-      }
+        transition: varTranExit({ durationOut, easeOut }),
+      },
     },
 
     // OUT
@@ -43,16 +43,16 @@ export const varFlip = (props?: VariantsType) => {
       animate: {
         rotateX: 70,
         opacity: 0,
-        transition: varTranExit({ durationOut, easeOut })
-      }
+        transition: varTranExit({ durationOut, easeOut }),
+      },
     },
     outY: {
       initial: { rotateY: 0, opacity: 1 },
       animate: {
         rotateY: 70,
         opacity: 0,
-        transition: varTranExit({ durationOut, easeOut })
-      }
-    }
+        transition: varTranExit({ durationOut, easeOut }),
+      },
+    },
   }
 }

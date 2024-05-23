@@ -2,7 +2,7 @@
 
 import { m, MotionProps } from 'framer-motion'
 
-import { Box } from '@/components/mui'
+import { Box } from '@mui/material'
 //
 import { varFade } from './variants'
 import { BoxProps } from '@mui/material'
@@ -21,7 +21,7 @@ export default function TextAnimate({ text, variants, sx, ...other }: TextAnimat
         typography: 'h1',
         overflow: 'hidden',
         display: 'inline-flex',
-        ...sx
+        ...sx,
       }}
       {...other}
     >
