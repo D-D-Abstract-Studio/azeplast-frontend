@@ -13,30 +13,21 @@ const options = {
   revalidateOnReconnect: false,
 }
 
-const defualtBoard: IKanban = {
-  tasks: {},
-  columns: {},
-  ordered: [],
-}
-
-export function useGetBoard() {
-  const {
-    data = defualtBoard,
-    isLoading,
-    error,
-    isValidating,
-  } = useSWR<IKanban>(URL, fetcher, options)
+export const useGetBoard = () => {
+  const { data, isLoading, error, isValidating } = useSWR<{ board: IKanban }>(URL, fetcher, options)
 
   const memoizedValue = useMemo(
     () => ({
-      board: data,
+      board: data?.board as IKanban,
       boardLoading: isLoading,
       boardError: error,
       boardValidating: isValidating,
-      boardEmpty: !isLoading && Boolean(data?.ordered?.length),
+      boardEmpty: !isLoading && Boolean(!data?.board?.ordered?.length),
     }),
-    [data, error, isLoading, isValidating]
+    [data?.board, error, isLoading, isValidating]
   )
+
+  console.log(memoizedValue)
 
   return memoizedValue
 }

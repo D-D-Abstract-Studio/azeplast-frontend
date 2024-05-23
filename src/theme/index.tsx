@@ -6,13 +6,12 @@ import { useMemo } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider as MuiThemeProvider, ThemeOptions } from '@mui/material/styles'
 
-// system
 import { palette } from './palette'
 import { shadows } from './shadows'
 import { typography } from './typography'
 import { customShadows } from './custom-shadows'
 import { componentsOverrides } from './overrides'
-// options
+
 import { presets } from './options/presets'
 import { darkMode } from './options/dark-mode'
 import { contrast } from './options/contrast'
