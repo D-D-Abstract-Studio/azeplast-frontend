@@ -1,8 +1,12 @@
 type Id = string | number
 
+const user = localStorage.getItem('userName') || 'anonymous'
+
+const urlEndpointsParams = new URLSearchParams({ user }).toString()
+
 export const endpoints = {
   kanban: {
-    getAllTasks: '/tasks',
+    getAllTasks: `/tasks?${urlEndpointsParams}`,
     createTask: '/tasks',
     archiveTask: (id: Id) => `/tasks/${id}/archive`,
     getTask: (id: Id) => `/tasks/${id}`,

@@ -111,7 +111,7 @@ export async function clearColumn(columnId: string) {
       const column = board.columns[columnId]
 
       // delete tasks in board.tasks
-      column.taskIds.forEach((key: string) => {
+      column.taskIds?.forEach((key: string) => {
         delete tasks[key]
       })
 
@@ -141,34 +141,30 @@ export async function deleteColumn(columnId: string) {
   // const data = { columnId };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-column' } });
 
-  mutate(
+  mutate<IKanban>(
     URL,
-    (currentData: any) => {
-      const board = currentData.board as IKanban
-
-      const { columns, tasks } = board
+    (currentData) => {
+      console.log(currentData)
       // current column
-      const column = columns[columnId]
+      const column = currentData?.columns[columnId]
 
       // delete column in board.columns
-      delete columns[columnId]
+      delete currentData?.columns[columnId]
 
       // delete tasks in board.tasks
-      column.taskIds.forEach((key: string) => {
-        delete tasks[key]
+      column?.taskIds.forEach((key: string) => {
+        delete currentData?.tasks[key]
       })
 
       // delete column in board.ordered
-      const ordered = board.ordered.filter((id: string) => id !== columnId)
+      const boardOrdered = currentData?.ordered.filter((id: string) => id !== columnId)
 
       return {
         ...currentData,
-        board: {
-          ...board,
-          columns,
-          tasks,
-          ordered,
-        },
+        ...boardOrdered,
+        columns: currentData?.columns || {},
+        tasks: currentData?.tasks || {},
+        ordered: boardOrdered || [],
       }
     },
     false

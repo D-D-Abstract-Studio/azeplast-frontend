@@ -16,7 +16,7 @@ import { IKanbanTask } from '@/types/kanban'
 import { useBoolean } from '@/hooks/use-boolean'
 
 import Iconify from '@/components/iconify'
-import Scrollbar from '@/components/scrollbar'
+
 import CustomDateRangePicker, { useDateRangePicker } from '@/components/custom-date-range-picker'
 import KanbanInputName from './kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
@@ -28,7 +28,7 @@ import { ConfirmDialog } from '../../../components/custom-dialog'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
-  width: 100,
+  width: '100%',
   flexShrink: 0,
   color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightSemiBold,
@@ -113,16 +113,7 @@ export default function KanbanDetails({
         },
       }}
     >
-      <Scrollbar
-        sx={{
-          height: 1,
-          '& .simplebar-content': {
-            height: 1,
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        }}
-      >
+      <Stack direction="column" justifyContent="space-between" sx={{ height: '100%' }}>
         <Stack
           spacing={3}
           sx={{
@@ -145,7 +136,7 @@ export default function KanbanDetails({
             </IconButton>
           </Stack>
 
-          <Stack direction="row" alignItems="center">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Criado por</StyledLabel>
 
             <Avatar alt={task.reporter.name} color="secondary">
@@ -153,7 +144,7 @@ export default function KanbanDetails({
             </Avatar>
           </Stack>
 
-          <Stack direction="row">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel sx={{ height: 40, lineHeight: '40px' }}>Responsáveis</StyledLabel>
 
             <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
@@ -183,26 +174,12 @@ export default function KanbanDetails({
             </Stack>
           </Stack>
 
-          <Stack direction="row" alignItems="center">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Data de vencimento</StyledLabel>
 
-            {rangePicker.selected ? (
-              <Button size="small" onClick={rangePicker.onOpen}>
-                {rangePicker.shortLabel}
-              </Button>
-            ) : (
-              <Tooltip title="Add due date">
-                <IconButton
-                  onClick={rangePicker.onOpen}
-                  sx={{
-                    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-                    border: (theme) => `dashed 1px ${theme.palette.divider}`,
-                  }}
-                >
-                  <Iconify icon="mingcute:add-line" />
-                </IconButton>
-              </Tooltip>
-            )}
+            <Button size="small" onClick={rangePicker.onOpen}>
+              {rangePicker.shortLabel}
+            </Button>
 
             <CustomDateRangePicker
               variant="calendar"
@@ -218,13 +195,13 @@ export default function KanbanDetails({
             />
           </Stack>
 
-          <Stack direction="row" alignItems="center">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Prioridade</StyledLabel>
 
             <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
           </Stack>
 
-          <Stack direction="row" alignItems="center">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Categorias</StyledLabel>
 
             <Autocomplete
@@ -276,7 +253,7 @@ export default function KanbanDetails({
             />
           </Stack>
 
-          <Stack direction="row">
+          <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Descrição </StyledLabel>
 
             <TextField
@@ -291,17 +268,17 @@ export default function KanbanDetails({
             />
           </Stack>
         </Stack>
-      </Scrollbar>
 
-      <Box p={2}>
-        <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
-          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-            <Typography variant="button">Deletar</Typography>
+        <Box p={2} sx={{ borderTop: 1, borderColor: 'divider' }}>
+          <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
+            <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+              <Typography variant="button">Deletar</Typography>
 
-            <Iconify icon="solar:trash-bin-trash-bold" />
-          </Stack>
-        </Button>
-      </Box>
+              <Iconify icon="solar:trash-bin-trash-bold" />
+            </Stack>
+          </Button>
+        </Box>
+      </Stack>
 
       <ConfirmDialog
         open={confirm.value}
