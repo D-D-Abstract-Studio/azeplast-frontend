@@ -12,8 +12,6 @@ import ListItemText from '@mui/material/ListItemText'
 import DialogContent from '@mui/material/DialogContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
-// _mock
-import { _contacts } from '@/_mock'
 
 import { IKanbanAssignee } from '@/types/kanban'
 
@@ -40,8 +38,10 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
     setSearchContact(event.target.value)
   }, [])
 
+  const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
+
   const dataFiltered = applyFilter({
-    inputData: _contacts,
+    inputData: userNames,
     query: searchContact,
   })
 
@@ -50,7 +50,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 0 }}>
-        Contacts <Typography component="span">({_contacts.length})</Typography>
+        Contacts <Typography component="span">({userNames.length})</Typography>
       </DialogTitle>
 
       <Box sx={{ px: 3, py: 2.5 }}>
@@ -79,12 +79,12 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
               height: ITEM_HEIGHT * 6,
             }}
           >
-            {dataFiltered.map((contact) => {
-              const checked = assignee.map((person) => person.name).includes(contact.name)
+            {dataFiltered.map((contact, index) => {
+              const checked = assignee.map((person) => person.name).includes(contact)
 
               return (
                 <ListItem
-                  key={contact.id}
+                  key={index}
                   disableGutters
                   secondaryAction={
                     <Button
@@ -104,11 +104,8 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                   sx={{ height: ITEM_HEIGHT }}
                 >
                   <ListItemAvatar>
-                    <Avatar
-                      alt={contact.name}
-                      color={COLORS[getRandomNumber(0, COLORS.length - 1)]}
-                    >
-                      {contact.name[0].toUpperCase()}
+                    <Avatar alt={contact} color={COLORS[getRandomNumber(0, COLORS.length - 1)]}>
+                      {contact[0].toUpperCase()}
                     </Avatar>
                   </ListItemAvatar>
 
@@ -118,7 +115,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                       sx: { mb: 0.25 },
                     }}
                     secondaryTypographyProps={{ typography: 'caption' }}
-                    primary={contact.name}
+                    primary={contact}
                   />
                 </ListItem>
               )
@@ -130,10 +127,10 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
   )
 }
 
-function applyFilter({ inputData, query }: { inputData: IKanbanAssignee[]; query: string }) {
+function applyFilter({ inputData, query }: { inputData: Array<string>; query: string }) {
   if (query) {
     inputData = inputData.filter(
-      (contact) => contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (contact) => contact.toLowerCase().indexOf(query.toLowerCase()) !== -1
     )
   }
 

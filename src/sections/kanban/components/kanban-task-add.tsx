@@ -22,18 +22,21 @@ export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Pro
   const defaultTask: IKanbanTask = useMemo(
     () => ({
       id: uuidv4(),
-      status,
-      name: name.trim(),
-      priority: 'medium',
-      attachments: [],
-      labels: [],
-      comments: [],
-      assignee: [],
-      due: [null, null],
+      name: name,
+      status: 'todo',
+      priority: 'low',
+      categories: ['frontend'],
+      description: 'Description',
+      assignee: [
+        {
+          id: '1',
+          name: _mock.fullName(2),
+        },
+      ],
+      dueDate: new Date(),
       reporter: {
-        id: _mock.id(16),
-        name: _mock.fullName(16),
-        avatarUrl: _mock.image.avatar(16),
+        id: '1',
+        name: 'John Doe',
       },
     }),
     [name, status]
