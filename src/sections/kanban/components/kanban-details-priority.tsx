@@ -19,9 +19,7 @@ export default function KanbanDetailsPriority({ priority, onChangePriority }: Pr
           key={option}
           onClick={() => onChangePriority(option)}
           sx={{
-            py: 0.5,
-            pl: 0.75,
-            pr: 1.25,
+            p: 1,
             fontSize: 12,
             borderRadius: 1,
             lineHeight: '20px',
@@ -34,7 +32,7 @@ export default function KanbanDetailsPriority({ priority, onChangePriority }: Pr
           }}
         >
           <Iconify
-            icon="solar:double-alt-arrow-down-bold-duotone"
+            icon="line-md:circle-twotone"
             sx={{
               mr: 0.5,
               ...(option === 'baixa' && {

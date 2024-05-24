@@ -23,7 +23,7 @@ export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Pro
       id: uuidv4(),
       name,
       priority: 'baixa',
-      description: 'Description',
+      description: '',
       categories: [],
       assignee: [],
       dueDate: new Date(),

@@ -87,7 +87,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                   disableGutters
                   secondaryAction={
                     <Button
-                      size="small"
+                      variant="outlined"
                       color={checked ? 'primary' : 'inherit'}
                       startIcon={
                         <Iconify

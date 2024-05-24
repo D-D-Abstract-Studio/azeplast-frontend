@@ -128,7 +128,7 @@ export default function KanbanDetails({
           <Stack direction="row" alignItems="center" spacing={1}>
             <KanbanInputName
               fullWidth
-              placeholder="Task name"
+              placeholder="Nome da tarefa"
               value={taskName}
               onChange={handleChangeTaskName}
               onKeyUp={handleUpdateTask}
@@ -157,7 +157,7 @@ export default function KanbanDetails({
                 </Avatar>
               ))}
 
-              <Tooltip title="Add assignee">
+              <Tooltip title="Adicionar responsável" arrow>
                 <IconButton
                   onClick={contacts.onTrue}
                   sx={{
