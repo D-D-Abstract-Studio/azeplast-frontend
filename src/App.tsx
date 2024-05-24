@@ -20,7 +20,7 @@ export const App = () => {
         themeDirection: 'ltr',
         themeContrast: 'default',
         themeLayout: 'vertical',
-        themeColorPresets: 'default',
+        themeColorPresets: 'purple',
         themeStretch: false,
       }}
     >
