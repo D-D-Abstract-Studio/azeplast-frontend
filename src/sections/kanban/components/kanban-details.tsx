@@ -138,8 +138,8 @@ export default function KanbanDetails({
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Criado por</StyledLabel>
 
-            <Avatar alt={task.reporter.name} color="secondary">
-              {task.reporter.name[0].toUpperCase()}
+            <Avatar alt={task.reporter.user} color="secondary">
+              {task?.reporter?.user?.[0].toUpperCase()}
             </Avatar>
           </Stack>
 
@@ -149,7 +149,7 @@ export default function KanbanDetails({
             <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
               {task.assignee.map((user, index) => (
                 <Avatar alt={user.name} key={index} color={COLORS[index]}>
-                  {user.name[0].toUpperCase()}
+                  {user.name?.[0].toUpperCase()}
                 </Avatar>
               ))}
 
@@ -194,57 +194,55 @@ export default function KanbanDetails({
             <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
           </Stack>
 
-          <Stack direction="column" alignItems="left" spacing={1}>
-            <StyledLabel>Categorias</StyledLabel>
+          <Autocomplete
+            multiple
+            fullWidth
+            options={[
+              'Gestão',
+              'Informática',
+              'Logística',
+              'Financeiro',
+              'Comercial',
+              'Marketing',
+              ...task.categories,
+            ]}
+            defaultValue={task.categories}
+            renderInput={(params) => (
+              <TextField {...params} label="Categorias" placeholder="Digite para adicionar" />
+            )}
+            onChange={(_, newValue) => {
+              console.log(newValue)
+            }}
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.toLowerCase().includes(params.inputValue.toLowerCase())
+              )
 
-            <Autocomplete
-              multiple
-              fullWidth
-              options={[
-                'Gestão',
-                'Informática',
-                'Logística',
-                'Financeiro',
-                'Comercial',
-                'Marketing',
-              ]}
-              renderInput={(params) => (
-                <TextField {...params} label="Categorias" placeholder="Digite para adicionar" />
-              )}
-              onChange={(_, newValue) => {
-                console.log(newValue)
-              }}
-              filterOptions={(options, params) => {
-                const filtered = options.filter((option) =>
-                  option.toLowerCase().includes(params.inputValue.toLowerCase())
-                )
-
-                if (params.inputValue !== '') {
-                  filtered.push(params.inputValue)
-                }
-
-                return filtered
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    variant="outlined"
-                    label={option}
-                    color="default"
-                    {...getTagProps({ index })}
-                    sx={{
-                      borderColor: 'background.neutral',
-                      backgroundColor: 'background.neutral',
-                      borderRadius: 1,
-                      alignItems: 'center',
-                    }}
-                    deleteIcon={<Iconify icon="eva:close-fill" />}
-                    key={Math.random()}
-                  />
-                ))
+              if (params.inputValue !== '') {
+                filtered.push(params.inputValue)
               }
-            />
-          </Stack>
+
+              return filtered
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  variant="outlined"
+                  label={option}
+                  color="default"
+                  {...getTagProps({ index })}
+                  sx={{
+                    borderColor: 'background.neutral',
+                    backgroundColor: 'background.neutral',
+                    borderRadius: 1,
+                    alignItems: 'center',
+                  }}
+                  deleteIcon={<Iconify icon="eva:close-fill" />}
+                  key={Math.random()}
+                />
+              ))
+            }
+          />
 
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Descrição </StyledLabel>

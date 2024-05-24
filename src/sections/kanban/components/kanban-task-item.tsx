@@ -105,9 +105,9 @@ export default function KanbanTaskItem({
                     },
                   }}
                 >
-                  {task.assignee.map((user, index) => (
+                  {task?.assignee?.map((user, index) => (
                     <Avatar alt={user.name} key={index} color={COLORS[index]}>
-                      {user.name[0].toUpperCase()}
+                      {user?.name?.[0].toUpperCase()}
                     </Avatar>
                   ))}
                 </AvatarGroup>

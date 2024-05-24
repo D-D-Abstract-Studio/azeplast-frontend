@@ -160,7 +160,7 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
                     width: 280,
                   }}
                 >
-                  {column.taskIds.map((taskId, taskIndex) => (
+                  {column?.taskIds.map((taskId, taskIndex) => (
                     <KanbanTaskItem
                       key={taskId}
                       index={taskIndex}

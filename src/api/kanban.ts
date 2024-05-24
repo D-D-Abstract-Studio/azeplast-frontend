@@ -117,16 +117,14 @@ export async function createTask(columnId: string, taskData: IKanbanTask) {
   // const data = { columnId, taskData };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-task' } });
 
-  mutate(
+  mutate<IKanban>(
     URL,
     (currentData: any) => {
-      const board = currentData.board as IKanban
-
       // current column
-      const column = board.columns[columnId]
+      const column = currentData?.columns[columnId]
 
       const columns = {
-        ...board.columns,
+        ...currentData?.columns,
         [columnId]: {
           ...column,
           // add task in column
@@ -136,17 +134,14 @@ export async function createTask(columnId: string, taskData: IKanbanTask) {
 
       // add task in board.tasks
       const tasks = {
-        ...board.tasks,
+        ...currentData?.tasks,
         [taskData.id]: taskData,
       }
 
       return {
-        ...currentData,
-        board: {
-          ...board,
-          columns,
-          tasks,
-        },
+        columns,
+        tasks,
+        ordered: currentData?.ordered || [],
       }
     },
     false

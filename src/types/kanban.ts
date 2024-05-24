@@ -1,20 +1,16 @@
-export type IKanbanAssignee = {
-  id: string
-  name: string
-}
-
 export type IKanbanTask = {
   id: string
   name: string
   status: string
   priority: string
   categories: string[]
-  description?: string
-  assignee: IKanbanAssignee[]
+  description: string
+  assignee: Array<{
+    name?: string
+  }>
   dueDate: Date
   reporter: {
-    id: string
-    name: string
+    user: string
   }
 }
 

@@ -1,6 +1,6 @@
 type Id = string | number
 
-const user = localStorage.getItem('userName') || 'anonymous'
+export const user = localStorage.getItem('userName') || 'anonymous'
 
 const urlEndpointsParams = new URLSearchParams({ user }).toString()
 
