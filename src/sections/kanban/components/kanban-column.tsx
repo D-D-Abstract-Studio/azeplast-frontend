@@ -17,6 +17,7 @@ import KanbanTaskAdd from './kanban-task-add'
 import KanbanTaskItem from './kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
 import { useSnackbar } from 'notistack'
+import { Box } from '@mui/material'
 
 type Props = Pick<IKanban, 'tasks'> & {
   column: IKanbanColumn
@@ -93,40 +94,6 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
     [column.id, enqueueSnackbar]
   )
 
-  const renderAddTask = (
-    <Stack
-      spacing={2}
-      sx={{
-        pb: 3,
-      }}
-    >
-      {openAddTask.value && (
-        <KanbanTaskAdd
-          status={column.name}
-          onAddTask={handleAddTask}
-          onCloseAddTask={openAddTask.onFalse}
-        />
-      )}
-
-      <Button
-        fullWidth
-        size="large"
-        color="inherit"
-        startIcon={
-          <Iconify
-            icon={openAddTask.value ? 'solar:close-circle-broken' : 'mingcute:add-line'}
-            width={18}
-            sx={{ mr: -0.5 }}
-          />
-        }
-        onClick={openAddTask.onToggle}
-        sx={{ fontSize: 14 }}
-      >
-        {openAddTask.value ? 'Close' : 'Add Task'}
-      </Button>
-    </Stack>
-  )
-
   return (
     <Draggable draggableId={column.id} index={index}>
       {(provided, snapshot) => (
@@ -142,39 +109,64 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
             }),
           }}
         >
-          <Stack {...provided.dragHandleProps}>
+          <Stack {...provided.dragHandleProps} spacing={2}>
             <KanbanColumnToolBar
               columnName={column.name}
               onUpdateColumn={handleUpdateColumn}
               onDeleteColumn={handleDeleteColumn}
             />
 
-            <Droppable droppableId={column.id} type="TASK">
-              {(dropProvided) => (
-                <Stack
-                  ref={dropProvided.innerRef}
-                  {...dropProvided.droppableProps}
-                  spacing={2}
-                  sx={{
-                    py: 3,
-                    width: 280,
-                  }}
-                >
-                  {column?.taskIds.map((taskId, taskIndex) => (
-                    <KanbanTaskItem
-                      key={taskId}
-                      index={taskIndex}
-                      task={tasks[taskId]}
-                      onUpdateTask={handleUpdateTask}
-                      onDeleteTask={() => handleDeleteTask(taskId)}
-                    />
-                  ))}
-                  {dropProvided.placeholder}
-                </Stack>
-              )}
-            </Droppable>
+            <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 210px)' }}>
+              <Droppable droppableId={column.id} type="TASK">
+                {(dropProvided) => (
+                  <Stack ref={dropProvided.innerRef} {...dropProvided.droppableProps} spacing={2}>
+                    {column?.taskIds.map((taskId, taskIndex) => (
+                      <KanbanTaskItem
+                        key={taskId}
+                        index={taskIndex}
+                        task={tasks[taskId]}
+                        onUpdateTask={handleUpdateTask}
+                        onDeleteTask={() => handleDeleteTask(taskId)}
+                      />
+                    ))}
 
-            {renderAddTask}
+                    {openAddTask.value && (
+                      <KanbanTaskAdd
+                        status={column.name}
+                        onAddTask={handleAddTask}
+                        onCloseAddTask={openAddTask.onFalse}
+                      />
+                    )}
+                    {dropProvided.placeholder}
+                  </Stack>
+                )}
+              </Droppable>
+            </Box>
+
+            <Button
+              fullWidth
+              size="large"
+              variant="contained"
+              startIcon={
+                <Iconify
+                  icon={openAddTask.value ? 'solar:close-circle-broken' : 'mingcute:add-line'}
+                  width={18}
+                  sx={{ mr: -0.5 }}
+                />
+              }
+              onClick={openAddTask.onToggle}
+              sx={{
+                mb: 2,
+                fontSize: 14,
+                backgroundColor: '#363e48',
+                color: 'text.primary',
+                '&:hover': {
+                  backgroundColor: 'grey.700',
+                },
+              }}
+            >
+              {openAddTask.value ? 'Cancelar' : 'Add Tarefa'}
+            </Button>
           </Stack>
         </Paper>
       )}

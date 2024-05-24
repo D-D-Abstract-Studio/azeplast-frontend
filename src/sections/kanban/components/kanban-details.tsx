@@ -23,9 +23,12 @@ import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
-import { Autocomplete, Box, Chip, Typography } from '@mui/material'
-import { ConfirmDialog } from '../../../components/custom-dialog'
+import { Autocomplete, Box, Chip, Typography, useTheme } from '@mui/material'
+
+import { ConfirmDialog } from '@/components/custom-dialog'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
+
+import { paper } from '@/theme/css'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -50,6 +53,7 @@ export default function KanbanDetails({
   onUpdateTask,
   onDeleteTask,
 }: Props) {
+  const theme = useTheme()
   const confirm = useBoolean()
 
   const [priority, setPriority] = useState(task.priority)
@@ -144,7 +148,7 @@ export default function KanbanDetails({
           </Stack>
 
           <Stack direction="column" alignItems="left" spacing={1}>
-            <StyledLabel sx={{ height: 40, lineHeight: '40px' }}>Responsáveis</StyledLabel>
+            <StyledLabel>Responsáveis</StyledLabel>
 
             <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
               {task.assignee.map((user, index) => (
@@ -180,12 +184,7 @@ export default function KanbanDetails({
             onChange={(newValue) => {
               console.log(dayjs(newValue))
             }}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                margin: 'normal',
-              },
-            }}
+            slotProps={{ textField: { fullWidth: true } }}
           />
 
           <Stack direction="column" alignItems="left" spacing={1}>
@@ -250,7 +249,6 @@ export default function KanbanDetails({
             <TextField
               fullWidth
               multiline
-              size="small"
               value={taskDescription}
               onChange={handleChangeTaskDescription}
               InputProps={{
@@ -260,8 +258,18 @@ export default function KanbanDetails({
           </Stack>
         </Stack>
 
-        <Box p={2} sx={{ borderTop: 1, borderColor: 'divider' }}>
-          <Button onClick={confirm.onTrue} variant="contained" color="error" fullWidth>
+        <Box
+          sx={{
+            p: 2,
+            borderTop: 1,
+            borderColor: 'divider',
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 999,
+            ...paper({ theme }),
+          }}
+        >
+          <Button onClick={confirm.onTrue} variant="outlined" color="error" fullWidth>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
               <Typography variant="button">Deletar</Typography>
 

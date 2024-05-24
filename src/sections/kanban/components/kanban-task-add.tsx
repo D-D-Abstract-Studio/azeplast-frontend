@@ -21,8 +21,7 @@ export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Pro
   const defaultTask: IKanbanTask = useMemo(
     () => ({
       id: uuidv4(),
-      name: name,
-      status: 'todo',
+      name,
       priority: 'baixa',
       description: 'Description',
       categories: [],

@@ -55,7 +55,7 @@ export default function KanbanColumnAdd() {
           <TextField
             autoFocus
             fullWidth
-            placeholder="New section"
+            placeholder="Nova Coluna"
             value={columnName}
             onChange={handleChangeName}
             onKeyUp={handleKeyUpCreateColumn}

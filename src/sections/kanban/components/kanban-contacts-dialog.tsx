@@ -14,7 +14,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 
 import Iconify from '@/components/iconify'
-import Scrollbar from '@/components/scrollbar'
+
 import SearchNotFound from '@/components/search-not-found'
 
 import { COLORS, userNames } from '@/constants/config'
@@ -48,7 +48,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 0 }}>
-        Contacts <Typography component="span">({userNames.length})</Typography>
+        Usuários <Typography component="span">({userNames.length})</Typography>
       </DialogTitle>
 
       <Box sx={{ px: 3, py: 2.5 }}>
@@ -71,9 +71,10 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
         {notFound ? (
           <SearchNotFound query={searchContact} sx={{ mt: 3, mb: 10 }} />
         ) : (
-          <Scrollbar
+          <Box
             sx={{
               px: 2.5,
+              overflowY: 'auto',
               height: ITEM_HEIGHT * 6,
             }}
           >
@@ -118,7 +119,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                 </ListItem>
               )
             })}
-          </Scrollbar>
+          </Box>
         )}
       </DialogContent>
     </Dialog>
