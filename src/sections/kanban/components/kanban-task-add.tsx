@@ -9,7 +9,7 @@ import { _mock } from '@/_mock'
 import uuidv4 from '@/utils/uuidv4'
 
 import { IKanbanTask } from '@/types/kanban'
-import { user } from '../../../constants/config'
+import { user } from '@/constants/config'
 
 type Props = {
   status: string
@@ -25,7 +25,7 @@ export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Pro
       id: uuidv4(),
       name: name,
       status: 'todo',
-      priority: 'low',
+      priority: 'baixa',
       categories: ['frontend'],
       description: 'Description',
       assignee: [],

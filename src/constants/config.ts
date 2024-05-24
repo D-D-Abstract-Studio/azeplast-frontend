@@ -2,6 +2,8 @@ type Id = string | number
 
 export const user = localStorage.getItem('userName') || 'anonymous'
 
+export const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
+
 const urlEndpointsParams = new URLSearchParams({ user }).toString()
 
 export const endpoints = {

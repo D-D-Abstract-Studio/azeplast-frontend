@@ -13,22 +13,22 @@ import DialogContent from '@mui/material/DialogContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 
-import { IKanbanAssignee } from '@/types/kanban'
-
 import Iconify from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 import SearchNotFound from '@/components/search-not-found'
 
-import { COLORS } from '@/constants/config'
+import { COLORS, userNames } from '@/constants/config'
 
 import { getRandomNumber } from '@/utils/get-random-number'
+
+import { IKanbanTask } from '@/types/kanban'
 
 const ITEM_HEIGHT = 64
 
 type Props = {
   open: boolean
   onClose: VoidFunction
-  assignee?: IKanbanAssignee[]
+  assignee?: IKanbanTask['assignee']
 }
 
 export default function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
@@ -37,8 +37,6 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
   const handleSearchContacts = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchContact(event.target.value)
   }, [])
-
-  const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
 
   const dataFiltered = applyFilter({
     inputData: userNames,

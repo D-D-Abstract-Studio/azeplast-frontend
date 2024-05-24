@@ -45,13 +45,13 @@ export default function KanbanTaskItem({
         position: 'absolute',
         top: 4,
         right: 4,
-        ...(task.priority === 'low' && {
+        ...(task.priority === 'baixa' && {
           color: 'info.main',
         }),
-        ...(task.priority === 'medium' && {
+        ...(task.priority === 'média' && {
           color: 'warning.main',
         }),
-        ...(task.priority === 'hight' && {
+        ...(task.priority === 'alta' && {
           color: 'error.main',
         }),
       }}

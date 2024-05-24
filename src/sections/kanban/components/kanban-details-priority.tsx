@@ -4,15 +4,17 @@ import ButtonBase from '@mui/material/ButtonBase'
 
 import Iconify from '@/components/iconify'
 
+import { IKanbanTask, priorityValues } from '@/types/kanban'
+
 type Props = {
   priority: string
-  onChangePriority: (newValue: string) => void
+  onChangePriority: (newValue: IKanbanTask['priority']) => void
 }
 
 export default function KanbanDetailsPriority({ priority, onChangePriority }: Props) {
   return (
     <Stack direction="row" flexWrap="wrap" spacing={1}>
-      {['low', 'medium', 'hight'].map((option) => (
+      {priorityValues.map((option) => (
         <ButtonBase
           key={option}
           onClick={() => onChangePriority(option)}
@@ -35,13 +37,13 @@ export default function KanbanDetailsPriority({ priority, onChangePriority }: Pr
             icon="solar:double-alt-arrow-down-bold-duotone"
             sx={{
               mr: 0.5,
-              ...(option === 'low' && {
+              ...(option === 'baixa' && {
                 color: 'info.main',
               }),
-              ...(option === 'medium' && {
+              ...(option === 'média' && {
                 color: 'warning.main',
               }),
-              ...(option === 'hight' && {
+              ...(option === 'alta' && {
                 color: 'error.main',
               }),
             }}

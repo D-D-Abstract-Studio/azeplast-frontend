@@ -86,7 +86,7 @@ export default function KanbanDetails({
     setTaskDescription(event.target.value)
   }, [])
 
-  const handleChangePriority = useCallback((newValue: string) => {
+  const handleChangePriority = useCallback((newValue: IKanbanTask['priority']) => {
     setPriority(newValue)
   }, [])
 
