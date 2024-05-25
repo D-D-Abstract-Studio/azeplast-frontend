@@ -13,13 +13,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { MenuRouter } from './components/menu-router'
 import { Stack } from '@mui/material'
 
-import { SettingsProvider } from './components/settings/context'
-import SettingsDrawer from './components/settings/drawer'
+import { SettingsButton } from './components/settings'
 
 export const App = () => {
   return (
-    <SettingsProvider
-      defaultSettings={{
+    <ThemeProvider
+      settings={{
         themeMode: 'dark',
         themeDirection: 'ltr',
         themeContrast: 'default',
@@ -28,20 +27,18 @@ export const App = () => {
         themeStretch: false,
       }}
     >
-      <ThemeProvider>
-        <MotionLazy>
-          <SnackbarProvider>
-            <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
-              <ProgressBar />
-              <SettingsDrawer />
-              <Stack direction="column" spacing={2}>
-                <MenuRouter />
-                <KanbanView />
-              </Stack>
-            </MuiLocalizationProvider>
-          </SnackbarProvider>
-        </MotionLazy>
-      </ThemeProvider>
-    </SettingsProvider>
+      <MotionLazy>
+        <SnackbarProvider>
+          <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
+            <ProgressBar />
+            <SettingsButton />
+            <Stack direction="column" spacing={2}>
+              <MenuRouter />
+              <KanbanView />
+            </Stack>
+          </MuiLocalizationProvider>
+        </SnackbarProvider>
+      </MotionLazy>
+    </ThemeProvider>
   )
 }

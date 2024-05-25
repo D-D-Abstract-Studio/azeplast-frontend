@@ -76,6 +76,11 @@ export const StyledArrow = styled('span')<{ arrow: MenuPopoverArrowValue }>(({ a
       bottom: 0,
       margin: 'auto',
     }),
+    ...(arrow === 'right-top-right' && {
+      transform: 'rotate(-176deg)',
+      top: 2,
+      right: 0,
+    }),
     ...(arrow === 'right-bottom' && { ...rightStyle, bottom: 20 }),
   }
 })

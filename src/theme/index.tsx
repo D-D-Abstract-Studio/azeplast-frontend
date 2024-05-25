@@ -17,15 +17,22 @@ import { darkMode } from './options/dark-mode'
 import { contrast } from './options/contrast'
 import RTL, { direction } from './options/right-to-left'
 import NextAppDirEmotionCacheProvider from './next-emotion-cache'
-import { useSettingsContext } from '../components/settings/context/settings-context'
+
+type SettingsValueProps = {
+  themeStretch: boolean
+  themeMode: 'light' | 'dark'
+  themeDirection: 'rtl' | 'ltr'
+  themeContrast: 'default' | 'bold'
+  themeLayout: 'vertical' | 'horizontal' | 'mini'
+  themeColorPresets: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+}
 
 type Props = {
   children: React.ReactNode
+  settings: SettingsValueProps
 }
 
-export default function ThemeProvider({ children }: Props) {
-  const settings = useSettingsContext()
-
+export default function ThemeProvider({ children, settings }: Props) {
   const darkModeOption = darkMode(settings.themeMode)
 
   const presetsOption = presets(settings.themeColorPresets)

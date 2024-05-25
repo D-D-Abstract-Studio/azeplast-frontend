@@ -13,6 +13,7 @@ export type MenuPopoverArrowValue =
   | 'right-top'
   | 'right-center'
   | 'right-bottom'
+  | 'right-top-right'
 
 export interface MenuPopoverProps extends Omit<PopoverProps, 'open'> {
   open: HTMLElement | null
