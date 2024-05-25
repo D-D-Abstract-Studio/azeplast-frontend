@@ -7,12 +7,19 @@ import IconButton from '@mui/material/IconButton'
 
 import { Iconify } from '@/components/iconify'
 import { StyledArrow } from '@/components/custom-popover/styles'
-import { SettingsDrawer } from './drawer'
+
+import { DrawerUser } from './drawer'
+
+export type SettingsContextProps = {
+  open: boolean
+  onToggle: VoidFunction
+  onClose: VoidFunction
+}
 
 export const SettingsButton = () => {
   const [openDrawer, setOpenDrawer] = useState(false)
 
-  const settings = {
+  const drawer: SettingsContextProps = {
     open: openDrawer,
     onToggle: () => setOpenDrawer((prev) => !prev),
     onClose: () => setOpenDrawer(false),
@@ -36,12 +43,12 @@ export const SettingsButton = () => {
         }}
       >
         <StyledArrow arrow="right-top-right" />
-        <IconButton component={m.button} onClick={settings.onToggle}>
+        <IconButton component={m.button} onClick={drawer.onToggle}>
           <Iconify icon="solar:settings-bold-duotone" size={2.8} />
         </IconButton>
       </Box>
 
-      <SettingsDrawer settings={settings} />
+      <DrawerUser drawer={drawer} />
     </>
   )
 }

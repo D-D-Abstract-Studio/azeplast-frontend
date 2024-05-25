@@ -12,16 +12,16 @@ import { paper } from '@/theme/css'
 import { Iconify } from '@/components/iconify'
 import Scrollbar from '@/components/scrollbar'
 
-import { SettingsContextProps } from './types'
+import { SettingsContextProps } from '.'
 
-export const SettingsDrawer = ({ settings }: { settings: SettingsContextProps }) => {
+export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const theme = useTheme()
 
   return (
     <Drawer
       anchor="right"
-      open={settings.open}
-      onClose={settings.onClose}
+      open={drawer.open}
+      onClose={drawer.onClose}
       slotProps={{
         backdrop: { invisible: true },
       }}
@@ -42,7 +42,7 @@ export const SettingsDrawer = ({ settings }: { settings: SettingsContextProps })
           Settings
         </Typography>
 
-        <IconButton onClick={settings.onClose}>
+        <IconButton onClick={drawer.onClose}>
           <Iconify icon="mingcute:close-line" />
         </IconButton>
       </Stack>
