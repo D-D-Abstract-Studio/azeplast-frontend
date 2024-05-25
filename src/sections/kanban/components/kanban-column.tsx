@@ -35,9 +35,7 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
         if (column.name !== columnName) {
           updateColumn(column.id, columnName)
 
-          enqueueSnackbar('Update success!', {
-            anchorOrigin: { vertical: 'top', horizontal: 'center' },
-          })
+          enqueueSnackbar('Update success!')
         }
       } catch (error) {
         console.error(error)
@@ -50,9 +48,7 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
     try {
       deleteColumn(column.id)
 
-      enqueueSnackbar('Delete success!', {
-        anchorOrigin: { vertical: 'top', horizontal: 'center' },
-      })
+      enqueueSnackbar('Delete success!')
     } catch (error) {
       console.error(error)
     }
@@ -84,9 +80,7 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
       try {
         deleteTask(column.id, taskId)
 
-        enqueueSnackbar('Delete success!', {
-          anchorOrigin: { vertical: 'top', horizontal: 'center' },
-        })
+        enqueueSnackbar('Delete success!')
       } catch (error) {
         console.error(error)
       }

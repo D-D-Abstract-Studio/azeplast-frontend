@@ -3,11 +3,9 @@
 import { useRef } from 'react'
 import { SnackbarProvider as NotistackProvider, closeSnackbar } from 'notistack'
 
-import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 
 import { Iconify } from '@/components/iconify'
-import { useSettingsContext } from '@/components/settings/context/settings-context'
 
 import { StyledIcon, StyledNotistack } from './styles'
 
@@ -16,10 +14,6 @@ type Props = {
 }
 
 export default function SnackbarProvider({ children }: Props) {
-  const settings = useSettingsContext()
-
-  const isRTL = settings.themeDirection === 'rtl'
-
   const notistackRef = useRef<any>(null)
 
   return (
@@ -27,10 +21,12 @@ export default function SnackbarProvider({ children }: Props) {
       ref={notistackRef}
       maxSnack={5}
       preventDuplicate
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
       autoHideDuration={3000}
-      TransitionComponent={isRTL ? Collapse : undefined}
       variant="success"
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       iconVariant={{
         info: (
           <StyledIcon color="info">
