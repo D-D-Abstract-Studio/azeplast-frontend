@@ -13,7 +13,7 @@ import DialogContent from '@mui/material/DialogContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 
 import SearchNotFound from '@/components/search-not-found'
 

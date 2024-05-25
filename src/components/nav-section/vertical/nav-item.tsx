@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip'
 import ListItemText from '@mui/material/ListItemText'
 // routes
 import { RouterLink } from '@/routes/components'
-import Iconify from '../../iconify'
+import { Iconify } from '@/components/iconify'
 import { NavItemProps, NavConfigProps } from '../types'
 import { StyledItem, StyledIcon, StyledDotIcon } from './styles'
 

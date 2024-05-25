@@ -21,6 +21,10 @@ export type IKanbanColumn = {
   taskIds: string[]
 }
 
+export type IKanbanBoard = {
+  name: string
+}
+
 export type IKanban = {
   tasks: Record<string, IKanbanTask>
   columns: Record<string, IKanbanColumn>

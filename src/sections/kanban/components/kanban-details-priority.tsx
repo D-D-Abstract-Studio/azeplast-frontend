@@ -2,7 +2,7 @@ import { alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import ButtonBase from '@mui/material/ButtonBase'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 
 import { IKanbanTask, priorityValues } from '@/types/kanban'
 

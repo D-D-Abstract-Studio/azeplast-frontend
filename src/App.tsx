@@ -7,15 +7,19 @@ import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './contexts/snackbar/snackbar-provider'
 
 import { KanbanView } from './sections/kanban/kanban-view'
-import { SettingsContext } from './components/settings/context/settings-context'
 
 import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { MenuRouter } from './components/menu-router'
+import { Stack } from '@mui/material'
+
+import { SettingsProvider } from './components/settings/context'
+import SettingsDrawer from './components/settings/drawer'
 
 export const App = () => {
   return (
-    <SettingsContext.Provider
-      value={{
+    <SettingsProvider
+      defaultSettings={{
         themeMode: 'dark',
         themeDirection: 'ltr',
         themeContrast: 'default',
@@ -27,13 +31,17 @@ export const App = () => {
       <ThemeProvider>
         <MotionLazy>
           <SnackbarProvider>
-            <ProgressBar />
             <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
-              <KanbanView />
+              <ProgressBar />
+              <SettingsDrawer />
+              <Stack direction="column" spacing={2}>
+                <MenuRouter />
+                <KanbanView />
+              </Stack>
             </MuiLocalizationProvider>
           </SnackbarProvider>
         </MotionLazy>
       </ThemeProvider>
-    </SettingsContext.Provider>
+    </SettingsProvider>
   )
 }

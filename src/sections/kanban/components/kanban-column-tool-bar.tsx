@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 import { ConfirmDialog } from '@/components/custom-dialog'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 import KanbanInputName from './kanban-input-name'

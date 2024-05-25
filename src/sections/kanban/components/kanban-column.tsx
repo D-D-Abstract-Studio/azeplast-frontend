@@ -10,7 +10,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { updateColumn, deleteColumn, createTask, updateTask, deleteTask } from '@/api/kanban'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 
 import { IKanban, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import KanbanTaskAdd from './kanban-task-add'
@@ -145,27 +145,19 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
 
             <Button
               fullWidth
+              sx={{ mb: 1 }}
               size="large"
-              variant="contained"
+              color="inherit"
+              variant="outlined"
               startIcon={
                 <Iconify
+                  size={1.5}
                   icon={openAddTask.value ? 'solar:close-circle-broken' : 'mingcute:add-line'}
-                  width={18}
-                  sx={{ mr: -0.5 }}
                 />
               }
               onClick={openAddTask.onToggle}
-              sx={{
-                mb: 2,
-                fontSize: 14,
-                backgroundColor: '#363e48',
-                color: 'text.primary',
-                '&:hover': {
-                  backgroundColor: 'grey.700',
-                },
-              }}
             >
-              {openAddTask.value ? 'Cancelar' : 'Add Tarefa'}
+              {openAddTask.value ? 'Cancelar' : 'Tarefa'}
             </Button>
           </Stack>
         </Paper>

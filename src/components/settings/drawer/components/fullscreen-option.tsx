@@ -3,7 +3,8 @@ import { useState, useCallback } from 'react'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import ButtonBase from '@mui/material/ButtonBase'
-import SvgColor from '../../svg-color'
+
+import SvgColor from '../../../svg-color'
 
 export default function FullScreenOption() {
   const [fullscreen, setFullscreen] = useState(false)

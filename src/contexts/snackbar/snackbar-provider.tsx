@@ -5,10 +5,11 @@ import { SnackbarProvider as NotistackProvider, closeSnackbar } from 'notistack'
 
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
-import Iconify from '../../components/iconify'
+
+import { Iconify } from '@/components/iconify'
+import { useSettingsContext } from '@/components/settings/context/settings-context'
 
 import { StyledIcon, StyledNotistack } from './styles'
-import { useSettingsContext } from '../../components/settings/context/settings-context'
 
 type Props = {
   children: React.ReactNode

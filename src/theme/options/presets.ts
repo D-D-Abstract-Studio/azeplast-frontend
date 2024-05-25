@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material/styles'
-// theme
+
 import { palette as themePalette } from '@/theme/palette'
 
 export function presets(presetsColor: string) {

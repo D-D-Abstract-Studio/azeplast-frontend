@@ -15,7 +15,7 @@ import { IKanbanTask } from '@/types/kanban'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 import dayjs from 'dayjs'
 
 import KanbanInputName from './kanban-input-name'

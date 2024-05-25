@@ -144,7 +144,7 @@ export const KanbanView = () => {
                 ...hideScroll.x,
               }}
             >
-              {board?.ordered.map((columnId, index) => (
+              {board?.ordered?.map((columnId, index) => (
                 <KanbanColumn
                   index={index}
                   key={columnId}

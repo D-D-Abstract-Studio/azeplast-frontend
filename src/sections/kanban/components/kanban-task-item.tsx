@@ -10,7 +10,7 @@ import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 
 import KanbanDetails from './kanban-details'
 

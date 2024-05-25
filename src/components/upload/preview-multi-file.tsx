@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
 
 import { fData } from '@/utils/format-number'
-import Iconify from '../iconify'
+import { Iconify } from '@/components/iconify'
 import { varFade } from '../animate'
 import FileThumbnail, { fileData } from '../file-thumbnail'
 import { UploadProps } from './types'

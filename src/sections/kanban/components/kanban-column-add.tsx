@@ -9,10 +9,10 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { useBoolean } from '@/hooks/use-boolean'
 
 import uuidv4 from '@/utils/uuidv4'
-// api
+
 import { createColumn } from '@/api/kanban'
 
-import Iconify from '@/components/iconify'
+import { Iconify } from '@/components/iconify'
 
 export default function KanbanColumnAdd() {
   const [columnName, setColumnName] = useState('')
@@ -72,10 +72,10 @@ export default function KanbanColumnAdd() {
           size="large"
           color="inherit"
           variant="outlined"
-          startIcon={<Iconify icon="mingcute:add-line" sx={{ mr: -0.5 }} />}
+          startIcon={<Iconify icon="mingcute:add-line" size={1.5} />}
           onClick={openAddColumn.onTrue}
         >
-          Add Section
+          Coluna
         </Button>
       )}
     </Paper>
