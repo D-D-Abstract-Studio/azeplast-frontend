@@ -14,8 +14,17 @@ import { MenuRouter } from './components/menu-router'
 import { Stack } from '@mui/material'
 
 import { SettingsButton } from './components/settings'
+import { useRequest } from './hooks/use-request'
+
+import { User } from './types/user'
+import { endpoints, user } from './constants/config'
 
 export const App = () => {
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+  const getUser = users?.find((getUser) => getUser.name === user)
+
   return (
     <ThemeProvider
       settings={{
@@ -31,7 +40,8 @@ export const App = () => {
         <SnackbarProvider>
           <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
             <ProgressBar />
-            <SettingsButton />
+            {getUser?.permissions === 'admin' && <SettingsButton />}
+
             <Stack direction="column" spacing={2}>
               <MenuRouter />
               <KanbanView />

@@ -84,26 +84,3 @@ export const MenuRouter = () => {
     </Paper>
   )
 }
-
-/* export const MenuRouter = () => {
-  return (
-    <Paper sx={{ minWidth: 280, width: 280 }}>
-      <Stack direction="column" spacing={1}>
-        {[1, 2, 3].map((item) => {
-          return (
-            <Button
-              sx={{ width: 30 }}
-              size="large"
-              color="inherit"
-              variant="outlined"
-              startIcon={<Iconify icon="mingcute:add-line" sx={{ mr: -0.5 }} />}
-            >
-              Painel
-            </Button>
-          )
-        })}
-      </Stack>
-    </Paper>
-  )
-}
- */

@@ -4,9 +4,18 @@ export const user = localStorage.getItem('userName') || 'anonymous'
 
 export const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
 
+console.log(userNames)
+
 const urlEndpointsParams = new URLSearchParams({ user }).toString()
 
 export const endpoints = {
+  user: {
+    getAllUsers: '/users',
+    createUser: '/users',
+    getUser: (id: Id) => `/user/${id}`,
+    updateUser: (id: Id) => `/user/${id}`,
+    deleteUser: (id: Id) => `/user/${id}`,
+  },
   kanban: {
     getAllTasks: `/tasks?${urlEndpointsParams}`,
     createTask: '/tasks',

@@ -23,6 +23,7 @@ export type UseRequestProps = SWRConfiguration & {
   url: string
   queryKey?: string
   silent?: boolean
+  stopRequest?: boolean
   method?: Method
   options?: HookOptions
 }
@@ -37,6 +38,7 @@ export function useRequest<T>({
   url,
   method = 'GET',
   silent = false,
+  stopRequest = false,
   options,
   queryKey,
   ...rest
@@ -51,7 +53,7 @@ export function useRequest<T>({
 
   const fetcher = async () => {
     try {
-      const response = await axios(axiosConfig)
+      const response = stopRequest ? { data: {} } : await axios(axiosConfig)
 
       if (!silent && response.data?.message) {
         enqueueSnackbar(response.data.message, {

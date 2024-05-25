@@ -12,7 +12,6 @@ export function accordion(theme: Theme) {
           [`&.${accordionClasses.expanded}`]: {
             boxShadow: theme.customShadows.z8,
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: theme.palette.background.paper,
           },
           [`&.${accordionClasses.disabled}`]: {
             backgroundColor: 'transparent',
