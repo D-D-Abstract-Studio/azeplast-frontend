@@ -5,9 +5,8 @@ export function cssBaseline() {
         '*': {
           boxSizing: 'border-box',
           '&::-webkit-scrollbar': {
-            boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
-            webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
             width: '0.512rem',
+            height: '5px',
           },
           '&::-webkit-scrollbar-track': {
             boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
@@ -15,7 +14,6 @@ export function cssBaseline() {
           },
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: '#ffffff12',
-            height: '8px',
             borderRadius: '8px',
           },
         },

@@ -38,7 +38,7 @@ export const KanbanBoardAdd = () => {
       .then(({ data: { message } }) => {
         enqueueSnackbar(message)
 
-        /* mutate(endpoints.tasks.getAllTasks) */
+        mutate(endpoints.boards.getAllBoards)
       })
   }
 
@@ -68,10 +68,11 @@ export const KanbanBoardAdd = () => {
   )
 
   return (
-    <Paper sx={{ minWidth: 280, width: 280 }}>
+    <Paper>
       {openAddBoard.value ? (
         <ClickAwayListener onClickAway={handleCreateBoard}>
           <TextField
+            size="small"
             autoFocus
             fullWidth
             placeholder="Novo Quadro"
@@ -80,6 +81,8 @@ export const KanbanBoardAdd = () => {
             onKeyUp={handleKeyUpCreateColumn}
             sx={{
               [`& .${inputBaseClasses.input}`]: {
+                height: 21,
+                border: 'none',
                 typography: 'h6',
               },
             }}
@@ -87,11 +90,9 @@ export const KanbanBoardAdd = () => {
         </ClickAwayListener>
       ) : (
         <Button
-          fullWidth
-          size="large"
-          color="inherit"
-          variant="outlined"
-          startIcon={<Iconify icon="mingcute:add-line" size={1.5} />}
+          variant="soft"
+          sx={{ border: '1px dashed', borderColor: 'text.secondary' }}
+          startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={openAddBoard.onTrue}
         >
           Quadro

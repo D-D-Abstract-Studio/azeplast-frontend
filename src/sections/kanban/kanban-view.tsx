@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 
 import Stack from '@mui/material/Stack'
@@ -17,20 +17,18 @@ import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { useRequest } from '@/hooks/use-request'
 
 import { endpoints } from '@/constants/config'
-import { IKanban } from '../../types/kanban'
-import { KanbanBoardAdd } from './components/kanban-board-add'
+import { KanbanBoardAdd } from './components/board/add'
 
-const boardDefault = {
-  tasks: {},
-  columns: {},
-  boards: {},
-  ordered: [],
-} as IKanban
+import { IKanban, IKanbanBoard } from '@/types/kanban'
+import { Button } from '@mui/material'
+import { BoardActions } from './components/board/actions'
 
 export const KanbanView = () => {
-  const { data: boards = boardDefault, isLoading } = useRequest<IKanban>({
-    url: endpoints.tasks.getAllTasks,
+  const { data: boards, isLoading } = useRequest<{ items: Array<IKanbanBoard> }>({
+    url: endpoints.boards.getAllBoards,
   })
+
+  const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
 
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
@@ -122,13 +120,7 @@ export const KanbanView = () => {
   )
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        height: 1,
-        pt: 2,
-      }}
-    >
+    <Container maxWidth="xl" sx={{ mt: 1 }}>
       {isLoading && renderSkeleton}
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -141,13 +133,29 @@ export const KanbanView = () => {
               direction="row"
               alignItems="flex-start"
               sx={{
-                p: 0.25,
-                height: 1,
+                alignItems: 'center',
                 overflowY: 'hidden',
                 ...hideScroll.x,
               }}
             >
-              <KanbanBoardAdd />
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  backgroundColor: 'background.neutral',
+                  width: '100%',
+                  p: 1,
+                  borderRadius: 1,
+                }}
+              >
+                <KanbanBoardAdd />
+
+                <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
+                  {boards?.items.map((board, index) => (
+                    <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
+                  ))}
+                </Stack>
+              </Stack>
 
               {/* {boards?.ordered?.map((columnId, index) => (
                 <KanbanColumn
