@@ -21,7 +21,8 @@ export type IKanbanColumn = {
   taskIds: string[]
 }
 
-export type IKanbanBoard = {
+export type IKanbanBoard = Pick<IKanban, 'tasks' | 'columns' | 'ordered'> & {
+  id: string
   name: string
 }
 

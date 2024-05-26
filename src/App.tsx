@@ -10,7 +10,7 @@ import { KanbanView } from './sections/kanban/kanban-view'
 
 import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { MenuRouter } from './components/menu-router'
+
 import { Stack } from '@mui/material'
 
 import { SettingsButton } from './components/settings'
@@ -43,7 +43,6 @@ export const App = () => {
             {getUser?.permissions === 'admin' && <SettingsButton />}
 
             <Stack direction="column" spacing={2}>
-              <MenuRouter />
               <KanbanView />
             </Stack>
           </MuiLocalizationProvider>

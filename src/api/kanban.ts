@@ -6,16 +6,25 @@ import { endpoints } from '../constants/config'
 const URL = endpoints.kanban.getAllTasks
 
 export async function createBoard(boardData: IKanbanBoard) {
-  // const data = { boardData };
-  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-board' } });
+  // const data = { columnData };
+  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-column' } });
 
   mutate<IKanban>(
     URL,
     (currentData) => {
+      const columns = {
+        ...currentData?.columns,
+        // add new column in board.columns
+        [boardData.id]: boardData,
+      }
+
+      // add new column in board.ordered
+      const ordered = [...(currentData?.ordered ?? []), boardData.id]
+
       return {
         tasks: currentData?.tasks || {},
-        columns: currentData?.columns || {},
-        ordered: currentData?.ordered || [],
+        columns,
+        ordered,
       }
     },
     false
