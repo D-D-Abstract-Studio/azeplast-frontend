@@ -18,6 +18,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints } from '@/constants/config'
 import { IKanban } from '../../types/kanban'
+import { KanbanBoardAdd } from './components/kanban-board-add'
 
 const boardDefault = {
   tasks: {},
@@ -28,11 +29,13 @@ const boardDefault = {
 
 export const KanbanView = () => {
   const { data: boards = boardDefault, isLoading } = useRequest<IKanban>({
-    url: endpoints.kanban.getAllTasks,
+    url: endpoints.tasks.getAllTasks,
   })
 
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
+      console.log({ destination, source, draggableId, type })
+
       try {
         if (!destination) {
           return
@@ -144,18 +147,20 @@ export const KanbanView = () => {
                 ...hideScroll.x,
               }}
             >
-              {boards?.ordered?.map((columnId, index) => (
+              <KanbanBoardAdd />
+
+              {/* {boards?.ordered?.map((columnId, index) => (
                 <KanbanColumn
                   index={index}
                   key={columnId}
                   column={boards?.columns[columnId]}
                   tasks={boards?.tasks}
                 />
-              ))}
+              ))} */}
 
               {provided.placeholder}
 
-              <KanbanColumnAdd />
+              {/* <KanbanColumnAdd /> */}
             </Stack>
           )}
         </Droppable>

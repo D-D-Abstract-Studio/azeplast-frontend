@@ -9,12 +9,19 @@ const urlEndpointsParams = new URLSearchParams({ user: userCurrency }).toString(
 export const endpoints = {
   user: {
     getAllUsers: '/users',
-    createUser: '/user',
-    getUser: (id: Id) => `/user/${id}`,
-    updateUser: (id: Id) => `/user/${id}`,
-    deleteUser: (id: Id) => `/user/${id}`,
+    createUser: '/users',
+    getUser: (id: Id) => `/users/${id}`,
+    updateUser: (id: Id) => `/users/${id}`,
+    deleteUser: (id: Id) => `/users/${id}`,
   },
-  kanban: {
+  boards: {
+    getAllBoards: `/boards?${urlEndpointsParams}`,
+    createBoard: '/boards',
+    getBoard: (id: Id) => `/boards/${id}`,
+    updateBoard: (id: Id) => `/boards/${id}`,
+    deleteBoard: (id: Id) => `/boards/${id}`,
+  },
+  tasks: {
     getAllTasks: `/tasks?${urlEndpointsParams}`,
     createTask: '/tasks',
     archiveTask: (id: Id) => `/tasks/${id}/archive`,
