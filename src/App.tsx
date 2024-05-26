@@ -17,13 +17,13 @@ import { SettingsButton } from './components/settings'
 import { useRequest } from './hooks/use-request'
 
 import { User } from './types/user'
-import { endpoints, user } from './constants/config'
+import { endpoints, userCurrency } from './constants/config'
 
 export const App = () => {
   const { data: users } = useRequest<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
-  const getUser = users?.find((getUser) => getUser.name === user)
+  const getUser = users?.find((getUser) => getUser.name === userCurrency)
 
   return (
     <ThemeProvider
@@ -32,7 +32,7 @@ export const App = () => {
         themeDirection: 'ltr',
         themeContrast: 'default',
         themeLayout: 'vertical',
-        themeColorPresets: 'purple',
+        themeColorPresets: 'default',
         themeStretch: false,
       }}
     >

@@ -1,4 +1,4 @@
-import { HOST_API } from '@/constants/config'
+import { HOST_API, userCurrency } from '@/constants/config'
 
 import axiosInstance, { AxiosResponse, AxiosRequestConfig } from 'axios'
 
@@ -70,9 +70,7 @@ export default axios
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
 
-  const user = localStorage.getItem('userName') || 'anonymous'
-
-  const params = { ...(config?.params || {}), user }
+  const params = { ...(config?.params || {}), ...{ user: userCurrency } }
 
   const res = await axiosInstance.get(url, { ...config, params })
 

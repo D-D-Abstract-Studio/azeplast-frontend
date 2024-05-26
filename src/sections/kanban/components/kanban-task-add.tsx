@@ -7,7 +7,7 @@ import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
 import uuidv4 from '@/utils/uuidv4'
 
 import { IKanbanTask } from '@/types/kanban'
-import { user } from '@/constants/config'
+import { userCurrency } from '@/constants/config'
 
 type Props = {
   status: string
@@ -28,7 +28,7 @@ export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Pro
       assignee: [],
       dueDate: new Date(),
       reporter: {
-        user,
+        user: userCurrency,
       },
     }),
     [name, status]
