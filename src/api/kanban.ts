@@ -184,7 +184,7 @@ export async function updateTask(taskData: IKanbanTask) {
       const board = currentData.board as IKanban
 
       const tasks = {
-        ...board.tasks,
+        ...board?.tasks,
         // add task in board.tasks
         [taskData.id]: taskData,
       }

@@ -17,17 +17,17 @@ import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { useRequest } from '@/hooks/use-request'
 
 import { endpoints } from '@/constants/config'
-
-import { IKanban } from '@/types/kanban'
+import { IKanban } from '../../types/kanban'
 
 const boardDefault = {
   tasks: {},
   columns: {},
+  boards: {},
   ordered: [],
 } as IKanban
 
 export const KanbanView = () => {
-  const { data: board = boardDefault, isLoading } = useRequest<IKanban>({
+  const { data: boards = boardDefault, isLoading } = useRequest<IKanban>({
     url: endpoints.kanban.getAllTasks,
   })
 
@@ -44,7 +44,7 @@ export const KanbanView = () => {
 
         // Moving column
         if (type === 'COLUMN') {
-          const newOrdered = [...board.ordered]
+          const newOrdered = [...boards.ordered]
 
           newOrdered.splice(source.index, 1)
 
@@ -54,9 +54,9 @@ export const KanbanView = () => {
           return
         }
 
-        const sourceColumn = board?.columns[source.droppableId]
+        const sourceColumn = boards?.columns[source.droppableId]
 
-        const destinationColumn = board?.columns[destination.droppableId]
+        const destinationColumn = boards?.columns[destination.droppableId]
 
         // Moving task to same list
         if (sourceColumn.id === destinationColumn.id) {
@@ -67,7 +67,7 @@ export const KanbanView = () => {
           newTaskIds.splice(destination.index, 0, draggableId)
 
           moveTask({
-            ...board?.columns,
+            ...boards?.columns,
             [sourceColumn.id]: {
               ...sourceColumn,
               taskIds: newTaskIds,
@@ -91,7 +91,7 @@ export const KanbanView = () => {
         destinationTaskIds.splice(destination.index, 0, draggableId)
 
         moveTask({
-          ...board?.columns,
+          ...boards?.columns,
           [sourceColumn.id]: {
             ...sourceColumn,
             taskIds: sourceTaskIds,
@@ -107,7 +107,7 @@ export const KanbanView = () => {
         console.error(error)
       }
     },
-    [board?.columns, board?.ordered]
+    [boards?.columns, boards?.ordered]
   )
 
   const renderSkeleton = (
@@ -144,12 +144,12 @@ export const KanbanView = () => {
                 ...hideScroll.x,
               }}
             >
-              {board?.ordered?.map((columnId, index) => (
+              {boards?.ordered?.map((columnId, index) => (
                 <KanbanColumn
                   index={index}
                   key={columnId}
-                  column={board?.columns[columnId]}
-                  tasks={board?.tasks}
+                  column={boards?.columns[columnId]}
+                  tasks={boards?.tasks}
                 />
               ))}
 

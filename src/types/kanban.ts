@@ -9,7 +9,7 @@ export type IKanbanTask = {
   assignee: Array<{
     name?: string
   }>
-  dueDate: Date
+  dueDate: string
   reporter: {
     user: string
   }
@@ -21,13 +21,15 @@ export type IKanbanColumn = {
   taskIds: string[]
 }
 
-export type IKanbanBoard = Pick<IKanban, 'tasks' | 'columns' | 'ordered'> & {
+export type IKanbanBoard = {
   id: string
   name: string
+  columnIds: string[]
 }
 
 export type IKanban = {
-  tasks: Record<string, IKanbanTask>
+  boards: Record<string, IKanbanBoard>
   columns: Record<string, IKanbanColumn>
   ordered: string[]
+  tasks: Record<string, IKanbanTask>
 }
