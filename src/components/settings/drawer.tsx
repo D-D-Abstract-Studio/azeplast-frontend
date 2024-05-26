@@ -46,9 +46,9 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   })
 
   const CreateUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    name: Yup.string().required('Nome é obrigatório'),
     permissions: Yup.mixed<'user' | 'admin'>()
-      .oneOf(['user', 'admin'], "Permissions must be 'user' or 'admin'")
+      .oneOf(['user', 'admin'], "Permissões devem ser 'user' ou 'admin'")
       .required(),
   })
 
