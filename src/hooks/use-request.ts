@@ -1,6 +1,6 @@
 'use client'
 
-import axios from '@/utils/axios'
+import { axios } from '@/utils/axios'
 import { AxiosError, AxiosRequestConfig, Method } from 'axios'
 
 import { enqueueSnackbar } from 'notistack'

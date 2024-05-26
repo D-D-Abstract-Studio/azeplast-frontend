@@ -4,14 +4,12 @@ export const userCurrency = localStorage.getItem('userName') || 'anonymous'
 
 export const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
 
-console.log(userNames)
-
 const urlEndpointsParams = new URLSearchParams({ user: userCurrency }).toString()
 
 export const endpoints = {
   user: {
     getAllUsers: '/users',
-    createUser: '/users',
+    createUser: '/user',
     getUser: (id: Id) => `/user/${id}`,
     updateUser: (id: Id) => `/user/${id}`,
     deleteUser: (id: Id) => `/user/${id}`,

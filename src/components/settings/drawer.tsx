@@ -27,7 +27,7 @@ import { useForm } from 'react-hook-form'
 import { RHFSelect, RHFTextField } from '../hook-form'
 import FormProvider from '../hook-form/form-provider'
 
-import axios from '@/utils/axios'
+import { axios } from '@/utils/axios'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
@@ -36,6 +36,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { CopyClipboard } from '../CopyClipboard'
 import { ConfirmDialog } from '../custom-dialog'
+import { enqueueSnackbar } from 'notistack'
 
 export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const theme = useTheme()
@@ -43,6 +44,37 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const { data, mutate } = useRequest<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
+
+  const CreateUserSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    permissions: Yup.mixed<'user' | 'admin'>()
+      .oneOf(['user', 'admin'], "Permissions must be 'user' or 'admin'")
+      .required(),
+  })
+
+  const methods = useForm<Pick<User, 'name' | 'permissions'>>({
+    defaultValues: {
+      name: '',
+      permissions: 'user',
+    },
+    resolver: yupResolver(CreateUserSchema),
+  })
+
+  const {
+    handleSubmit,
+    formState: { isDirty },
+  } = methods
+
+  const handleCreateUser = async (userData: Pick<User, 'name' | 'permissions'>) => {
+    await axios.post(endpoints.user.createUser, userData).then(() => {
+      enqueueSnackbar('Usuário criado com sucesso!', {
+        variant: 'success',
+        preventDuplicate: true,
+      })
+
+      mutate()
+    })
+  }
 
   return (
     <Drawer
@@ -80,13 +112,13 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<Iconify icon="mdi:chevron-down" />}
-            aria-controls="panel3-content"
-            id="panel3-header"
+            aria-controls="users-content"
+            id="users-content"
           >
             Usuários
           </AccordionSummary>
           <AccordionDetails>
-            <Stack direction="column" spacing={1}>
+            <Stack direction="column" spacing={2}>
               <Alert severity="info">
                 Atenção! Os nomes de usuários devem ser identicos aos nomes de usuários do sistema
                 GLPI
@@ -108,6 +140,42 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
                   </AccordionDetails>
                 </Accordion>
               </Alert>
+
+              <FormProvider
+                methods={methods}
+                onSubmit={handleSubmit((data) => handleCreateUser(data))}
+              >
+                <Stack direction="column" spacing={1}>
+                  <Stack direction="row" spacing={1}>
+                    <RHFTextField name="name" label="Nome" />
+
+                    <RHFSelect name="permissions" label="Permissões" sx={{ width: 180 }}>
+                      {[
+                        {
+                          label: 'Usuário',
+                          value: 'user',
+                        },
+                        {
+                          label: 'Admin',
+                          value: 'admin',
+                        },
+                      ].map((option, index) => (
+                        <MenuItem key={index} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </RHFSelect>
+                  </Stack>
+
+                  <Stack justifyContent="flex-end" spacing={1}>
+                    <Button type="submit" variant="contained" color="inherit" disabled={!isDirty}>
+                      Criar
+                    </Button>
+                  </Stack>
+                </Stack>
+              </FormProvider>
+
+              <Divider />
 
               {data?.map((user) => (
                 <UserUpdate key={user._id} user={user} mutate={mutate} />
@@ -145,10 +213,20 @@ const UserUpdate = ({ user, mutate }: { user: User; mutate: () => void }) => {
   } = methods
 
   const handleDelete = async (userId: string) => {
+    enqueueSnackbar('Usuário deletado com sucesso!', {
+      variant: 'error',
+      preventDuplicate: true,
+    })
+
     await axios.delete(endpoints.user.deleteUser(userId)).then(() => mutate())
   }
 
   const handleUpdate = async (userId: string, updatedData: User) => {
+    enqueueSnackbar('Usuário atualizado com sucesso!', {
+      variant: 'success',
+      preventDuplicate: true,
+    })
+
     await axios.put(endpoints.user.updateUser(userId), updatedData).then(() => mutate())
   }
 

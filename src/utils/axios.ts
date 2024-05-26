@@ -35,7 +35,7 @@ export const serverColorsError = (status: number) => {
   return statusColor[status]
 }
 
-const axios = axiosInstance.create({
+export const axios = axiosInstance.create({
   timeout: 60 * 1000, // 1 minute
   timeoutErrorMessage:
     'Tempo limite excedido. Verifique sua conexão com a internet e tente novamente.',
@@ -63,9 +63,6 @@ axios.interceptors.response.use(
     return Promise.reject(new Error(errorMessage))
   }
 )
-
-export * from 'axios'
-export default axios
 
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
