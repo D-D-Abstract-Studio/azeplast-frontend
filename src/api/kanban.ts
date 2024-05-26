@@ -1,10 +1,10 @@
 import { mutate } from 'swr'
 
-import { IKanbanColumn, IKanbanTask, IKanban, IKanbanBoard } from '@/types/kanban'
+import { IKanbanColumn, IKanbanTask, IKanban /*  IKanbanBoard */ } from '@/types/kanban'
 import { endpoints } from '../constants/config'
 
 const URL = endpoints.kanban.getAllTasks
-
+/*
 export async function createBoard(boardData: IKanbanBoard) {
   // const data = { columnData };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-column' } });
@@ -29,7 +29,7 @@ export async function createBoard(boardData: IKanbanBoard) {
     },
     false
   )
-}
+} */
 
 export async function createColumn(columnData: IKanbanColumn) {
   // const data = { columnData };

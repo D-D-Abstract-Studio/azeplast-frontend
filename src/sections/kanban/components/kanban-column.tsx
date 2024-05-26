@@ -5,28 +5,29 @@ import { alpha } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
+import { Box } from '@mui/material'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
 import { updateColumn, deleteColumn, createTask, updateTask, deleteTask } from '@/api/kanban'
 
-import { Iconify } from '@/components/iconify'
-
-import { IKanban, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import KanbanTaskAdd from './kanban-task-add'
 import KanbanTaskItem from './kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
-import { useSnackbar } from 'notistack'
-import { Box } from '@mui/material'
 
-type Props = Pick<IKanban, 'tasks'> & {
+import { Iconify } from '@/components/iconify'
+
+import { enqueueSnackbar } from 'notistack'
+
+import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+
+type Props = {
   column: IKanbanColumn
+  tasks: Record<string, IKanbanTask>
   index: number
 }
 
-export default function KanbanColumn({ column, tasks, index }: Props) {
-  const { enqueueSnackbar } = useSnackbar()
-
+export const KanbanColumn = ({ column, tasks, index }: Props) => {
   const openAddTask = useBoolean()
 
   const handleUpdateColumn = useCallback(
@@ -35,7 +36,9 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
         if (column.name !== columnName) {
           updateColumn(column.id, columnName)
 
-          enqueueSnackbar('Update success!')
+          enqueueSnackbar('Update success!', {
+            anchorOrigin: { vertical: 'top', horizontal: 'center' },
+          })
         }
       } catch (error) {
         console.error(error)
@@ -48,7 +51,9 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
     try {
       deleteColumn(column.id)
 
-      enqueueSnackbar('Delete success!')
+      enqueueSnackbar('Delete success!', {
+        anchorOrigin: { vertical: 'top', horizontal: 'center' },
+      })
     } catch (error) {
       console.error(error)
     }
@@ -80,7 +85,9 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
       try {
         deleteTask(column.id, taskId)
 
-        enqueueSnackbar('Delete success!')
+        enqueueSnackbar('Delete success!', {
+          anchorOrigin: { vertical: 'top', horizontal: 'center' },
+        })
       } catch (error) {
         console.error(error)
       }
@@ -113,8 +120,16 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
             <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 210px)' }}>
               <Droppable droppableId={column.id} type="TASK">
                 {(dropProvided) => (
-                  <Stack ref={dropProvided.innerRef} {...dropProvided.droppableProps} spacing={2}>
-                    {column?.taskIds.map((taskId, taskIndex) => (
+                  <Stack
+                    ref={dropProvided.innerRef}
+                    {...dropProvided.droppableProps}
+                    spacing={2}
+                    sx={{
+                      py: 3,
+                      width: 280,
+                    }}
+                  >
+                    {column.taskIds.map((taskId, taskIndex) => (
                       <KanbanTaskItem
                         key={taskId}
                         index={taskIndex}
@@ -131,6 +146,7 @@ export default function KanbanColumn({ column, tasks, index }: Props) {
                         onCloseAddTask={openAddTask.onFalse}
                       />
                     )}
+
                     {dropProvided.placeholder}
                   </Stack>
                 )}

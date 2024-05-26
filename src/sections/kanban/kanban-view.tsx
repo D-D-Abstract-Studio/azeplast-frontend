@@ -10,7 +10,7 @@ import { hideScroll } from '@/theme/css'
 
 import { moveColumn, moveTask } from '@/api/kanban'
 
-import KanbanColumn from './components/kanban-column'
+import { KanbanColumn } from './components/kanban-column'
 import KanbanColumnAdd from './components/kanban-column-add'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 
