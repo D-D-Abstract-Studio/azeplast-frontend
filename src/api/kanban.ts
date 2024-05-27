@@ -36,14 +36,6 @@ export async function createBoard(boardData: IKanbanBoard) {
   )
 } */
 
-export async function createColumn(columnData: IKanbanColumn) {
-  // const data = { columnData };
-  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'create-column' } });
-
-  console.log('createColumn')
-  console.log(columnData)
-}
-
 export async function updateColumn(columnId: string, columnName: string) {
   // const data = { columnId, columnName };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'update-column' } });

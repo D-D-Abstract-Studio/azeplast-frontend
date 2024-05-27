@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 
 import Stack from '@mui/material/Stack'
@@ -10,18 +10,21 @@ import { hideScroll } from '@/theme/css'
 
 import { moveColumn, moveTask } from '@/api/kanban'
 
-import { KanbanColumnSkeleton } from './components/kanban-skeleton'
-
 import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
-import { KanbanBoardAdd } from './components/board/add'
 
 import { IKanbanBoard } from '@/types/kanban'
 
+import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
+import { MenuPopover } from '@/components/MenuPopover'
+
+import { KanbanColumnAdd } from './components/kanban-column-add'
+import { KanbanColumnSkeleton } from './components/kanban-skeleton'
+import { KanbanBoardAdd } from './components/board/add'
 import { BoardActions } from './components/board/actions'
+
 import { User } from '@/types/user'
-import { Alert, Typography } from '@mui/material'
 
 export const KanbanView = () => {
   const { data: boards, isLoading } = useRequest<{ items: Array<IKanbanBoard> }>({
@@ -33,6 +36,8 @@ export const KanbanView = () => {
   })
 
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
+
+  const isPermissionAdmin = user?.permissions === 'admin'
 
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
@@ -136,6 +141,12 @@ export const KanbanView = () => {
     )
   }
 
+  useEffect(() => {
+    if (boards?.items.length && !selectedBoard) {
+      setSelectedBoard(boards.items.filter((board) => !board.archived)[0].id)
+    }
+  }, [boards?.items, selectedBoard])
+
   return (
     <Container maxWidth="xl" sx={{ mt: 1 }}>
       {isLoading && renderSkeleton}
@@ -147,7 +158,7 @@ export const KanbanView = () => {
               ref={provided.innerRef}
               {...provided.droppableProps}
               spacing={3}
-              direction="row"
+              direction="column"
               alignItems="flex-start"
               sx={{
                 alignItems: 'center',
@@ -165,15 +176,16 @@ export const KanbanView = () => {
                   borderRadius: 1,
                 }}
               >
-                {user?.permissions === 'admin' && <KanbanBoardAdd />}
+                <BoardsItems
+                  boards={boards?.items}
+                  {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
+                />
+              </Stack>
 
-                <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
-                  {boards?.items
-                    .filter((board) => !board.archived)
-                    .map((board, index) => (
-                      <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
-                    ))}
-                </Stack>
+              <Stack direction="row" spacing={1} sx={{ width: '100%', p: 1 }}>
+                {provided.placeholder}
+
+                {selectedBoard && <KanbanColumnAdd boardId={selectedBoard} />}
               </Stack>
 
               {/* {boards?.ordered?.map((columnId, index) => (
@@ -184,14 +196,67 @@ export const KanbanView = () => {
                   tasks={boards?.tasks}
                 />
               ))} */}
-
-              {provided.placeholder}
-
-              {/* <KanbanColumnAdd /> */}
             </Stack>
           )}
         </Droppable>
       </DragDropContext>
     </Container>
+  )
+}
+
+type BoardsProps = {
+  boards: Array<IKanbanBoard> | undefined
+  isPermissionAdmin: boolean
+  setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
+  selectedBoard: string | null
+}
+
+const BoardsItems = ({
+  boards,
+  isPermissionAdmin,
+  setSelectedBoard,
+  selectedBoard,
+}: BoardsProps) => {
+  const [isShowBoardsArchived, setIsShowBoardsArchived] = useState(false)
+
+  return (
+    <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
+      {isPermissionAdmin && (
+        <>
+          <MenuPopover
+            arrow="top-right"
+            sx={{ width: 250 }}
+            renderContent={(onClose) => (
+              <MenuItem
+                onClick={(event) => {
+                  setIsShowBoardsArchived((prevState) => !prevState)
+
+                  onClose()
+                  event.preventDefault()
+                }}
+              >
+                <FormControlLabel
+                  sx={{ ml: 2 }}
+                  control={<Checkbox checked={isShowBoardsArchived} sx={{ width: 10 }} />}
+                  label={
+                    isShowBoardsArchived
+                      ? 'Ocultar Quadros Arquivados'
+                      : 'Mostrar Quadros Arquivados'
+                  }
+                />
+              </MenuItem>
+            )}
+          />
+
+          <KanbanBoardAdd />
+        </>
+      )}
+
+      {boards
+        ?.filter((board) => (isShowBoardsArchived ? true : !board.archived))
+        .map((board, index) => (
+          <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
+        ))}
+    </Stack>
   )
 }

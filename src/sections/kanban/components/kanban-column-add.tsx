@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { mutate } from 'swr'
 
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
@@ -8,13 +9,17 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import uuidv4 from '@/utils/uuidv4'
-
-import { createColumn } from '@/api/kanban'
-
 import { Iconify } from '@/components/iconify'
+import { IKanbanColumn } from '@/types/kanban'
+import { axios } from '@/utils/axios'
+import { endpoints } from '@/constants/config'
+import { enqueueSnackbar } from 'notistack'
 
-export default function KanbanColumnAdd() {
+type Props = {
+  boardId: string
+}
+
+export const KanbanColumnAdd = ({ boardId }: Props) => {
   const [columnName, setColumnName] = useState('')
 
   const openAddColumn = useBoolean()
@@ -23,14 +28,24 @@ export default function KanbanColumnAdd() {
     setColumnName(event.target.value)
   }, [])
 
+  const createColumn = async (columnData: Pick<IKanbanColumn, 'name'>) =>
+    await axios
+      .post(endpoints.columns.createColumn, {
+        ...columnData,
+        boardId,
+        taskIds: [],
+        archived: false,
+      })
+      .then(() => {
+        enqueueSnackbar('Coluna criada com sucesso')
+
+        mutate(endpoints.boards.getAllBoards)
+      })
+
   const handleCreateColumn = useCallback(async () => {
     try {
       if (columnName) {
-        createColumn({
-          id: uuidv4(),
-          name: columnName,
-          taskIds: [],
-        })
+        createColumn({ name: columnName })
         setColumnName('')
       }
       openAddColumn.onFalse()

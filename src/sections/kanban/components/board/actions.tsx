@@ -37,6 +37,8 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [lastTap, setLastTap] = useState<number>(0)
 
+  const isPermissionAdmin = user?.permissions === 'admin'
+
   const handleMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
     switch (event.button) {
       case 0:
@@ -73,7 +75,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
     <>
       <Button
         variant="soft"
-        onMouseDown={user?.permissions === 'admin' ? handleMouseDown : undefined}
+        onMouseDown={isPermissionAdmin ? handleMouseDown : undefined}
         onContextMenu={(event) => event.preventDefault()}
         sx={{
           minWidth: '150px',

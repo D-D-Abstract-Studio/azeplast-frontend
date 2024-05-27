@@ -51,10 +51,8 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
 
   const {
     handleSubmit,
-    formState: { isDirty, errors },
+    formState: { isDirty },
   } = methods
-
-  console.log(errors)
 
   const handleUpdate = async (boardId: string, updatedData: IKanbanBoard) =>
     await axios.put(endpoints.boards.updateBoard(boardId), updatedData).then(() => {

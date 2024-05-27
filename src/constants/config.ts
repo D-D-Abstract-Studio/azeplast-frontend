@@ -17,9 +17,13 @@ export const endpoints = {
   boards: {
     getAllBoards: `/boards?${urlEndpointsParams}`,
     createBoard: '/boards',
-    getBoard: (id: Id) => `/boards/${id}`,
     updateBoard: (id: Id) => `/boards/${id}`,
     deleteBoard: (id: Id) => `/boards/${id}`,
+  },
+  columns: {
+    createColumn: '/columns',
+    updateColumn: (id: Id) => `/columns/${id}`,
+    deleteColumn: (id: Id) => `/columns/${id}`,
   },
   tasks: {
     getAllTasks: `/tasks?${urlEndpointsParams}`,
