@@ -1,16 +1,20 @@
 'use client'
 
+import { mutate } from 'swr'
+
 import { useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Accordion from '@mui/material/Accordion'
-
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Button from '@mui/material/Button'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
+import { Alert, alpha, Box, MenuItem, Paper } from '@mui/material'
+
+import { enqueueSnackbar } from 'notistack'
 
 import { paper } from '@/theme/css'
 
@@ -21,8 +25,6 @@ import { useRequest } from '@/hooks/use-request'
 import { SettingsContextProps } from '.'
 import { endpoints, userCurrency, userNames } from '@/constants/config'
 
-import { User } from '@/types/user'
-import { Alert, alpha, Box, MenuItem, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { RHFSelect, RHFTextField } from '../hook-form'
 import FormProvider from '../hook-form/form-provider'
@@ -36,8 +38,8 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { CopyClipboard } from '../CopyClipboard'
 import { ConfirmDialog } from '../custom-dialog'
-import { enqueueSnackbar } from 'notistack'
-import { mutate } from 'swr'
+
+import { User } from '@/types/user'
 
 export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const theme = useTheme()
@@ -184,6 +186,27 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
             </Stack>
           </AccordionDetails>
         </Accordion>
+
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<Iconify icon="mdi:chevron-down" />}
+            aria-controls="sobre-content"
+            id="sobre-content"
+          >
+            Sobre
+          </AccordionSummary>
+          <AccordionDetails>
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              <Typography variant="body2">
+                Caso precise de ajuda, ou solicitar alguma funcionalidade, entre em contato. <br />{' '}
+                <a href="https://web.whatsapp.com/send?1=pt_BR&phone=5549991954455" target="_blank">
+                  +55 49 991954455
+                </a>{' '}
+                <i>~Diego Horvatti</i>
+              </Typography>
+            </Alert>
+          </AccordionDetails>
+        </Accordion>
       </Box>
     </Drawer>
   )
@@ -297,8 +320,7 @@ const UserUpdate = ({ user }: { user: User }) => {
             <Alert severity="warning" sx={{ mb: 2 }}>
               <Typography variant="body2">
                 Como administrador, cuidado ao fazer alteração no seu perfil. Se não ouver outro
-                usuário administrador, você poderá perder acesso ao sistema. Caso precise de ajuda,
-                entre em contato. +55 49 991954455 ~Diego Horvatti
+                usuário administrador, você poderá perder acesso ao sistema.
               </Typography>
             </Alert>
           )}

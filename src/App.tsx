@@ -13,17 +13,19 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 import { Stack } from '@mui/material'
 
+import { endpoints } from './constants/config'
+
 import { SettingsButton } from './components/settings'
 import { useRequest } from './hooks/use-request'
 
 import { User } from './types/user'
-import { endpoints, userCurrency } from './constants/config'
 
 export const App = () => {
-  const { data: users } = useRequest<Array<User>>({
-    url: endpoints.user.getAllUsers,
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUser,
   })
-  const getUser = users?.find((getUser) => getUser.name === userCurrency)
+
+  const isPermissionAdmin = user?.permissions === 'admin'
 
   return (
     <ThemeProvider
@@ -40,7 +42,7 @@ export const App = () => {
         <SnackbarProvider>
           <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
             <ProgressBar />
-            {getUser?.permissions === 'admin' && <SettingsButton />}
+            {isPermissionAdmin && <SettingsButton />}
 
             <Stack direction="column" spacing={2}>
               <KanbanView />
