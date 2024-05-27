@@ -22,7 +22,7 @@ export default function ConfirmDialog({
       <DialogActions>
         {action}
 
-        <Button variant="outlined" color="inherit" onClick={onClose}>
+        <Button variant="contained" color="inherit" onClick={onClose}>
           Cancel
         </Button>
       </DialogActions>

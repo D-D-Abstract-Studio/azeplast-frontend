@@ -14,6 +14,8 @@ import { endpoints } from '@/constants/config'
 import { enqueueSnackbar } from 'notistack'
 
 import { handleTouchStart } from './shared/handleTouchStart'
+import { UpdateBoard } from './board-update'
+import { mutate } from 'swr'
 
 type Props = {
   setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
@@ -22,8 +24,8 @@ type Props = {
 }
 
 export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) => {
-  const dialogEdit = useBoolean()
   const confirmDialogDelete = useBoolean()
+  const dialogEdit = useBoolean()
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [lastTap, setLastTap] = useState<number>(0)
@@ -87,7 +89,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
 
         <MenuItem
           onClick={() => {
-            setSelectedBoard(board.id)
+            confirmDialogDelete.onTrue()
             handleClose()
           }}
         >
@@ -95,29 +97,12 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         </MenuItem>
       </Menu>
 
-      <ConfirmDialog
-        open={dialogEdit.value}
-        onClose={dialogEdit.onFalse}
-        title="Delete"
-        content={<>Are you sure want to delete column?</>}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleClose()
-              dialogEdit.onFalse()
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+      {/* <UpdateBoard /> */}
 
       <ConfirmDialog
         open={confirmDialogDelete.value}
         onClose={confirmDialogDelete.onFalse}
-        title="Delete"
+        title="Deletar"
         content={
           <>
             Você quer mesmo excluir o quadro?
@@ -129,14 +114,18 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         }
         action={
           <Button
-            variant="contained"
+            variant="outlined"
             color="error"
             onClick={() =>
               axios
                 .delete<{ message: string }>(endpoints.boards.deleteBoard(board.id))
                 .then(({ data }) => {
                   enqueueSnackbar(data.message, { variant: 'success' })
+
                   setSelectedBoard(null)
+
+                  mutate(endpoints.boards.getAllBoards)
+                  confirmDialogDelete.onFalse()
                 })
             }
           >

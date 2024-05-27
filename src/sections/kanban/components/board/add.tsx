@@ -82,6 +82,7 @@ export const KanbanBoardAdd = () => {
             sx={{
               [`& .${inputBaseClasses.input}`]: {
                 height: 21,
+                minWidth: 150,
                 border: 'none',
                 typography: 'h6',
               },
