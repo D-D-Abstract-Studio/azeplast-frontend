@@ -7,7 +7,7 @@ import { endpoints } from '@/constants/config'
 
 import { useForm } from 'react-hook-form'
 
-import { RHFTextField } from '@/components/hook-form'
+import { RHFAutocomplete, RHFTextField } from '@/components/hook-form'
 import FormProvider from '@/components/hook-form/form-provider'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
@@ -19,6 +19,8 @@ import * as Yup from 'yup'
 import { enqueueSnackbar } from 'notistack'
 import { IKanbanBoard } from '@/types/kanban'
 import { mutate } from 'swr'
+import { useRequest } from '@/hooks/use-request'
+import { User } from '@/types/user'
 
 type Props = {
   board: IKanbanBoard
@@ -26,9 +28,18 @@ type Props = {
 }
 
 export const UpdateBoard = ({ board, dialogEdit }: Props) => {
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+
+  /* const { data: coluns } = useRequest<User>({
+    url: endpoints.user.getUser,
+  }) */
+
   const UpdateUserSchema = Yup.object().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
+    usersIds: Yup.array().required(),
     columnIds: Yup.array().required(),
   })
 
@@ -48,7 +59,8 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
     await axios.put(endpoints.boards.updateBoard(boardId), updatedData).then(() => {
       enqueueSnackbar('Quadro atualizado com sucesso')
 
-      mutate(endpoints.boards.updateBoard(boardId))
+      mutate(endpoints.boards.getAllBoards)
+      dialogEdit.onFalse()
     })
 
   return (
@@ -56,10 +68,17 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
       <ConfirmDialog
         open={dialogEdit.value}
         onClose={dialogEdit.onFalse}
-        title="Editar"
+        title="Editar Quadro"
         content={
-          <Stack direction="row" spacing={1} py={1}>
+          <Stack direction="column" spacing={2} py={1}>
             <RHFTextField name="name" label="Nome" />
+
+            <RHFAutocomplete
+              multiple
+              name="usersIds"
+              label="Usuários"
+              options={users?.map((user) => ({ value: user._id, label: user.name }))}
+            />
           </Stack>
         }
         action={

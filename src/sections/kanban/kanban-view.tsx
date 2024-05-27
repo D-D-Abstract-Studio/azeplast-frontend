@@ -19,8 +19,8 @@ import { useRequest } from '@/hooks/use-request'
 import { endpoints } from '@/constants/config'
 import { KanbanBoardAdd } from './components/board/add'
 
-import { IKanban, IKanbanBoard } from '@/types/kanban'
-import { Button } from '@mui/material'
+import { IKanbanBoard } from '@/types/kanban'
+
 import { BoardActions } from './components/board/actions'
 
 export const KanbanView = () => {
@@ -151,9 +151,11 @@ export const KanbanView = () => {
                 <KanbanBoardAdd />
 
                 <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
-                  {boards?.items.map((board, index) => (
-                    <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
-                  ))}
+                  {boards?.items
+                    .filter((board) => !board.archived)
+                    .map((board, index) => (
+                      <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
+                    ))}
                 </Stack>
               </Stack>
 

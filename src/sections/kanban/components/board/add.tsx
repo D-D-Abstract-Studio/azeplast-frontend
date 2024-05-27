@@ -33,6 +33,7 @@ export const KanbanBoardAdd = () => {
       .post<{ message: string }>(endpoints.boards.createBoard, {
         name,
         usersIds: [data?._id],
+        archived: false,
         columnIds: [],
       })
       .then(({ data: { message } }) => {

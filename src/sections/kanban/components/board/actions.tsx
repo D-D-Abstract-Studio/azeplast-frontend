@@ -1,6 +1,6 @@
 import { useState, MouseEvent, useEffect } from 'react'
 
-import { Box, Button, Menu, MenuItem } from '@mui/material'
+import { Box, Button, Menu, MenuItem, Stack, Typography } from '@mui/material'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { useBoolean } from '@/hooks/use-boolean'
@@ -16,6 +16,7 @@ import { enqueueSnackbar } from 'notistack'
 import { handleTouchStart } from './shared/handleTouchStart'
 import { UpdateBoard } from './board-update'
 import { mutate } from 'swr'
+import { Iconify } from '@/components/iconify'
 
 type Props = {
   setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
@@ -84,7 +85,11 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
             handleClose()
           }}
         >
-          Editar
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="mdi:pencil" />
+
+            <Typography variant="body2">Editar</Typography>
+          </Stack>
         </MenuItem>
 
         <MenuItem
@@ -93,7 +98,11 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
             handleClose()
           }}
         >
-          Deletar
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="mdi:archive" />
+
+            <Typography variant="body2">Arquivar</Typography>
+          </Stack>
         </MenuItem>
       </Menu>
 
@@ -105,10 +114,10 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         title="Deletar"
         content={
           <>
-            Você quer mesmo excluir o quadro?
+            Você quer mesmo arquivar o quadro?
             <Box sx={{ typography: 'caption', color: 'error.main', mt: 2 }}>
               <strong>Aviso: </strong> Todos as colunas e tasks relacionados a este quadro também
-              serão excluídos.
+              serão arquivados.
             </Box>
           </>
         }
@@ -116,11 +125,11 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
           <Button
             variant="outlined"
             color="error"
-            onClick={() =>
-              axios
-                .delete<{ message: string }>(endpoints.boards.deleteBoard(board.id))
-                .then(({ data }) => {
-                  enqueueSnackbar(data.message, { variant: 'success' })
+            onClick={async () =>
+              await axios
+                .put(endpoints.boards.updateBoard(board.id), { ...board, archived: true })
+                .then(() => {
+                  enqueueSnackbar('Quadro arquivado com sucesso')
 
                   setSelectedBoard(null)
 
@@ -129,7 +138,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
                 })
             }
           >
-            Delete
+            Arquivar
           </Button>
         }
       />
