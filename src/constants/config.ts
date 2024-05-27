@@ -22,6 +22,7 @@ export const endpoints = {
   },
   columns: {
     getAllColumns: '/columns',
+    createColumn: '/columns',
     updateColumn: (id: Id) => `/columns/${id}`,
     deleteColumn: (id: Id) => `/columns/${id}`,
   },

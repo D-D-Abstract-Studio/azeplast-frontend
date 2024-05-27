@@ -37,7 +37,7 @@ export const KanbanView = () => {
   })
 
   const { data: tasks } = useRequest<Array<IKanbanTask>>({
-    url: endpoints.columns.getAllColumns,
+    url: endpoints.tasks.getAllTasks,
   })
 
   const { data: user } = useRequest<User>({
@@ -57,7 +57,7 @@ export const KanbanView = () => {
       return null
     }
 
-    const columnsFiltered = columns?.filter((column) => board.columnIds.includes(column.id))
+    const columnsFiltered = columns?.filter((column) => column.boardId === selectedBoard)
 
     const columnsMapped = columnsFiltered?.reduce((acc, column) => {
       acc[column.id] = column
@@ -73,14 +73,14 @@ export const KanbanView = () => {
       return acc
     }, {} as Record<string, IKanbanTask>)
 
+    console.log
+
     return {
       ...board,
       columns: columnsMapped,
       tasks: tasksMapped,
     }
   }, [boards, columns, tasks, selectedBoard]) as IKanbanBoard
-
-  console.log(board)
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
