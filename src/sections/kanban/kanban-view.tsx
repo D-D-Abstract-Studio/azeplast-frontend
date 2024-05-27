@@ -25,6 +25,7 @@ import { KanbanBoardAdd } from './components/board/add'
 import { BoardActions } from './components/board/actions'
 
 import { User } from '@/types/user'
+import { KanbanColumn } from '@/sections/kanban/components/kanban-column'
 
 export const KanbanView = () => {
   const { data: boards, isLoading } = useRequest<Array<IKanbanBoard>>({
@@ -230,14 +231,14 @@ export const KanbanView = () => {
                 {selectedBoard && <KanbanColumnAdd boardId={selectedBoard} />}
               </Stack>
 
-              {/* {boards?.ordered?.map((columnId, index) => (
+              {board?.ordered?.map((columnId, index) => (
                 <KanbanColumn
                   index={index}
                   key={columnId}
-                  column={boards?.columns[columnId]}
-                  tasks={boards?.tasks}
+                  column={board?.columns[columnId]}
+                  tasks={board?.tasks}
                 />
-              ))} */}
+              ))}
             </Stack>
           )}
         </Droppable>
