@@ -10,22 +10,26 @@ import { hideScroll } from '@/theme/css'
 
 import { moveColumn, moveTask } from '@/api/kanban'
 
-import { KanbanColumn } from './components/kanban-column'
-import KanbanColumnAdd from './components/kanban-column-add'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 
 import { useRequest } from '@/hooks/use-request'
 
-import { endpoints } from '@/constants/config'
+import { endpoints, userCurrency } from '@/constants/config'
 import { KanbanBoardAdd } from './components/board/add'
 
 import { IKanbanBoard } from '@/types/kanban'
 
 import { BoardActions } from './components/board/actions'
+import { User } from '@/types/user'
+import { Alert, Typography } from '@mui/material'
 
 export const KanbanView = () => {
   const { data: boards, isLoading } = useRequest<{ items: Array<IKanbanBoard> }>({
     url: endpoints.boards.getAllBoards,
+  })
+
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUser,
   })
 
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
@@ -123,6 +127,15 @@ export const KanbanView = () => {
     <Container maxWidth="xl" sx={{ mt: 1 }}>
       {isLoading && renderSkeleton}
 
+      {userCurrency === 'anonymous' && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          <Typography variant="body2">
+            Você está visualizando a aplicação como um usuário anônimo. Para ter acesso a todas as
+            funcionalidades, peça ao administrador para criar uma conta de usuário para você.
+          </Typography>
+        </Alert>
+      )}
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="board" type="COLUMN" direction="horizontal">
           {(provided) => (
@@ -148,7 +161,7 @@ export const KanbanView = () => {
                   borderRadius: 1,
                 }}
               >
-                <KanbanBoardAdd />
+                {user?.permissions === 'admin' && <KanbanBoardAdd />}
 
                 <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
                   {boards?.items

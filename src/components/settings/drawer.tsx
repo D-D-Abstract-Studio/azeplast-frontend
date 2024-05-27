@@ -37,6 +37,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 import { CopyClipboard } from '../CopyClipboard'
 import { ConfirmDialog } from '../custom-dialog'
 import { enqueueSnackbar } from 'notistack'
+import { mutate } from 'swr'
 
 export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const theme = useTheme()
@@ -178,7 +179,7 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
               <Divider />
 
               {data?.map((user) => (
-                <UserUpdate key={user._id} user={user} mutate={mutate} />
+                <UserUpdate key={user._id} user={user} />
               ))}
             </Stack>
           </AccordionDetails>
@@ -188,7 +189,7 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   )
 }
 
-const UserUpdate = ({ user, mutate }: { user: User; mutate: () => void }) => {
+const UserUpdate = ({ user }: { user: User }) => {
   const theme = useTheme()
   const confirmDialog = useBoolean()
 
@@ -212,22 +213,32 @@ const UserUpdate = ({ user, mutate }: { user: User; mutate: () => void }) => {
     formState: { isDirty },
   } = methods
 
-  const handleDelete = async (userId: string) => {
-    enqueueSnackbar('Usuário deletado com sucesso!', {
-      variant: 'error',
-      preventDuplicate: true,
-    })
+  const isActualUser = user.name === userCurrency
 
-    await axios.delete(endpoints.user.deleteUser(userId)).then(() => mutate())
+  const handleDelete = async (userId: string) => {
+    await axios.delete(endpoints.user.deleteUser(userId)).then(() => {
+      enqueueSnackbar('Usuário deletado com sucesso!', {
+        variant: 'error',
+        preventDuplicate: true,
+      })
+
+      mutate(endpoints.user.getAllUsers)
+    })
   }
 
   const handleUpdate = async (userId: string, updatedData: User) => {
-    enqueueSnackbar('Usuário atualizado com sucesso!', {
-      variant: 'success',
-      preventDuplicate: true,
-    })
+    await axios.put(endpoints.user.updateUser(userId), updatedData).then(() => {
+      enqueueSnackbar('Usuário atualizado com sucesso!', {
+        variant: 'success',
+        preventDuplicate: true,
+      })
 
-    await axios.put(endpoints.user.updateUser(userId), updatedData).then(() => mutate())
+      if (isActualUser) {
+        window.localStorage.setItem('userName', updatedData.name)
+      }
+
+      mutate(endpoints.user.getAllUsers)
+    })
   }
 
   return (
@@ -263,7 +274,7 @@ const UserUpdate = ({ user, mutate }: { user: User; mutate: () => void }) => {
 
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
             <Stack direction="row" spacing={1}>
-              {user.name === userCurrency && '(atual)'}
+              {isActualUser && '(atual)'}
             </Stack>
 
             <Stack direction="row" spacing={1}>

@@ -17,6 +17,8 @@ import { handleTouchStart } from './shared/handleTouchStart'
 import { UpdateBoard } from './board-update'
 import { mutate } from 'swr'
 import { Iconify } from '@/components/iconify'
+import { useRequest } from '@/hooks/use-request'
+import { User } from '@/types/user'
 
 type Props = {
   setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
@@ -27,6 +29,10 @@ type Props = {
 export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) => {
   const confirmDialogDelete = useBoolean()
   const dialogEdit = useBoolean()
+
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUser,
+  })
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [lastTap, setLastTap] = useState<number>(0)
@@ -67,7 +73,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
     <>
       <Button
         variant="soft"
-        onMouseDown={handleMouseDown}
+        onMouseDown={user?.permissions === 'admin' ? handleMouseDown : undefined}
         onContextMenu={(event) => event.preventDefault()}
         sx={{
           minWidth: '150px',

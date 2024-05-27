@@ -22,7 +22,7 @@ import { User } from '@/types/user'
 export const KanbanBoardAdd = () => {
   const [boardName, setBoardName] = useState('')
 
-  const { data } = useRequest<User>({
+  const { data: user } = useRequest<User>({
     url: endpoints.user.getUser,
   })
 
@@ -32,7 +32,7 @@ export const KanbanBoardAdd = () => {
     await axios
       .post<{ message: string }>(endpoints.boards.createBoard, {
         name,
-        usersIds: [data?._id],
+        usersIds: [user?._id],
         archived: false,
         columnIds: [],
       })
