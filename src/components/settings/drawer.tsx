@@ -292,6 +292,16 @@ const UserUpdate = ({ user }: { user: User }) => {
               </Button>
             </Stack>
           </Stack>
+
+          {isActualUser && (
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              <Typography variant="body2">
+                Como administrador, cuidado ao fazer alteração no seu perfil. Se não ouver outro
+                usuário administrador, você poderá perder acesso ao sistema. Caso precise de ajuda,
+                entre em contato. +55 49 991954455 ~Diego Horvatti
+              </Typography>
+            </Alert>
+          )}
         </Stack>
       </FormProvider>
 
