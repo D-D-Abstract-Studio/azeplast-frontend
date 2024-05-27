@@ -10,7 +10,7 @@ export const endpoints = {
   user: {
     getAllUsers: '/users',
     createUser: '/users',
-    getUser: (id: Id) => `/users/${id}`,
+    getUser: `/users/${userCurrency}`,
     updateUser: (id: Id) => `/users/${id}`,
     deleteUser: (id: Id) => `/users/${id}`,
   },

@@ -3,6 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
+
 import { ConfirmDialogProps } from './types'
 
 export default function ConfirmDialog({
@@ -14,7 +15,7 @@ export default function ConfirmDialog({
   ...other
 }: ConfirmDialogProps) {
   return (
-    <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other} disablePortal>
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
       {content && <DialogContent sx={{ typography: 'body2' }}> {content} </DialogContent>}

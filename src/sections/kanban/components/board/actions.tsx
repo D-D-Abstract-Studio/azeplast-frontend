@@ -97,7 +97,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         </MenuItem>
       </Menu>
 
-      {/* <UpdateBoard /> */}
+      <UpdateBoard board={board} dialogEdit={dialogEdit} />
 
       <ConfirmDialog
         open={confirmDialogDelete.value}

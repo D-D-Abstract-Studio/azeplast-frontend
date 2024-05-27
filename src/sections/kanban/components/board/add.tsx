@@ -12,7 +12,7 @@ import { axios } from '@/utils/axios'
 import { mutate } from 'swr'
 
 import { Iconify } from '@/components/iconify'
-import { endpoints, userCurrency } from '@/constants/config'
+import { endpoints } from '@/constants/config'
 
 import { IKanbanBoard } from '@/types/kanban'
 import { enqueueSnackbar } from 'notistack'
@@ -23,7 +23,7 @@ export const KanbanBoardAdd = () => {
   const [boardName, setBoardName] = useState('')
 
   const { data } = useRequest<User>({
-    url: endpoints.user.getUser(userCurrency),
+    url: endpoints.user.getUser,
   })
 
   const openAddBoard = useBoolean()
