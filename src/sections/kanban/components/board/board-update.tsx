@@ -39,6 +39,7 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
   const UpdateUserSchema = Yup.object().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
+    archived: Yup.boolean().required(),
     usersIds: Yup.array().required(),
     columnIds: Yup.array().required(),
   })

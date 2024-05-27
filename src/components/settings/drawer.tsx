@@ -299,6 +299,7 @@ const UserUpdate = ({ user }: { user: User }) => {
         open={confirmDialog.value}
         onClose={confirmDialog.onFalse}
         title="Delete"
+        disablePortal={false}
         content={
           <>
             Você quer mesmo deletar o usuário?

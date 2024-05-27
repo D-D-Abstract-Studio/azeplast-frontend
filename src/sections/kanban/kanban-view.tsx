@@ -123,18 +123,22 @@ export const KanbanView = () => {
     </Stack>
   )
 
-  return (
-    <Container maxWidth="xl" sx={{ mt: 1 }}>
-      {isLoading && renderSkeleton}
-
-      {userCurrency === 'anonymous' && (
+  if (userCurrency === 'anonymous') {
+    return (
+      <Stack p={2}>
         <Alert severity="warning" sx={{ mb: 2 }}>
           <Typography variant="body2">
             Você está visualizando a aplicação como um usuário anônimo. Para ter acesso a todas as
             funcionalidades, peça ao administrador para criar uma conta de usuário para você.
           </Typography>
         </Alert>
-      )}
+      </Stack>
+    )
+  }
+
+  return (
+    <Container maxWidth="xl" sx={{ mt: 1 }}>
+      {isLoading && renderSkeleton}
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="board" type="COLUMN" direction="horizontal">
