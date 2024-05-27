@@ -1,18 +1,15 @@
 'use client'
 
-import { useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 
-import { endpoints, userCurrency } from '@/constants/config'
+import { endpoints } from '@/constants/config'
 
-import { alpha, MenuItem, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
 
-import { RHFSelect, RHFTextField } from '@/components/hook-form'
+import { RHFTextField } from '@/components/hook-form'
 import FormProvider from '@/components/hook-form/form-provider'
 import { ConfirmDialog } from '@/components/custom-dialog'
-import { Iconify } from '@/components/iconify'
 
 import { axios } from '@/utils/axios'
 
@@ -29,10 +26,6 @@ type Props = {
 }
 
 export const UpdateBoard = ({ board, dialogEdit }: Props) => {
-  const theme = useTheme()
-
-  console.log({ board })
-
   const UpdateUserSchema = Yup.object().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
@@ -55,7 +48,7 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
     await axios.put(endpoints.boards.updateBoard(boardId), updatedData).then(() => {
       enqueueSnackbar('Quadro atualizado com sucesso')
 
-      mutate(endpoints.user.getAllUsers)
+      mutate(endpoints.boards.updateBoard(boardId))
     })
 
   return (
