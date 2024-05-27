@@ -34,6 +34,7 @@ export const KanbanBoardAdd = () => {
         name,
         usersIds: [user?._id],
         archived: false,
+        ordered: [],
         columnIds: [],
       })
       .then(({ data: { message } }) => {

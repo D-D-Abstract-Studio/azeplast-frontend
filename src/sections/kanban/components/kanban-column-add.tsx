@@ -10,16 +10,16 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { useBoolean } from '@/hooks/use-boolean'
 
 import { Iconify } from '@/components/iconify'
-import { IKanbanColumn } from '@/types/kanban'
+import { IKanbanBoard, IKanbanColumn } from '@/types/kanban'
 import { axios } from '@/utils/axios'
 import { endpoints } from '@/constants/config'
 import { enqueueSnackbar } from 'notistack'
 
 type Props = {
-  boardId: string
+  board: IKanbanBoard | undefined
 }
 
-export const KanbanColumnAdd = ({ boardId }: Props) => {
+export const KanbanColumnAdd = ({ board }: Props) => {
   const [columnName, setColumnName] = useState('')
 
   const openAddColumn = useBoolean()
@@ -28,16 +28,23 @@ export const KanbanColumnAdd = ({ boardId }: Props) => {
     setColumnName(event.target.value)
   }, [])
 
+  if (!board) return null
+
   const createColumn = async (columnData: Pick<IKanbanColumn, 'name'>) =>
     await axios
-      .post(endpoints.columns.createColumn, {
+      .post<{ items: IKanbanColumn; message: string }>(endpoints.columns.createColumn, {
         ...columnData,
-        boardId,
+        boardId: board.id,
         taskIds: [],
         archived: false,
       })
-      .then(() => {
-        enqueueSnackbar('Coluna criada com sucesso')
+      .then(async (response) => {
+        enqueueSnackbar(response.data.message)
+
+        await axios.put(endpoints.boards.updateBoard(board.id), {
+          ...board,
+          ordered: [...board.ordered, response.data.items.id],
+        })
 
         mutate(endpoints.boards.getAllBoards)
       })

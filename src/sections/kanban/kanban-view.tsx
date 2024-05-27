@@ -14,7 +14,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
 
-import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import { MenuPopover } from '@/components/MenuPopover'
@@ -73,14 +73,14 @@ export const KanbanView = () => {
       return acc
     }, {} as Record<string, IKanbanTask>)
 
-    console.log
+    console.log({ columnsMapped, tasksMapped })
 
     return {
       ...board,
       columns: columnsMapped,
       tasks: tasksMapped,
     }
-  }, [boards, columns, tasks, selectedBoard]) as IKanbanBoard
+  }, [boards, columns, tasks, selectedBoard]) as IKanbanBoard & Pick<IKanban, 'columns' | 'tasks'>
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
@@ -228,7 +228,9 @@ export const KanbanView = () => {
               <Stack direction="row" spacing={1} sx={{ width: '100%', p: 1 }}>
                 {provided.placeholder}
 
-                {selectedBoard && <KanbanColumnAdd boardId={selectedBoard} />}
+                {selectedBoard && (
+                  <KanbanColumnAdd board={boards?.find((b) => b.id === selectedBoard)} />
+                )}
               </Stack>
 
               {board?.ordered?.map((columnId, index) => (

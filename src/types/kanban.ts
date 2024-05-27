@@ -24,7 +24,7 @@ export type IKanbanColumn = {
   taskIds: string[]
 }
 
-export type IKanbanBoard = Pick<IKanban, 'columns' | 'tasks'> & {
+export type IKanbanBoard = {
   id: string
   archived: boolean
   name: string
