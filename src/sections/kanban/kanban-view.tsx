@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 
 import Stack from '@mui/material/Stack'
@@ -14,7 +14,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
 
-import { IKanbanBoard } from '@/types/kanban'
+import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import { MenuPopover } from '@/components/MenuPopover'
@@ -27,8 +27,16 @@ import { BoardActions } from './components/board/actions'
 import { User } from '@/types/user'
 
 export const KanbanView = () => {
-  const { data: boards, isLoading } = useRequest<{ items: Array<IKanbanBoard> }>({
+  const { data: boards, isLoading } = useRequest<Array<IKanbanBoard>>({
     url: endpoints.boards.getAllBoards,
+  })
+
+  const { data: columns } = useRequest<Array<IKanbanColumn>>({
+    url: endpoints.columns.getAllColumns,
+  })
+
+  const { data: tasks } = useRequest<Array<IKanbanTask>>({
+    url: endpoints.columns.getAllColumns,
   })
 
   const { data: user } = useRequest<User>({
@@ -37,12 +45,46 @@ export const KanbanView = () => {
 
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
 
+  const board = useMemo(() => {
+    if (!selectedBoard) {
+      return null
+    }
+
+    const board = boards?.find((board) => board.id === selectedBoard)
+
+    if (!board) {
+      return null
+    }
+
+    const columnsFiltered = columns?.filter((column) => board.columnIds.includes(column.id))
+
+    const columnsMapped = columnsFiltered?.reduce((acc, column) => {
+      acc[column.id] = column
+      return acc
+    }, {} as Record<string, IKanbanColumn>)
+
+    const tasksFiltered = tasks?.filter((task) =>
+      columnsFiltered?.some((column) => column.taskIds.includes(task.id))
+    )
+
+    const tasksMapped = tasksFiltered?.reduce((acc, task) => {
+      acc[task.id] = task
+      return acc
+    }, {} as Record<string, IKanbanTask>)
+
+    return {
+      ...board,
+      columns: columnsMapped,
+      tasks: tasksMapped,
+    }
+  }, [boards, columns, tasks, selectedBoard]) as IKanbanBoard
+
+  console.log(board)
+
   const isPermissionAdmin = user?.permissions === 'admin'
 
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
-      console.log({ destination, source, draggableId, type })
-
       try {
         if (!destination) {
           return
@@ -54,7 +96,7 @@ export const KanbanView = () => {
 
         // Moving column
         if (type === 'COLUMN') {
-          const newOrdered = [...boards.ordered]
+          const newOrdered = [...board.ordered]
 
           newOrdered.splice(source.index, 1)
 
@@ -64,9 +106,9 @@ export const KanbanView = () => {
           return
         }
 
-        const sourceColumn = boards?.columns[source.droppableId]
+        const sourceColumn = board?.columns[source.droppableId]
 
-        const destinationColumn = boards?.columns[destination.droppableId]
+        const destinationColumn = board?.columns[destination.droppableId]
 
         // Moving task to same list
         if (sourceColumn.id === destinationColumn.id) {
@@ -77,7 +119,7 @@ export const KanbanView = () => {
           newTaskIds.splice(destination.index, 0, draggableId)
 
           moveTask({
-            ...boards?.columns,
+            ...board?.columns,
             [sourceColumn.id]: {
               ...sourceColumn,
               taskIds: newTaskIds,
@@ -101,7 +143,7 @@ export const KanbanView = () => {
         destinationTaskIds.splice(destination.index, 0, draggableId)
 
         moveTask({
-          ...boards?.columns,
+          ...board?.columns,
           [sourceColumn.id]: {
             ...sourceColumn,
             taskIds: sourceTaskIds,
@@ -117,7 +159,7 @@ export const KanbanView = () => {
         console.error(error)
       }
     },
-    [boards?.columns, boards?.ordered]
+    [board?.columns, board?.ordered]
   )
 
   const renderSkeleton = (
@@ -142,10 +184,10 @@ export const KanbanView = () => {
   }
 
   useEffect(() => {
-    if (boards?.items.length && !selectedBoard) {
-      setSelectedBoard(boards.items.filter((board) => !board.archived)[0].id)
+    if (boards?.length && !selectedBoard) {
+      setSelectedBoard(boards.filter((board) => !board.archived)[0].id)
     }
-  }, [boards?.items, selectedBoard])
+  }, [boards, selectedBoard])
 
   return (
     <Container maxWidth="xl" sx={{ mt: 1 }}>
@@ -177,7 +219,7 @@ export const KanbanView = () => {
                 }}
               >
                 <BoardsItems
-                  boards={boards?.items}
+                  boards={boards}
                   {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
                 />
               </Stack>

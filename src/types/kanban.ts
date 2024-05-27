@@ -23,17 +23,18 @@ export type IKanbanColumn = {
   taskIds: string[]
 }
 
-export type IKanbanBoard = {
+export type IKanbanBoard = Pick<IKanban, 'columns' | 'tasks'> & {
   id: string
   archived: boolean
   name: string
   usersIds: string[]
   columnIds: string[]
+  ordered: string[]
 }
 
 export type IKanban = {
   boards: Record<string, IKanbanBoard>
   columns: Record<string, IKanbanColumn>
-  ordered: string[]
   tasks: Record<string, IKanbanTask>
+  ordered: string[]
 }

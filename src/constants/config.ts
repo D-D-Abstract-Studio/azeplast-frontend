@@ -21,7 +21,7 @@ export const endpoints = {
     deleteBoard: (id: Id) => `/boards/${id}`,
   },
   columns: {
-    createColumn: '/columns',
+    getAllColumns: '/columns',
     updateColumn: (id: Id) => `/columns/${id}`,
     deleteColumn: (id: Id) => `/columns/${id}`,
   },

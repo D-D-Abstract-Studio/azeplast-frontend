@@ -30,7 +30,7 @@ export const KanbanColumnAdd = ({ boardId }: Props) => {
 
   const createColumn = async (columnData: Pick<IKanbanColumn, 'name'>) =>
     await axios
-      .post(endpoints.columns.createColumn, {
+      .post(endpoints.columns.getAllColumns, {
         ...columnData,
         boardId,
         taskIds: [],
