@@ -11,8 +11,8 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { createTask, updateTask, deleteTask } from '@/api/kanban'
 
-import KanbanTaskAdd from './kanban-task-add'
-import KanbanTaskItem from './kanban-task-item'
+import KanbanTaskAdd from '../tasks/kanban-task-add'
+import KanbanTaskItem from '../tasks/kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
 
 import { Iconify } from '@/components/iconify'

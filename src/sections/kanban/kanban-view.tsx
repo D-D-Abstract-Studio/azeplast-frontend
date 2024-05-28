@@ -21,10 +21,10 @@ import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/ma
 import { MenuPopover } from '@/components/MenuPopover'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
-import { KanbanBoardAdd } from './components/board/add'
-import { BoardActions } from './components/board/actions'
-import { KanbanColumnAdd } from './components/kanban-column-add'
-import { KanbanColumn } from './components/kanban-column'
+import { KanbanBoardAdd } from './components/board/board-add'
+import { BoardActions } from './components/board/board-actions'
+import { KanbanColumnAdd } from './components/column/kanban-column-add'
+import { KanbanColumn } from './components/column/kanban-column'
 
 import { User } from '@/types/user'
 
