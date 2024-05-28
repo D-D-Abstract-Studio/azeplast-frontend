@@ -49,6 +49,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import FormProvider from '@/components/hook-form/form-provider'
+import { RHFTextField } from '@/components/hook-form'
 
 export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
@@ -231,15 +232,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               </Stack>
             </Stack>
 
-            <DesktopDatePicker
-              disablePast
-              label="Data de vencimento"
-              defaultValue={task.dueDate}
-              onChange={(newValue) => {
-                /* setValues({ ...values, dueDate: newValue }) */
-              }}
-              slotProps={{ textField: { fullWidth: true } }}
-            />
+            <RHFTextField fullWidth label="Data de vencimento" name="dueDate" type="date" />
+
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Prioridade</StyledLabel>
 
