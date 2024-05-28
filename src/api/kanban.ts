@@ -36,29 +36,12 @@ export async function createBoard(boardData: IKanbanBoard) {
   )
 } */
 
-export async function updateColumn(columnId: string, columnName: string) {
-  // const data = { columnId, columnName };
-  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'update-column' } });
-
-  console.log('updateColumn')
-  console.log(columnId)
-  console.log(columnName)
-}
-
 export async function moveColumn(newOrdered: string[]) {
   // const data = { newOrdered };
   // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-column' } });
 
   console.log('moveColumn')
   console.log(newOrdered)
-}
-
-export async function deleteColumn(columnId: string) {
-  // const data = { columnId };
-  // await axios.post(endpoints.kanban, data, { params: { endpoint: 'delete-column' } });
-
-  console.log('deleteColumn')
-  console.log(columnId)
 }
 
 export async function createTask(columnId: string, taskData: IKanbanTask) {

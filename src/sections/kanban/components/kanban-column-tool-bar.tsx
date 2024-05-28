@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import { mutate } from 'swr'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -12,14 +13,17 @@ import { Iconify } from '@/components/iconify'
 import { ConfirmDialog } from '@/components/custom-dialog'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 import KanbanInputName from './kanban-input-name'
+import { enqueueSnackbar } from 'notistack'
+import { IKanbanColumn } from '@/types/kanban'
+import { axios } from '@/utils/axios'
+import { endpoints } from '@/constants/config'
 
 type Props = {
   columnName: string
-  onDeleteColumn: VoidFunction
-  onUpdateColumn: (inputName: string) => void
+  column: IKanbanColumn
 }
 
-export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpdateColumn }: Props) {
+export default function KanbanColumnToolBar({ columnName, column }: Props) {
   const renameRef = useRef<HTMLInputElement>(null)
 
   const popover = usePopover()
@@ -27,6 +31,22 @@ export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpda
   const confirmDialog = useBoolean()
 
   const [name, setName] = useState(columnName)
+
+  const handleUpdateColumn = async (name: string) =>
+    await axios.put(endpoints.columns.updateColumn(column.id), { ...column, name }).then(() => {
+      enqueueSnackbar('Nome atualizado com sucesso!')
+
+      mutate(endpoints.columns.getAllColumns)
+    })
+
+  const handleDeleteColumn = async () =>
+    await axios
+      .put(endpoints.columns.updateColumn(column.id), { ...column, archived: true })
+      .then(() => {
+        enqueueSnackbar('Coluna arquivada com sucesso!')
+
+        mutate(endpoints.columns.getAllColumns)
+      })
 
   useEffect(() => {
     if (popover.open) {
@@ -46,10 +66,11 @@ export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpda
         if (renameRef.current) {
           renameRef.current.blur()
         }
-        onUpdateColumn(name)
+
+        handleUpdateColumn(name)
       }
     },
-    [name, onUpdateColumn]
+    [name]
   )
 
   return (
@@ -105,9 +126,9 @@ export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpda
         title="Delete"
         content={
           <>
-            Are you sure want to delete column?
+            Você tem certeza que deseja deletar está coluna <strong>{columnName}</strong>?
             <Box sx={{ typography: 'caption', color: 'error.main', mt: 2 }}>
-              <strong> NOTE: </strong> All tasks related to this category will also be deleted.
+              <strong> Atenção: </strong> Todos os cards desta coluna serão deletados.
             </Box>
           </>
         }
@@ -116,11 +137,11 @@ export default function KanbanColumnToolBar({ columnName, onDeleteColumn, onUpda
             variant="contained"
             color="error"
             onClick={() => {
-              onDeleteColumn()
+              handleDeleteColumn()
               confirmDialog.onFalse()
             }}
           >
-            Delete
+            Arquivar
           </Button>
         }
       />

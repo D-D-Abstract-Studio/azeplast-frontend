@@ -242,7 +242,6 @@ const UserUpdate = ({ user }: { user: User }) => {
     await axios.delete(endpoints.user.deleteUser(userId)).then(() => {
       enqueueSnackbar('Usuário deletado com sucesso!', {
         variant: 'error',
-        preventDuplicate: true,
       })
 
       mutate(endpoints.user.getAllUsers)
@@ -251,10 +250,7 @@ const UserUpdate = ({ user }: { user: User }) => {
 
   const handleUpdate = async (userId: string, updatedData: User) => {
     await axios.put(endpoints.user.updateUser(userId), updatedData).then(() => {
-      enqueueSnackbar('Usuário atualizado com sucesso!', {
-        variant: 'success',
-        preventDuplicate: true,
-      })
+      enqueueSnackbar('Usuário atualizado com sucesso!')
 
       if (isActualUser) {
         window.localStorage.setItem('userName', updatedData.name)

@@ -235,8 +235,8 @@ export const KanbanView = () => {
 
               {board?.ordered?.map((columnId, index) => (
                 <KanbanColumn
-                  index={index}
                   key={columnId}
+                  index={index}
                   column={board?.columns[columnId]}
                   tasks={board?.tasks}
                 />

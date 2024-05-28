@@ -9,7 +9,7 @@ import { Box } from '@mui/material'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { updateColumn, deleteColumn, createTask, updateTask, deleteTask } from '@/api/kanban'
+import { createTask, updateTask, deleteTask } from '@/api/kanban'
 
 import KanbanTaskAdd from './kanban-task-add'
 import KanbanTaskItem from './kanban-task-item'
@@ -19,45 +19,17 @@ import { Iconify } from '@/components/iconify'
 
 import { enqueueSnackbar } from 'notistack'
 
-import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { IKanban, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
-type Props = {
-  column: IKanbanColumn
-  tasks: Record<string, IKanbanTask>
+type Props = Partial<Pick<IKanban, 'tasks'>> & {
+  column: IKanbanColumn | undefined
   index: number
 }
 
 export const KanbanColumn = ({ column, tasks, index }: Props) => {
   const openAddTask = useBoolean()
 
-  const handleUpdateColumn = useCallback(
-    async (columnName: string) => {
-      try {
-        if (column.name !== columnName) {
-          updateColumn(column.id, columnName)
-
-          enqueueSnackbar('Update success!', {
-            anchorOrigin: { vertical: 'top', horizontal: 'center' },
-          })
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    [column.id, column.name, enqueueSnackbar]
-  )
-
-  const handleDeleteColumn = useCallback(async () => {
-    try {
-      deleteColumn(column.id)
-
-      enqueueSnackbar('Delete success!', {
-        anchorOrigin: { vertical: 'top', horizontal: 'center' },
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }, [column.id, enqueueSnackbar])
+  if (!column) return null
 
   const handleAddTask = useCallback(
     async (taskData: IKanbanTask) => {
@@ -111,11 +83,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
           }}
         >
           <Stack {...provided.dragHandleProps} spacing={2}>
-            <KanbanColumnToolBar
-              columnName={column.name}
-              onUpdateColumn={handleUpdateColumn}
-              onDeleteColumn={handleDeleteColumn}
-            />
+            <KanbanColumnToolBar columnName={column.name} column={column} />
 
             <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 210px)' }}>
               <Droppable droppableId={column.id} type="TASK">
@@ -129,15 +97,19 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                       width: 280,
                     }}
                   >
-                    {column.taskIds.map((taskId, taskIndex) => (
-                      <KanbanTaskItem
-                        key={taskId}
-                        index={taskIndex}
-                        task={tasks[taskId]}
-                        onUpdateTask={handleUpdateTask}
-                        onDeleteTask={() => handleDeleteTask(taskId)}
-                      />
-                    ))}
+                    {column.taskIds.map((taskId, taskIndex) => {
+                      if (!tasks) return null
+
+                      return (
+                        <KanbanTaskItem
+                          key={taskId}
+                          index={taskIndex}
+                          task={tasks[taskId]}
+                          onUpdateTask={handleUpdateTask}
+                          onDeleteTask={() => handleDeleteTask(taskId)}
+                        />
+                      )
+                    })}
 
                     {openAddTask.value && (
                       <KanbanTaskAdd
