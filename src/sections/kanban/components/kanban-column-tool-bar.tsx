@@ -115,8 +115,8 @@ export default function KanbanColumnToolBar({ columnName, column }: Props) {
           }}
           sx={{ color: 'error.main' }}
         >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Deletar
+          <Iconify icon="solar:archive-bold" />
+          Arquivar
         </MenuItem>
       </CustomPopover>
 
