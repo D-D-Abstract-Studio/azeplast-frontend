@@ -32,16 +32,13 @@ export const UpdateBoard = ({ board, dialogEdit }: Props) => {
     url: endpoints.user.getAllUsers,
   })
 
-  /* const { data: coluns } = useRequest<User>({
-    url: endpoints.user.getUser,
-  }) */
-
   const UpdateUserSchema = Yup.object().shape({
-    id: Yup.string().required(),
-    name: Yup.string().required(),
-    archived: Yup.boolean().required(),
-    usersIds: Yup.array().required(),
-    columnIds: Yup.array().required(),
+    id: Yup.string().required('Campo obrigatório'),
+    archived: Yup.boolean().required('Campo obrigatório'),
+    name: Yup.string().required('Campo obrigatório'),
+    usersIds: Yup.array().required('Campo obrigatório'),
+    columnIds: Yup.array().required('Campo obrigatório'),
+    ordered: Yup.array().required('Campo obrigatório'),
   })
 
   const methods = useForm<IKanbanBoard>({

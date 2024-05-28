@@ -14,11 +14,7 @@ import { KanbanColumnToolBar } from './kanban-column-tool-bar'
 
 import { Iconify } from '@/components/iconify'
 
-import { enqueueSnackbar } from 'notistack'
-
-import { IKanban, IKanbanColumn, IKanbanTask } from '@/types/kanban'
-import { axios } from '@/utils/axios'
-import { endpoints } from '@/constants/config'
+import { IKanban, IKanbanColumn } from '@/types/kanban'
 
 type Props = Partial<Pick<IKanban, 'tasks'>> & {
   column: IKanbanColumn | undefined
@@ -29,29 +25,6 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
   const openAddTask = useBoolean()
 
   if (!column) return null
-
-  const handleUpdateTask = async (task: IKanbanTask) =>
-    await axios
-      .put(endpoints.tasks.updateTask(task.id), {
-        ...task,
-      })
-      .then(() => {
-        enqueueSnackbar('Tarefa atualizada com sucesso')
-
-        openAddTask.onFalse()
-      })
-
-  const handleArchiveTask = async (taskId: string) =>
-    await axios
-      .put(endpoints.tasks.updateTask(taskId), {
-        ...tasks,
-        archived: true,
-      })
-      .then(() => {
-        enqueueSnackbar('Tarefa arquivada com sucesso')
-
-        openAddTask.onFalse()
-      })
 
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -86,15 +59,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                       if (!tasks) return null
                       if (!tasks[taskId]) return null
 
-                      return (
-                        <KanbanTaskItem
-                          key={taskId}
-                          index={taskIndex}
-                          task={tasks[taskId]}
-                          onUpdateTask={handleUpdateTask}
-                          onArchiveTask={() => handleArchiveTask(taskId)}
-                        />
-                      )
+                      return <KanbanTaskItem key={taskId} index={taskIndex} task={tasks[taskId]} />
                     })}
 
                     {openAddTask.value && (

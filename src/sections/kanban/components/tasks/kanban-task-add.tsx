@@ -1,14 +1,15 @@
+import { mutate } from 'swr'
 import { useState, useCallback } from 'react'
 
 import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
+
 import { axios } from '@/utils/axios'
-import { endpoints, userCurrency } from '@/constants/config'
 import { enqueueSnackbar } from 'notistack'
+
+import { endpoints, userCurrency } from '@/constants/config'
 import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
-import dayjs from 'dayjs'
-import { mutate } from 'swr'
 
 type Props = {
   onCloseAddTask: VoidFunction
@@ -26,7 +27,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
       categories: [],
       description: '...',
       assignee: [],
-      dueDate: dayjs().format('DD/MM/YYYY'),
+      dueDate: new Date(),
       reporter: userCurrency,
     })
 

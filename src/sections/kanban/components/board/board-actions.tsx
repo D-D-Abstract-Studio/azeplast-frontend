@@ -101,16 +101,16 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         </MenuItem>
 
         <MenuItem
-          sx={{ color: 'warning.main' }}
+          sx={{ color: 'error.main' }}
           onClick={() => {
             confirmDialogDelete.onTrue()
             handleClose()
           }}
         >
           <Stack direction="row" spacing={1} alignItems="center">
-            <Iconify icon="solar:archive-bold" />
+            <Iconify icon="tabler:trash-filled" />
 
-            <Typography variant="body2">Arquivar</Typography>
+            <Typography variant="body2">Deletar</Typography>
           </Stack>
         </MenuItem>
       </Menu>
@@ -120,13 +120,13 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
       <ConfirmDialog
         open={confirmDialogDelete.value}
         onClose={confirmDialogDelete.onFalse}
-        title="Arquivar"
+        title="Deletar"
         content={
           <>
-            Você quer mesmo arquivar o quadro?
+            Você quer mesmo deletar o quadro?
             <Box sx={{ typography: 'caption', color: 'error.main', mt: 2 }}>
               <strong>Aviso: </strong> Todos as colunas e tasks relacionados a este quadro também
-              serão arquivados.
+              serão deletados.
             </Box>
           </>
         }
@@ -147,7 +147,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
                 })
             }
           >
-            Arquivar
+            Deletar
           </Button>
         }
       />

@@ -16,24 +16,16 @@ import KanbanDetails from './kanban-details'
 
 import { bgBlur } from '@/theme/css'
 
-import { IKanbanTask } from '@/types/kanban'
 import { COLORS } from '@/constants/config'
+
+import { IKanbanTask } from '@/types/kanban'
 
 type Props = PaperProps & {
   index: number
   task: IKanbanTask
-  onUpdateTask: (updateTask: IKanbanTask) => void
-  onArchiveTask: VoidFunction
 }
 
-export const KanbanTaskItem = ({
-  task,
-  index,
-  onArchiveTask,
-  onUpdateTask,
-  sx,
-  ...other
-}: Props) => {
+export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
   const theme = useTheme()
 
   const openDetails = useBoolean()
@@ -107,7 +99,7 @@ export const KanbanTaskItem = ({
                 >
                   {task?.assignee?.map((user, index) => (
                     <Avatar alt={user.name} key={index} color={COLORS[index]}>
-                      {user?.name?.[0].toUpperCase()}
+                      {user?.name?.slice(0, 3).toUpperCase()}
                     </Avatar>
                   ))}
                 </AvatarGroup>
@@ -121,8 +113,6 @@ export const KanbanTaskItem = ({
         task={task}
         openDetails={openDetails.value}
         onCloseDetails={openDetails.onFalse}
-        onUpdateTask={onUpdateTask}
-        onDeleteTask={onArchiveTask}
       />
     </>
   )

@@ -17,7 +17,11 @@ export const ArchivedList = () => {
 
   return (
     <div>
-      <h1>Archived</h1>
+      {tasks
+        ?.filter((task) => task.archived)
+        .map((task) => (
+          <div key={task.id}>{task.name}</div>
+        ))}
     </div>
   )
 }

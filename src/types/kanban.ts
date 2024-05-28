@@ -10,7 +10,7 @@ export type IKanbanTask = {
   assignee: Array<{
     name?: string
   }>
-  dueDate: string
+  dueDate: Date
   reporter: string
 }
 

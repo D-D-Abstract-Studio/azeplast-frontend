@@ -13,7 +13,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
 
-import { Alert, Button, Card, Typography } from '@mui/material'
+import { Alert, Button, Paper, Typography } from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
@@ -86,11 +86,11 @@ export const KanbanView = () => {
 
       <Stack direction="column" spacing={1}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <Card sx={{ p: 1, borderRadius: 1, cursor: 'pointer' }}>
-            <Button onClick={() => setShowArchived((prevState) => !prevState)}>
-              {showArchived ? 'Arquivados' : 'Kanban'}
+          <Paper sx={{ p: 1, borderRadius: 1 }}>
+            <Button variant="soft" onClick={() => setShowArchived((prevState) => !prevState)}>
+              {showArchived ? 'Kanban' : 'Arquivados'}
             </Button>
-          </Card>
+          </Paper>
 
           <Stack
             direction="row"
