@@ -49,17 +49,13 @@ export const KanbanView = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
-  const board = boardMescle({ selectedBoard, boards, columns, tasks })
-
   const isPermissionAdmin = user?.permissions === 'admin'
 
-  const renderSkeleton = (
-    <Stack direction="row" alignItems="flex-start" spacing={3}>
-      {[...Array(4)].map((_, index) => (
-        <KanbanColumnSkeleton key={index} index={index} />
-      ))}
-    </Stack>
-  )
+  useEffect(() => {
+    if (boards?.length && !selectedBoard) {
+      setSelectedBoard(boards.filter((board) => !board.archived)[0].id)
+    }
+  }, [boards, selectedBoard])
 
   if (userCurrency === 'anonymous') {
     return (
@@ -74,16 +70,22 @@ export const KanbanView = () => {
     )
   }
 
-  useEffect(() => {
-    if (boards?.length && !selectedBoard) {
-      setSelectedBoard(boards.filter((board) => !board.archived)[0].id)
-    }
-  }, [boards, selectedBoard])
+  if (isLoading) {
+    return (
+      <Container maxWidth="xl" sx={{ mt: 1 }}>
+        <Stack direction="row" alignItems="flex-start" spacing={3}>
+          {[...Array(4)].map((_, index) => (
+            <KanbanColumnSkeleton key={index} index={index} />
+          ))}
+        </Stack>
+      </Container>
+    )
+  }
+
+  const board = boardMescle({ selectedBoard, boards, columns, tasks })
 
   return (
     <Container maxWidth="xl" sx={{ mt: 1 }}>
-      {isLoading && renderSkeleton}
-
       <Stack direction="column" spacing={1}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Paper sx={{ p: 1, borderRadius: 1 }}>

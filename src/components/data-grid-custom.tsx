@@ -39,11 +39,6 @@ export const DataGridCustom = <T,>({ data, columns }: Props<T>) => {
 
   const hiddenFields = ['id', '_id']
 
-  const getTogglableColumns = () =>
-    columns
-      .filter((column) => !hiddenFields.includes(column.field as MuiGridColDef['field']))
-      .map((column) => column.field)
-
   return (
     <DataGrid
       disableRowSelectionOnClick
@@ -51,15 +46,25 @@ export const DataGridCustom = <T,>({ data, columns }: Props<T>) => {
       columns={columns as MuiGridColDef[]}
       columnVisibilityModel={columnVisibilityModel}
       onColumnVisibilityModelChange={handleChangeColumnVisibilityModel}
+      sx={{
+        borderRadius: '10px',
+        backgroundColor: 'background.paper',
+      }}
       slots={{
-        toolbar: GridToolbar,
+        toolbar: () => (
+          <GridToolbar
+            sx={{
+              backgroundColor: 'background.paper',
+              borderRadius: '10px 0px',
+            }}
+          />
+        ),
       }}
-      slotProps={{
+      /* slotProps={{
         columnsPanel: {
-          /* @ts-ignore */
-          getTogglableColumns,
+          getTogglableColumns: () => columns.filter((column) => !hiddenFields.includes(column.field)),
         },
-      }}
+      }} */
     />
   )
 }
