@@ -15,14 +15,12 @@ import { endpoints, userCurrency } from '@/constants/config'
 
 import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
-import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
-import { MenuPopover } from '@/components/MenuPopover'
+import { Alert, Button, Card, Typography } from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
-import { KanbanBoardAdd } from './components/board/board-add'
-import { BoardActions } from './components/board/board-actions'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
 import { KanbanColumn } from './components/column/kanban-column'
+import { BoardsItems } from './components/BoardsItems'
 
 import { User } from '@/types/user'
 import { axios } from '@/utils/axios'
@@ -191,20 +189,26 @@ export const KanbanView = () => {
       {isLoading && renderSkeleton}
 
       <Stack direction="column" spacing={1}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            p: 1,
-            width: '100%',
-            backgroundColor: 'background.neutral',
-            borderRadius: 1,
-          }}
-        >
-          <BoardsItems
-            boards={boards}
-            {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
-          />
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Card sx={{ p: 1, borderRadius: 1, cursor: 'pointer' }}>
+            <Button onClick={() => setSelectedBoard(null)}>Voltar</Button>
+          </Card>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              p: 1,
+              width: '100%',
+              backgroundColor: 'background.neutral',
+              borderRadius: 1,
+            }}
+          >
+            <BoardsItems
+              boards={boards}
+              {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
+            />
+          </Stack>
         </Stack>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -243,62 +247,5 @@ export const KanbanView = () => {
         </DragDropContext>
       </Stack>
     </Container>
-  )
-}
-
-type BoardsProps = {
-  boards: Array<IKanbanBoard> | undefined
-  isPermissionAdmin: boolean
-  setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
-  selectedBoard: string | null
-}
-
-const BoardsItems = ({
-  boards,
-  isPermissionAdmin,
-  setSelectedBoard,
-  selectedBoard,
-}: BoardsProps) => {
-  const [isShowBoardsArchived, setIsShowBoardsArchived] = useState(false)
-
-  return (
-    <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
-      {isPermissionAdmin && (
-        <>
-          <MenuPopover
-            arrow="top-right"
-            sx={{ width: 250 }}
-            renderContent={(onClose) => (
-              <MenuItem
-                onClick={(event) => {
-                  setIsShowBoardsArchived((prevState) => !prevState)
-
-                  onClose()
-                  event.preventDefault()
-                }}
-              >
-                <FormControlLabel
-                  sx={{ ml: 2 }}
-                  control={<Checkbox checked={isShowBoardsArchived} sx={{ width: 10 }} />}
-                  label={
-                    isShowBoardsArchived
-                      ? 'Ocultar Quadros Arquivados'
-                      : 'Mostrar Quadros Arquivados'
-                  }
-                />
-              </MenuItem>
-            )}
-          />
-
-          <KanbanBoardAdd />
-        </>
-      )}
-
-      {boards
-        ?.filter((board) => (isShowBoardsArchived ? true : !board.archived))
-        .map((board, index) => (
-          <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
-        ))}
-    </Stack>
   )
 }

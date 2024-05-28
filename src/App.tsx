@@ -1,12 +1,15 @@
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
 import ThemeProvider from './theme'
 
 import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './contexts/snackbar/snackbar-provider'
 
-import { KanbanView } from './sections/kanban/kanban-view'
+import { KanbanView } from '@/sections/kanban/kanban-view'
+import { ArchivedList } from '@/sections/archived'
 
 import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -45,7 +48,13 @@ export const App = () => {
             {isPermissionAdmin && <SettingsButton />}
 
             <Stack direction="column" spacing={2}>
-              <KanbanView />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<KanbanView />} />
+                  <Route path="/archived" element={<ArchivedList />} />
+                  <Route path="*" element={<h1>Not Found</h1>} />
+                </Routes>
+              </BrowserRouter>
             </Stack>
           </MuiLocalizationProvider>
         </SnackbarProvider>
