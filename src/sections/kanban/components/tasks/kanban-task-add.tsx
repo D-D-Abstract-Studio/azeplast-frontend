@@ -15,43 +15,37 @@ type Props = {
   column: IKanbanColumn
 }
 
-export default function KanbanTaskAdd({ onCloseAddTask, column }: Props) {
+export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
   const [name, setName] = useState('')
 
-  const handleAddTask = async (name: string) =>
-    await axios
-      .post<IKanbanTask>(endpoints.tasks.createTask, {
-        name,
-        archived: false,
-        priority: priorityValues[0],
-        categories: [],
-        description: 'asdsa',
-        assignee: [],
-        dueDate: dayjs().format('DD/MM/YYYY'),
-        reporter: userCurrency,
-      })
-      .then(async (response) => {
-        await axios
-          .put(endpoints.columns.updateColumn(column.id), {
-            ...column,
-            taskIds: [...column.taskIds, response.data.id],
-          })
-          .then(() => {
-            mutate(endpoints.columns.getAllColumns)
-          })
+  const handleAddTask = async (name: string) => {
+    const response = await axios.post<IKanbanTask>(endpoints.tasks.createTask, {
+      name,
+      archived: false,
+      priority: priorityValues[0],
+      categories: [],
+      description: '',
+      assignee: [],
+      dueDate: dayjs().format('DD/MM/YYYY'),
+      reporter: userCurrency,
+    })
 
-        enqueueSnackbar('Tarefa criada com sucesso')
-        mutate(endpoints.tasks.getAllTasks)
+    await axios.put(endpoints.columns.updateColumn(column.id), {
+      ...column,
+      taskIds: [...column.taskIds, response.data.id],
+    })
 
-        onCloseAddTask()
-      })
+    enqueueSnackbar('Tarefa criada com sucesso')
+    mutate(endpoints.columns.getAllColumns)
+    mutate(endpoints.tasks.getAllTasks)
+
+    onCloseAddTask()
+  }
 
   const handleKeyUpAddTask = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        if (name) {
-          handleAddTask(name)
-        }
+    async (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter' && name) {
+        await handleAddTask(name)
       }
     },
     [name, handleAddTask]
@@ -80,7 +74,6 @@ export default function KanbanTaskAdd({ onCloseAddTask, column }: Props) {
       >
         <InputBase
           autoFocus
-          multiline
           fullWidth
           placeholder="Task name"
           value={name}

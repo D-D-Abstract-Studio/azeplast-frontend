@@ -26,15 +26,17 @@ type Props = PaperProps & {
   onArchiveTask: VoidFunction
 }
 
-export default function KanbanTaskItem({
+export const KanbanTaskItem = ({
   task,
   index,
   onArchiveTask,
   onUpdateTask,
   sx,
   ...other
-}: Props) {
+}: Props) => {
   const theme = useTheme()
+
+  console.log(task)
 
   const openDetails = useBoolean()
 

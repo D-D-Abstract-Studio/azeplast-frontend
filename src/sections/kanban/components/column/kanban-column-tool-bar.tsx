@@ -23,7 +23,7 @@ type Props = {
   column: IKanbanColumn
 }
 
-export default function KanbanColumnToolBar({ columnName, column }: Props) {
+export const KanbanColumnToolBar = ({ columnName, column }: Props) => {
   const renameRef = useRef<HTMLInputElement>(null)
 
   const popover = usePopover()
