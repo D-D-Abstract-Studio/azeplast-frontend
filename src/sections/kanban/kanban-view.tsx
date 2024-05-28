@@ -155,8 +155,6 @@ export const KanbanView = () => {
       })
 
       mutate(endpoints.columns.getAllColumns)
-
-      console.info('Moving to different list!')
     },
     [board?.columns, board?.ordered]
   )

@@ -15,7 +15,7 @@ import { Iconify } from '@/components/iconify'
 import { endpoints } from '@/constants/config'
 
 import { IKanbanBoard } from '@/types/kanban'
-import { enqueueSnackbar } from 'notistack'
+
 import { useRequest } from '@/hooks/use-request'
 import { User } from '@/types/user'
 
@@ -30,18 +30,14 @@ export const KanbanBoardAdd = () => {
 
   const createBoard = async ({ name }: Pick<IKanbanBoard, 'name'>) => {
     await axios
-      .post<{ message: string }>(endpoints.boards.createBoard, {
+      .post(endpoints.boards.createBoard, {
         name,
         usersIds: [user?._id],
         archived: false,
         ordered: [],
         columnIds: [],
       })
-      .then(({ data: { message } }) => {
-        enqueueSnackbar(message)
-
-        mutate(endpoints.boards.getAllBoards)
-      })
+      .then(() => mutate(endpoints.boards.getAllBoards))
   }
 
   const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
