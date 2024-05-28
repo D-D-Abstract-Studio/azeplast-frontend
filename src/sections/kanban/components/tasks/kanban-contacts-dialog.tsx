@@ -104,7 +104,7 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
                 >
                   <ListItemAvatar>
                     <Avatar alt={contact} color={COLORS[getRandomNumber(0, COLORS.length - 1)]}>
-                      {contact[0].toUpperCase()}
+                      <Typography variant="button">{contact.slice(0, 3).toUpperCase()}</Typography>
                     </Avatar>
                   </ListItemAvatar>
 

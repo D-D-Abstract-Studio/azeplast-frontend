@@ -101,13 +101,14 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         </MenuItem>
 
         <MenuItem
+          sx={{ color: 'warning.main' }}
           onClick={() => {
             confirmDialogDelete.onTrue()
             handleClose()
           }}
         >
           <Stack direction="row" spacing={1} alignItems="center">
-            <Iconify icon="mdi:archive" />
+            <Iconify icon="solar:archive-bold" />
 
             <Typography variant="body2">Arquivar</Typography>
           </Stack>
@@ -119,7 +120,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
       <ConfirmDialog
         open={confirmDialogDelete.value}
         onClose={confirmDialogDelete.onFalse}
-        title="Deletar"
+        title="Arquivar"
         content={
           <>
             Você quer mesmo arquivar o quadro?

@@ -12,7 +12,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { Iconify } from '@/components/iconify'
 
-import KanbanDetails from '../kanban-details'
+import KanbanDetails from './kanban-details'
 
 import { bgBlur } from '@/theme/css'
 

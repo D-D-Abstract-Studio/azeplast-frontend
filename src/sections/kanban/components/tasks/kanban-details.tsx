@@ -18,7 +18,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 import { Iconify } from '@/components/iconify'
 import dayjs from 'dayjs'
 
-import KanbanInputName from './kanban-input-name'
+import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 import KanbanDetailsPriority from './kanban-details-priority'
 
@@ -55,12 +55,11 @@ export default function KanbanDetails({
 }: Props) {
   const theme = useTheme()
   const confirm = useBoolean()
+  const contacts = useBoolean()
 
   const [priority, setPriority] = useState(task.priority)
 
   const [taskName, setTaskName] = useState(task.name)
-
-  const contacts = useBoolean()
 
   const [taskDescription, setTaskDescription] = useState(task.description)
 
@@ -138,22 +137,22 @@ export default function KanbanDetails({
               <Iconify icon="eva:close-fill" size={2.5} />
             </IconButton>
           </Stack>
-
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Criado por</StyledLabel>
 
-            <Avatar alt={task.reporter.user} color="secondary">
-              {task?.reporter?.user?.[0].toUpperCase()}
+            <Avatar alt={task.reporter} color="secondary">
+              <Typography variant="button">{task.reporter.slice(0, 3).toUpperCase()}</Typography>
             </Avatar>
           </Stack>
-
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Responsáveis</StyledLabel>
 
             <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
               {task.assignee.map((user, index) => (
-                <Avatar alt={user.name} key={index} color={COLORS[index]}>
-                  {user.name?.[0].toUpperCase()}
+                <Avatar key={index} alt={user.name} color={COLORS[index]}>
+                  <Typography variant="button">
+                    {task.reporter.slice(0, 3).toUpperCase()}
+                  </Typography>
                 </Avatar>
               ))}
 
@@ -177,22 +176,20 @@ export default function KanbanDetails({
             </Stack>
           </Stack>
 
-          <DesktopDatePicker<Date>
+          <DesktopDatePicker
             disablePast
             label="Data de vencimento"
-            value={new Date(task.dueDate)} // 2024-05-22T18:43:37.043Z
+            value={task.dueDate}
             onChange={(newValue) => {
               console.log(dayjs(newValue))
             }}
             slotProps={{ textField: { fullWidth: true } }}
           />
-
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Prioridade</StyledLabel>
 
             <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
           </Stack>
-
           <Autocomplete
             multiple
             fullWidth
@@ -242,7 +239,6 @@ export default function KanbanDetails({
               ))
             }
           />
-
           <Stack direction="column" alignItems="left" spacing={1}>
             <StyledLabel>Descrição </StyledLabel>
 
@@ -269,11 +265,11 @@ export default function KanbanDetails({
             ...paper({ theme }),
           }}
         >
-          <Button onClick={confirm.onTrue} variant="outlined" color="error" fullWidth>
+          <Button onClick={confirm.onTrue} variant="outlined" color="warning" fullWidth>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-              <Typography variant="button">Deletar</Typography>
+              <Typography variant="button">Arquivar</Typography>
 
-              <Iconify icon="solar:trash-bin-trash-bold" />
+              <Iconify icon="solar:archive-bold" />
             </Stack>
           </Button>
         </Box>
@@ -282,15 +278,11 @@ export default function KanbanDetails({
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {taskName} </strong>?
-          </>
-        }
+        title="Arquivar"
+        content={<>Tem certeza que deseja deletar esta tarefa?</>}
         action={
           <Button variant="contained" color="error" onClick={onDelete}>
-            Delete
+            Arquivar
           </Button>
         }
       />

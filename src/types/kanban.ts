@@ -11,9 +11,7 @@ export type IKanbanTask = {
     name?: string
   }>
   dueDate: string
-  reporter: {
-    user: string
-  }
+  reporter: string
 }
 
 export type IKanbanColumn = {

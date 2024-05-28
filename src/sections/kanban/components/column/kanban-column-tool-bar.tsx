@@ -113,7 +113,7 @@ export const KanbanColumnToolBar = ({ columnName, column }: Props) => {
             confirmDialog.onTrue()
             popover.onClose()
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: 'warning.main' }}
         >
           <Iconify icon="solar:archive-bold" />
           Arquivar
