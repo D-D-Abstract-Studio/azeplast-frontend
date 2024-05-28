@@ -24,7 +24,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
       archived: false,
       priority: priorityValues[0],
       categories: [],
-      description: '',
+      description: '...',
       assignee: [],
       dueDate: dayjs().format('DD/MM/YYYY'),
       reporter: userCurrency,
@@ -44,7 +44,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
 
   const handleKeyUpAddTask = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' && name) {
+      if (event.key === 'Enter') {
         await handleAddTask(name)
       }
     },

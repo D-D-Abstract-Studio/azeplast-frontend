@@ -84,6 +84,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                   >
                     {column.taskIds.map((taskId, taskIndex) => {
                       if (!tasks) return null
+                      if (!tasks[taskId]) return null
 
                       return (
                         <KanbanTaskItem
