@@ -17,11 +17,10 @@ type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never
 
 type DeepKeys<T> = Expand<NestedKeyOf<T>>
 
-export type GridColDef<T> = {
+export type GridColDef<T> = Partial<Omit<MuiGridColDef, 'field' | 'renderCell' | 'hiddenCell'>> & {
   headerName?: string | React.ReactNode
   field?: DeepKeys<T>
-  renderCell?: (params: T, parents: T) => React.ReactNode
-  hiddenCell?: (params: T) => boolean
+  renderCell?: (params: { row: T }) => React.ReactNode
 }
 
 type Props<T> = {

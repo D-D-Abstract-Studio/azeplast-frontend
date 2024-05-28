@@ -240,9 +240,7 @@ const UserUpdate = ({ user }: { user: User }) => {
 
   const handleDelete = async (userId: string) => {
     await axios.delete(endpoints.user.deleteUser(userId)).then(() => {
-      enqueueSnackbar('Usuário deletado com sucesso!', {
-        variant: 'error',
-      })
+      enqueueSnackbar('Usuário deletado com sucesso!')
 
       mutate(endpoints.user.getAllUsers)
     })

@@ -3,10 +3,11 @@ import { endpoints } from '@/constants/config'
 import { useRequest } from '@/hooks/use-request'
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
+import { Label } from '@/components/label'
+
 import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
-
-import Label from '@/components/label'
+import dayjs from 'dayjs'
 
 export const ArchivedList = () => {
   const { data: boards } = useRequest<Array<IKanbanBoard>>({
@@ -31,18 +32,20 @@ export const ArchivedList = () => {
         {
           field: 'name',
           headerName: 'Nome',
+          flex: 1,
         },
         {
           field: 'priority',
           headerName: 'Prioridade',
-          renderCell: (params) => params?.priority,
+          renderCell: ({ row }) => <Label>{String(row?.priority)}</Label>,
         },
         {
           field: 'categories',
           headerName: 'Categorias',
-          renderCell: (params) => (
+          flex: 1,
+          renderCell: ({ row }) => (
             <Stack spacing={1} direction="row">
-              {params?.categories?.map((category) => (
+              {row?.categories?.map((category) => (
                 <Label key={category} color="primary">
                   {category}
                 </Label>
@@ -53,13 +56,15 @@ export const ArchivedList = () => {
         {
           field: 'description',
           headerName: 'Descrição',
+          flex: 1,
         },
         {
           field: 'assignee',
-          headerName: 'Responsável',
-          renderCell: (params) => (
+          headerName: 'Responsáveis',
+          flex: 1,
+          renderCell: ({ row }) => (
             <Stack spacing={1} direction="row">
-              {params?.assignee?.map((assignee) => (
+              {row?.assignee?.map((assignee) => (
                 <Avatar key={assignee.name} src={assignee.name} />
               ))}
             </Stack>
@@ -68,15 +73,8 @@ export const ArchivedList = () => {
         {
           field: 'dueDate',
           headerName: 'Data de entrega',
-        },
-        {
-          field: 'reporter',
-          headerName: 'Relator',
-          renderCell: (params) => (
-            <Stack spacing={1} direction="row">
-              <Avatar src={params?.reporter} />
-            </Stack>
-          ),
+          renderCell: ({ row }) => dayjs(row?.dueDate).format('DD/MM/YYYY'),
+          flex: 1,
         },
       ]}
     />
