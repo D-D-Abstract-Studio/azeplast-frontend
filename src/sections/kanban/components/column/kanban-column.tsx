@@ -70,7 +70,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
           <Stack {...provided.dragHandleProps} spacing={2} py={1}>
             <KanbanColumnToolBar columnName={column.name} column={column} />
 
-            <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 210px)' }}>
+            <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 255px)' }}>
               <Droppable droppableId={column.id} type="TASK">
                 {(dropProvided) => (
                   <Stack

@@ -74,8 +74,6 @@ export const KanbanView = () => {
       return acc
     }, {} as Record<string, IKanbanTask>)
 
-    console.log({ columnsMapped, tasksMapped })
-
     return {
       ...board,
       columns: columnsMapped,
@@ -85,95 +83,80 @@ export const KanbanView = () => {
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
-  const moveTask = async (updateColumns: Record<string, IKanbanColumn>) => {
-    // const data = { updateColumns };
-    // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-task' } });
-
-    console.log('moveTask')
-    console.log(updateColumns)
-  }
-
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
-      try {
-        if (!destination) {
-          return
-        }
-
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-          return
-        }
-
-        // Moving column
-        if (type === 'COLUMN') {
-          const newOrdered = [...board.ordered]
-
-          newOrdered.splice(source.index, 1)
-
-          newOrdered.splice(destination.index, 0, draggableId)
-
-          await axios
-            .put(endpoints.boards.updateBoard(board.id), {
-              ...board,
-              ordered: newOrdered,
-            })
-            .then(() => mutate(endpoints.boards.getAllBoards))
-
-          return
-        }
-
-        const sourceColumn = board?.columns[source.droppableId]
-
-        const destinationColumn = board?.columns[destination.droppableId]
-
-        // Moving task to same list
-        if (sourceColumn.id === destinationColumn.id) {
-          const newTaskIds = [...sourceColumn.taskIds]
-
-          newTaskIds.splice(source.index, 1)
-
-          newTaskIds.splice(destination.index, 0, draggableId)
-
-          moveTask({
-            ...board?.columns,
-            [sourceColumn.id]: {
-              ...sourceColumn,
-              taskIds: newTaskIds,
-            },
-          })
-
-          console.info('Moving to same list!')
-
-          return
-        }
-
-        // Moving task to different list
-        const sourceTaskIds = [...sourceColumn.taskIds]
-
-        const destinationTaskIds = [...destinationColumn.taskIds]
-
-        // Remove from source
-        sourceTaskIds.splice(source.index, 1)
-
-        // Insert into destination
-        destinationTaskIds.splice(destination.index, 0, draggableId)
-
-        moveTask({
-          ...board?.columns,
-          [sourceColumn.id]: {
-            ...sourceColumn,
-            taskIds: sourceTaskIds,
-          },
-          [destinationColumn.id]: {
-            ...destinationColumn,
-            taskIds: destinationTaskIds,
-          },
-        })
-
-        console.info('Moving to different list!')
-      } catch (error) {
-        console.error(error)
+      if (!destination) {
+        return
       }
+
+      if (destination.droppableId === source.droppableId && destination.index === source.index) {
+        return
+      }
+
+      // Moving column
+      if (type === 'COLUMN') {
+        const newOrdered = [...board.ordered]
+
+        newOrdered.splice(source.index, 1)
+
+        newOrdered.splice(destination.index, 0, draggableId)
+
+        await axios
+          .put(endpoints.boards.updateBoard(board.id), {
+            ...board,
+            ordered: newOrdered,
+          })
+          .then(() => mutate(endpoints.boards.getAllBoards))
+
+        return
+      }
+
+      const sourceColumn = board?.columns[source.droppableId]
+
+      const destinationColumn = board?.columns[destination.droppableId]
+
+      // Moving task to same list
+      if (sourceColumn.id === destinationColumn.id) {
+        const newTaskIds = [...sourceColumn.taskIds]
+
+        newTaskIds.splice(source.index, 1)
+
+        newTaskIds.splice(destination.index, 0, draggableId)
+
+        axios
+          .put<IKanbanColumn>(endpoints.columns.updateColumn(sourceColumn.id), {
+            ...sourceColumn,
+            taskIds: newTaskIds,
+          })
+          .then(() => mutate(endpoints.columns.getAllColumns))
+
+        return
+      }
+
+      // Moving task to different list
+      const sourceTaskIds = [...sourceColumn.taskIds]
+
+      const destinationTaskIds = [...destinationColumn.taskIds]
+
+      // Remove from source
+      sourceTaskIds.splice(source.index, 1)
+
+      // Insert into destination
+      destinationTaskIds.splice(destination.index, 0, draggableId)
+
+      await axios.put<IKanbanColumn>(endpoints.columns.updateColumn(sourceColumn.id), {
+        ...sourceColumn,
+        taskIds: sourceTaskIds,
+      })
+
+      await axios.put<IKanbanColumn>(endpoints.columns.updateColumn(destinationColumn.id), {
+        ...destinationColumn,
+        taskIds: destinationTaskIds,
+      })
+
+      mutate(endpoints.columns.getAllColumns)
+
+      console.info('Moving to different list!')
     },
     [board?.columns, board?.ordered]
   )
@@ -214,9 +197,9 @@ export const KanbanView = () => {
           direction="row"
           spacing={1}
           sx={{
-            backgroundColor: 'background.neutral',
-            width: '100%',
             p: 1,
+            width: '100%',
+            backgroundColor: 'background.neutral',
             borderRadius: 1,
           }}
         >
@@ -254,7 +237,7 @@ export const KanbanView = () => {
                 {provided.placeholder}
 
                 {selectedBoard && (
-                  <KanbanColumnAdd board={boards?.find((b) => b.id === selectedBoard)} />
+                  <KanbanColumnAdd board={boards?.find((board) => board.id === selectedBoard)} />
                 )}
               </Stack>
             )}
