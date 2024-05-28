@@ -218,7 +218,7 @@ export const KanbanView = () => {
               <Stack
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                spacing={3}
+                spacing={1}
                 direction="row"
                 alignItems="flex-start"
                 sx={{

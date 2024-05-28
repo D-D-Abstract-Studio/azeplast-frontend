@@ -14,6 +14,7 @@ import { IKanbanBoard, IKanbanColumn } from '@/types/kanban'
 import { axios } from '@/utils/axios'
 import { endpoints } from '@/constants/config'
 import { enqueueSnackbar } from 'notistack'
+import { Typography } from '@mui/material'
 
 type Props = {
   board: IKanbanBoard | undefined
@@ -73,7 +74,7 @@ export const KanbanColumnAdd = ({ board }: Props) => {
   )
 
   return (
-    <Paper sx={{ minWidth: 280, width: 280 }}>
+    <Paper>
       {openAddColumn.value ? (
         <ClickAwayListener onClickAway={handleCreateColumn}>
           <TextField
@@ -85,6 +86,9 @@ export const KanbanColumnAdd = ({ board }: Props) => {
             onKeyUp={handleKeyUpCreateColumn}
             sx={{
               [`& .${inputBaseClasses.input}`]: {
+                height: 17,
+                minWidth: 250,
+                border: 'none',
                 typography: 'h6',
               },
             }}
@@ -93,13 +97,19 @@ export const KanbanColumnAdd = ({ board }: Props) => {
       ) : (
         <Button
           fullWidth
-          size="large"
-          color="inherit"
-          variant="outlined"
-          startIcon={<Iconify icon="mingcute:add-line" size={1.5} />}
+          variant="soft"
+          sx={{
+            border: '1px dashed',
+            borderColor: 'text.secondary',
+            minHeight: 50,
+            width: 200,
+          }}
+          startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={openAddColumn.onTrue}
         >
-          Coluna
+          <Typography variant="h6" sx={{ fontWeight: 550 }}>
+            Coluna
+          </Typography>
         </Button>
       )}
     </Paper>
