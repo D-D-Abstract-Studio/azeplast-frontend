@@ -9,8 +9,6 @@ import Container from '@mui/material/Container'
 
 import { hideScroll } from '@/theme/css'
 
-import { moveColumn, moveTask } from '@/api/kanban'
-
 import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
@@ -27,6 +25,7 @@ import { KanbanColumnAdd } from './components/column/kanban-column-add'
 import { KanbanColumn } from './components/column/kanban-column'
 
 import { User } from '@/types/user'
+import { axios } from '@/utils/axios'
 
 export const KanbanView = () => {
   const { data: user } = useRequest<User>({
@@ -85,6 +84,14 @@ export const KanbanView = () => {
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
+  const moveTask = async (updateColumns: Record<string, IKanbanColumn>) => {
+    // const data = { updateColumns };
+    // await axios.post(endpoints.kanban, data, { params: { endpoint: 'move-task' } });
+
+    console.log('moveTask')
+    console.log(updateColumns)
+  }
+
   const onDragEnd = useCallback(
     async ({ destination, source, draggableId, type }: DropResult) => {
       try {
@@ -104,7 +111,11 @@ export const KanbanView = () => {
 
           newOrdered.splice(destination.index, 0, draggableId)
 
-          moveColumn(newOrdered)
+          await axios.put(endpoints.columns.updateColumn(board.id), {
+            ...board,
+            ordered: newOrdered,
+          })
+
           return
         }
 

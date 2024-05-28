@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 
 import { alpha } from '@mui/material/styles'
@@ -9,8 +8,6 @@ import { Box } from '@mui/material'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { createTask, updateTask, deleteTask } from '@/api/kanban'
-
 import KanbanTaskAdd from '../tasks/kanban-task-add'
 import KanbanTaskItem from '../tasks/kanban-task-item'
 import KanbanColumnToolBar from './kanban-column-tool-bar'
@@ -20,6 +17,8 @@ import { Iconify } from '@/components/iconify'
 import { enqueueSnackbar } from 'notistack'
 
 import { IKanban, IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { axios } from '@/utils/axios'
+import { endpoints } from '@/constants/config'
 
 type Props = Partial<Pick<IKanban, 'tasks'>> & {
   column: IKanbanColumn | undefined
@@ -31,41 +30,39 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
 
   if (!column) return null
 
-  const handleAddTask = useCallback(
-    async (taskData: IKanbanTask) => {
-      try {
-        createTask(column.id, taskData)
+  const handleAddTask = async () =>
+    await axios
+      .post(endpoints.tasks.createTask, {
+        ...tasks,
+      })
+      .then(() => {
+        enqueueSnackbar('Tarefa criada com sucesso')
 
         openAddTask.onFalse()
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    [column.id, openAddTask]
-  )
+      })
 
-  const handleUpdateTask = useCallback(async (taskData: IKanbanTask) => {
-    try {
-      updateTask(taskData)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [])
+  const handleUpdateTask = async (task: IKanbanTask) =>
+    await axios
+      .put(endpoints.tasks.updateTask(task.id), {
+        ...task,
+      })
+      .then(() => {
+        enqueueSnackbar('Tarefa atualizada com sucesso')
 
-  const handleDeleteTask = useCallback(
-    async (taskId: string) => {
-      try {
-        deleteTask(column.id, taskId)
+        openAddTask.onFalse()
+      })
 
-        enqueueSnackbar('Delete success!', {
-          anchorOrigin: { vertical: 'top', horizontal: 'center' },
-        })
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    [column.id, enqueueSnackbar]
-  )
+  const handleArchiveTask = async (taskId: string) =>
+    await axios
+      .put(endpoints.tasks.updateTask(taskId), {
+        ...tasks,
+        archived: true,
+      })
+      .then(() => {
+        enqueueSnackbar('Tarefa arquivada com sucesso')
+
+        openAddTask.onFalse()
+      })
 
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -76,13 +73,12 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
           sx={{
             px: 2,
             borderRadius: 2,
-            bgcolor: 'background.neutral',
             ...(snapshot.isDragging && {
               bgcolor: (theme) => alpha(theme.palette.grey[500], 0.24),
             }),
           }}
         >
-          <Stack {...provided.dragHandleProps} spacing={2}>
+          <Stack {...provided.dragHandleProps} spacing={2} py={1}>
             <KanbanColumnToolBar columnName={column.name} column={column} />
 
             <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 210px)' }}>
@@ -106,7 +102,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                           index={taskIndex}
                           task={tasks[taskId]}
                           onUpdateTask={handleUpdateTask}
-                          onDeleteTask={() => handleDeleteTask(taskId)}
+                          onArchiveTask={() => handleArchiveTask(taskId)}
                         />
                       )
                     })}
@@ -127,16 +123,10 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
 
             <Button
               fullWidth
-              sx={{ mb: 1 }}
               size="large"
               color="inherit"
               variant="outlined"
-              startIcon={
-                <Iconify
-                  size={1.5}
-                  icon={openAddTask.value ? 'solar:close-circle-broken' : 'mingcute:add-line'}
-                />
-              }
+              startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={openAddTask.onToggle}
             >
               {openAddTask.value ? 'Cancelar' : 'Tarefa'}
