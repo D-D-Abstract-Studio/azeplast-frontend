@@ -56,6 +56,7 @@ export const KanbanColumnAdd = ({ board }: Props) => {
         createColumn({ name: columnName })
         setColumnName('')
       }
+
       openAddColumn.onFalse()
     } catch (error) {
       console.error(error)

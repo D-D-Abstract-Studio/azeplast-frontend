@@ -194,57 +194,58 @@ export const KanbanView = () => {
     <Container maxWidth="xl" sx={{ mt: 1 }}>
       {isLoading && renderSkeleton}
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-          {(provided) => (
-            <Stack
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              spacing={3}
-              direction="column"
-              alignItems="flex-start"
-              sx={{
-                alignItems: 'center',
-                overflowY: 'hidden',
-                ...hideScroll.x,
-              }}
-            >
+      <Stack direction="column" spacing={1}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            backgroundColor: 'background.neutral',
+            width: '100%',
+            p: 1,
+            borderRadius: 1,
+          }}
+        >
+          <BoardsItems
+            boards={boards}
+            {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
+          />
+        </Stack>
+
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="board" type="COLUMN" direction="horizontal">
+            {(provided) => (
               <Stack
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                spacing={3}
                 direction="row"
-                spacing={1}
+                alignItems="flex-start"
                 sx={{
-                  backgroundColor: 'background.neutral',
-                  width: '100%',
-                  p: 1,
-                  borderRadius: 1,
+                  p: 0.25,
+                  height: 1,
+                  overflowY: 'hidden',
+                  ...hideScroll.x,
                 }}
               >
-                <BoardsItems
-                  boards={boards}
-                  {...{ setSelectedBoard, selectedBoard, isPermissionAdmin }}
-                />
-              </Stack>
+                {board?.ordered?.map((columnId, index) => (
+                  <KanbanColumn
+                    key={columnId}
+                    index={index}
+                    column={board?.columns[columnId]}
+                    tasks={board?.tasks}
+                  />
+                ))}
 
-              <Stack direction="row" spacing={1} sx={{ width: '100%', p: 1 }}>
                 {provided.placeholder}
 
                 {selectedBoard && (
                   <KanbanColumnAdd board={boards?.find((b) => b.id === selectedBoard)} />
                 )}
               </Stack>
-
-              {board?.ordered?.map((columnId, index) => (
-                <KanbanColumn
-                  key={columnId}
-                  index={index}
-                  column={board?.columns[columnId]}
-                  tasks={board?.tasks}
-                />
-              ))}
-            </Stack>
-          )}
-        </Droppable>
-      </DragDropContext>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Stack>
     </Container>
   )
 }
