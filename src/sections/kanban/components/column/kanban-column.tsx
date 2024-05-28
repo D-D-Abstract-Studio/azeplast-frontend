@@ -30,17 +30,6 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
 
   if (!column) return null
 
-  const handleAddTask = async () =>
-    await axios
-      .post(endpoints.tasks.createTask, {
-        ...tasks,
-      })
-      .then(() => {
-        enqueueSnackbar('Tarefa criada com sucesso')
-
-        openAddTask.onFalse()
-      })
-
   const handleUpdateTask = async (task: IKanbanTask) =>
     await axios
       .put(endpoints.tasks.updateTask(task.id), {
@@ -108,11 +97,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                     })}
 
                     {openAddTask.value && (
-                      <KanbanTaskAdd
-                        status={column.name}
-                        onAddTask={handleAddTask}
-                        onCloseAddTask={openAddTask.onFalse}
-                      />
+                      <KanbanTaskAdd onCloseAddTask={openAddTask.onFalse} column={column} />
                     )}
 
                     {dropProvided.placeholder}

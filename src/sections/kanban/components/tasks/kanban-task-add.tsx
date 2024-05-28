@@ -1,57 +1,69 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 
 import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
-
-import uuidv4 from '@/utils/uuidv4'
-
-import { IKanbanTask } from '@/types/kanban'
-import { userCurrency } from '@/constants/config'
+import { axios } from '@/utils/axios'
+import { endpoints, userCurrency } from '@/constants/config'
+import { enqueueSnackbar } from 'notistack'
+import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
+import dayjs from 'dayjs'
+import { mutate } from 'swr'
 
 type Props = {
-  status: string
   onCloseAddTask: VoidFunction
-  onAddTask: (task: IKanbanTask) => void
+  column: IKanbanColumn
 }
 
-export default function KanbanTaskAdd({ status, onAddTask, onCloseAddTask }: Props) {
+export default function KanbanTaskAdd({ onCloseAddTask, column }: Props) {
   const [name, setName] = useState('')
 
-  const defaultTask: IKanbanTask = useMemo(
-    () => ({
-      id: uuidv4(),
-      name,
-      priority: 'baixa',
-      description: '',
-      categories: [],
-      assignee: [],
-      dueDate: new Date(),
-      reporter: {
-        user: userCurrency,
-      },
-    }),
-    [name, status]
-  )
+  const handleAddTask = async (name: string) =>
+    await axios
+      .post<IKanbanTask>(endpoints.tasks.createTask, {
+        name,
+        archived: false,
+        priority: priorityValues[0],
+        categories: [],
+        description: 'asdsa',
+        assignee: [],
+        dueDate: dayjs().format('DD/MM/YYYY'),
+        reporter: userCurrency,
+      })
+      .then(async (response) => {
+        await axios
+          .put(endpoints.columns.updateColumn(column.id), {
+            ...column,
+            taskIds: [...column.taskIds, response.data.id],
+          })
+          .then(() => {
+            mutate(endpoints.columns.getAllColumns)
+          })
+
+        enqueueSnackbar('Tarefa criada com sucesso')
+        mutate(endpoints.tasks.getAllTasks)
+
+        onCloseAddTask()
+      })
 
   const handleKeyUpAddTask = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         if (name) {
-          onAddTask(defaultTask)
+          handleAddTask(name)
         }
       }
     },
-    [defaultTask, name, onAddTask]
+    [name, handleAddTask]
   )
 
   const handleClickAddTask = useCallback(() => {
     if (name) {
-      onAddTask(defaultTask)
+      handleAddTask(name)
     } else {
       onCloseAddTask()
     }
-  }, [defaultTask, name, onAddTask, onCloseAddTask])
+  }, [name, handleAddTask, onCloseAddTask])
 
   const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
