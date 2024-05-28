@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 
 import Stack from '@mui/material/Stack'
@@ -19,15 +20,19 @@ import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanba
 import { Alert, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import { MenuPopover } from '@/components/MenuPopover'
 
-import { KanbanColumnAdd } from './components/kanban-column-add'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanBoardAdd } from './components/board/add'
 import { BoardActions } from './components/board/actions'
+import { KanbanColumnAdd } from './components/kanban-column-add'
+import { KanbanColumn } from './components/kanban-column'
 
 import { User } from '@/types/user'
-import { KanbanColumn } from '@/sections/kanban/components/kanban-column'
 
 export const KanbanView = () => {
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUser,
+  })
+
   const { data: boards, isLoading } = useRequest<Array<IKanbanBoard>>({
     url: endpoints.boards.getAllBoards,
   })
@@ -38,10 +43,6 @@ export const KanbanView = () => {
 
   const { data: tasks } = useRequest<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
-  })
-
-  const { data: user } = useRequest<User>({
-    url: endpoints.user.getUser,
   })
 
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
