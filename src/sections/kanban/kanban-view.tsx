@@ -26,6 +26,7 @@ import { KanbanColumn } from './components/column/kanban-column'
 
 import { User } from '@/types/user'
 import { axios } from '@/utils/axios'
+import { mutate } from 'swr'
 
 export const KanbanView = () => {
   const { data: user } = useRequest<User>({
@@ -111,10 +112,12 @@ export const KanbanView = () => {
 
           newOrdered.splice(destination.index, 0, draggableId)
 
-          await axios.put(endpoints.columns.updateColumn(board.id), {
-            ...board,
-            ordered: newOrdered,
-          })
+          await axios
+            .put(endpoints.boards.updateBoard(board.id), {
+              ...board,
+              ordered: newOrdered,
+            })
+            .then(() => mutate(endpoints.boards.getAllBoards))
 
           return
         }
