@@ -52,6 +52,8 @@ export const KanbanView = () => {
 
   const board = boardMescle({ selectedBoard, boards, columns, tasks })
 
+  const isPermissionAdmin = user?.permissions === 'admin'
+
   const isUserValid = userCurrency !== 'anonymous'
 
   useEffect(() => {
@@ -104,7 +106,7 @@ export const KanbanView = () => {
 
               <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
                 {boards
-                  ?.filter((board) => board.usersIds.includes(user?._id || ''))
+                  ?.filter((board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin)
                   .map((board, index) => (
                     <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
                   ))}
