@@ -1,7 +1,5 @@
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
 import ThemeProvider from './theme'
 
 import ProgressBar from './components/progress-bar'
@@ -51,12 +49,7 @@ export const App = () => {
               {isPermissionAdmin && <SettingsButton />}
 
               <Stack direction="column" spacing={2}>
-                <BrowserRouter>
-                  <Routes>
-                    <Route path="/" element={<KanbanView />} />
-                    <Route path="*" element={<h1>Not Found</h1>} />
-                  </Routes>
-                </BrowserRouter>
+                <KanbanView />
               </Stack>
             </MuiLocalizationProvider>
           </LocalizationProvider>
