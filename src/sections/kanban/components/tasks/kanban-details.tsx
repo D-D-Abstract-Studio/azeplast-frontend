@@ -299,13 +299,15 @@ export default function KanbanDetails({
               name="categories"
               label="Categorias"
               options={[
-                'Gestão',
-                'Informática',
-                'Logística',
-                'Financeiro',
-                'Comercial',
-                'Marketing',
-                ...task.categories,
+                ...new Set([
+                  'Gestão',
+                  'Informática',
+                  'Logística',
+                  'Financeiro',
+                  'Comercial',
+                  'Marketing',
+                  ...task?.categories,
+                ]),
               ].map((option) => ({ value: option, label: option }))}
             />
 
@@ -355,7 +357,7 @@ export default function KanbanDetails({
           disablePortal={false}
           content={<>Tem certeza que deseja deletar esta tarefa?</>}
           action={
-            <Button variant="contained" color="error" onClick={() => onArchiveTask(task.id)}>
+            <Button variant="contained" color="error" onClick={() => onDeleteTask(task.id)}>
               Deletar
             </Button>
           }
@@ -368,7 +370,7 @@ export default function KanbanDetails({
           disablePortal={false}
           content={<>Tem certeza que deseja arquivar esta tarefa?</>}
           action={
-            <Button variant="contained" color="warning" onClick={() => onDeleteTask(task.id)}>
+            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task.id)}>
               Arquivar
             </Button>
           }

@@ -68,6 +68,10 @@ export const ArchivedList = () => {
       return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
     })
 
+  console.log(row)
+  console.log(tasks)
+  console.log('===========')
+
   const onUnarchiveTask = async (id: string) => {
     const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
 
