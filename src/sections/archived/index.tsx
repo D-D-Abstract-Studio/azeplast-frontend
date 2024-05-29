@@ -1,6 +1,6 @@
 import { mutate } from 'swr'
 
-import { Button, Divider, MenuItem, Stack, Avatar } from '@mui/material'
+import { Button, Divider, MenuItem, Stack, Avatar, Tooltip } from '@mui/material'
 import { Label } from '@/components/label'
 
 import { DataGridCustom } from '@/components/data-grid-custom'
@@ -107,8 +107,10 @@ export const ArchivedList = () => {
           headerName: 'Responsáveis',
           renderCell: ({ row }) => (
             <Stack spacing={1} direction="row">
-              {row?.assignee?.map((assignee) => (
-                <Avatar key={assignee.name} src={assignee.name} />
+              {row?.assignee?.map((assignee, index) => (
+                <Tooltip key={index} title={assignee.name}>
+                  <Avatar>{assignee.name?.slice(0, 3).toUpperCase()}</Avatar>
+                </Tooltip>
               ))}
             </Stack>
           ),
