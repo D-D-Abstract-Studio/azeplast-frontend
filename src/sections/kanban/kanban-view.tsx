@@ -23,7 +23,7 @@ import { BoardsItems } from './components/BoardsItems'
 import { onDragEnd } from './shared/onDragEnd'
 import { boardMescle } from './shared/boardMescle'
 
-import { ArchivedList } from '@/sections/archived'
+import { ArchivedList } from './kanban-task-unarchive'
 
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 

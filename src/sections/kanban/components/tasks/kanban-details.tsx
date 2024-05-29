@@ -23,10 +23,10 @@ import { COLORS } from '@/constants/config'
 import { Autocomplete, Box, Chip, Typography, useTheme } from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
-import { DesktopDatePicker } from '@mui/x-date-pickers'
+
 import { enqueueSnackbar } from 'notistack'
 
-import { IKanban, IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
+import { IKanbanTask, priorityValues } from '@/types/kanban'
 import { axios } from '@/utils/axios'
 import { endpoints } from '@/constants/config'
 import { paper } from '@/theme/css'
@@ -50,6 +50,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import FormProvider from '@/components/hook-form/form-provider'
 import { RHFTextField } from '@/components/hook-form'
+import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
 
 export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
@@ -168,6 +169,20 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         },
       }}
     >
+      <Stack direction="row" alignItems="center" spacing={1} p={2}>
+        <KanbanInputName
+          fullWidth
+          placeholder="Nome da tarefa"
+          value={taskName}
+          onChange={handleChangeTaskName}
+          onKeyUp={handleUpdateTask}
+        />
+
+        <IconButton color="default" onClick={onCloseDetails}>
+          <Iconify icon="eva:close-fill" size={2.5} />
+        </IconButton>
+      </Stack>
+
       <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>
         <Stack direction="column" justifyContent="space-between" sx={{ height: '100%' }}>
           <Stack
@@ -178,20 +193,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               px: 2.5,
             }}
           >
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <KanbanInputName
-                fullWidth
-                placeholder="Nome da tarefa"
-                value={taskName}
-                onChange={handleChangeTaskName}
-                onKeyUp={handleUpdateTask}
-              />
-
-              <IconButton color="default" onClick={onCloseDetails}>
-                <Iconify icon="eva:close-fill" size={2.5} />
-              </IconButton>
-            </Stack>
-
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Criado por</StyledLabel>
 
@@ -199,7 +200,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 <Typography variant="button">{task.reporter.slice(0, 3).toUpperCase()}</Typography>
               </Avatar>
             </Stack>
-
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Responsáveis</StyledLabel>
 
@@ -232,7 +232,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               </Stack>
             </Stack>
 
-            <RHFTextField fullWidth label="Data de vencimento" name="dueDate" type="date" />
+            <RHFDatePiker<{ dueDate: Date }> label="Data de vencimento" name="dueDate" />
 
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Prioridade</StyledLabel>
@@ -325,7 +325,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 Arquivar
               </Button>
 
-              <Button fullWidth disabled={!taskName} type="submit" variant="contained">
+              <Button fullWidth disabled={!isDirty} type="submit" variant="contained">
                 Salvar
               </Button>
             </Stack>
