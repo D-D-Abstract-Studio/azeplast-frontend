@@ -135,7 +135,7 @@ export const KanbanView = () => {
                   >
                     {board?.ordered?.map(
                       (columnId, index) =>
-                        board?.columns[columnId].archived && (
+                        !board?.columns[columnId]?.archived && (
                           <KanbanColumn
                             key={columnId}
                             index={index}

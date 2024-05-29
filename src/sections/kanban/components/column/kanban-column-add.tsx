@@ -40,14 +40,15 @@ export const KanbanColumnAdd = ({ board }: Props) => {
         archived: false,
       })
       .then(async (response) => {
-        await axios.put(endpoints.boards.updateBoard(board.id), {
-          ...board,
-          ordered: [...board.ordered, response.data.items.id],
-        })
+        await axios
+          .put(endpoints.boards.updateBoard(board.id), {
+            ...board,
+            ordered: [...board.ordered, response.data.items.id],
+          })
+          .then(() => mutate(endpoints.boards.getAllBoards))
 
         enqueueSnackbar(response.data.message)
 
-        mutate(endpoints.boards.getAllBoards)
         mutate(endpoints.columns.getAllColumns)
       })
 

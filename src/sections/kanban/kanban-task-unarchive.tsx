@@ -155,20 +155,6 @@ export const ArchivedList = () => {
             ),
           },
           {
-            field: 'assignee',
-            headerName: 'Responsáveis',
-            width: 200,
-            renderCell: ({ row }) => (
-              <Stack spacing={1} direction="row">
-                {row?.assignee?.map((assignee, index) => (
-                  <Tooltip key={index} title={assignee.name}>
-                    <Avatar>{assignee.name?.slice(0, 3).toUpperCase()}</Avatar>
-                  </Tooltip>
-                ))}
-              </Stack>
-            ),
-          },
-          {
             field: 'description',
             headerName: 'Descrição',
             flex: 1,
