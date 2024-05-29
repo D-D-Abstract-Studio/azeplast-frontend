@@ -17,6 +17,7 @@ import { enqueueSnackbar } from 'notistack'
 import { axios } from '@/utils/axios'
 
 import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { LabelColor } from '@/components/label/types'
 
 export const ArchivedList = () => {
   const { data: columns } = useRequest<Array<IKanbanColumn>>({
@@ -42,7 +43,7 @@ export const ArchivedList = () => {
         archived: false,
       })
       .then(() => {
-        enqueueSnackbar('Tarefa arquivada com sucesso')
+        enqueueSnackbar('Tarefa desarquivada com sucesso')
 
         mutate(endpoints.tasks.getAllTasks)
       })
@@ -56,6 +57,12 @@ export const ArchivedList = () => {
 
       mutate(endpoints.tasks.getAllTasks)
     })
+  }
+
+  const priorityColorMap: Record<IKanbanTask['priority'], LabelColor> = {
+    baixa: 'success',
+    média: 'warning',
+    alta: 'error',
   }
 
   return (
@@ -72,7 +79,11 @@ export const ArchivedList = () => {
         {
           field: 'priority',
           headerName: 'Prioridade',
-          renderCell: ({ row }) => <Label>{String(row?.priority)}</Label>,
+          renderCell: ({ row }) => {
+            const priorityColor = priorityColorMap[row?.priority || 'baixa']
+
+            return <Label color={priorityColor}>{row?.priority}</Label>
+          },
         },
         {
           field: 'status',
