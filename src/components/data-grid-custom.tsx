@@ -44,7 +44,7 @@ export const DataGridCustom = <T,>({ row, columns }: Props<T>) => {
   }, [])
 
   const position = reference.current?.getBoundingClientRect()
-  const height = screenHeight - Number(position?.top ?? 0) - 40
+  const height = screenHeight - Number(position?.top ?? 0) - 20
 
   return (
     <Box ref={reference} sx={{ height, width: '100%' }}>

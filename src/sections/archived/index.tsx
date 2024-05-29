@@ -1,19 +1,22 @@
-import Stack from '@mui/material/Stack'
-import Avatar from '@mui/material/Avatar'
+import { mutate } from 'swr'
+
+import { Button, Divider, MenuItem, Stack, Avatar } from '@mui/material'
 import { Label } from '@/components/label'
 
 import { DataGridCustom } from '@/components/data-grid-custom'
+import { MenuPopover } from '@/components/MenuPopover'
+import { Iconify } from '@/components/iconify'
 
 import { useRequest } from '@/hooks/use-request'
 
 import { endpoints } from '@/constants/config'
 
 import dayjs from 'dayjs'
+import { enqueueSnackbar } from 'notistack'
+
+import { axios } from '@/utils/axios'
 
 import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
-import { MenuPopover } from '@/components/MenuPopover'
-import { Button, Divider, MenuItem } from '@mui/material'
-import { Iconify } from '@/components/iconify'
 
 export const ArchivedList = () => {
   const { data: columns } = useRequest<Array<IKanbanColumn>>({
@@ -29,6 +32,31 @@ export const ArchivedList = () => {
 
     return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
   })
+
+  const onUnarchiveTask = async (id: string) => {
+    const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
+
+    await axios
+      .put<IKanbanTask>(endpoints.tasks.updateTask(task.data.id), {
+        ...task.data,
+        archived: false,
+      })
+      .then(() => {
+        enqueueSnackbar('Tarefa arquivada com sucesso')
+
+        mutate(endpoints.tasks.getAllTasks)
+      })
+  }
+
+  const onDeleteTask = async (id: string) => {
+    const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
+
+    await axios.delete<IKanbanTask>(endpoints.tasks.deleteTask(task.data.id)).then(() => {
+      enqueueSnackbar('Tarefa deletada com sucesso')
+
+      mutate(endpoints.tasks.getAllTasks)
+    })
+  }
 
   return (
     <DataGridCustom<(IKanbanTask & { status: string }) | undefined>
@@ -89,15 +117,18 @@ export const ArchivedList = () => {
         {
           headerName: 'Ações',
           width: 60,
-          renderCell: (launch) => (
+          renderCell: ({ row }) => (
             <MenuPopover arrow="top-right" sx={{ width: 'max-content', p: 1 }}>
               <MenuItem
                 component={Button}
                 fullWidth
-                onClick={() => onEditLaunch(launch._id)}
-                startIcon={<Iconify icon="mdi:pencil" />}
+                onClick={() => row?.id && onUnarchiveTask(row.id)}
+                sx={{ color: 'warning.main' }}
               >
-                Editar
+                <Stack direction="row">
+                  <Iconify icon="eva:archive-outline" />
+                  Desarquivar
+                </Stack>
               </MenuItem>
 
               <Divider />
@@ -105,11 +136,13 @@ export const ArchivedList = () => {
               <MenuItem
                 component={Button}
                 fullWidth
-                onClick={() => onArchiveLaunch(launch._id)}
-                sx={{ color: 'warning.main' }}
-                startIcon={<Iconify icon="eva:archive-outline" />}
+                onClick={() => row?.id && onDeleteTask(row.id)}
+                sx={{ color: 'error.main' }}
               >
-                Desarquivar
+                <Stack direction="row">
+                  <Iconify icon="eva:trash-fill" />
+                  Deletar
+                </Stack>
               </MenuItem>
             </MenuPopover>
           ),
