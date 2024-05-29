@@ -49,16 +49,19 @@ export const KanbanColumnToolBar = ({ columnName, column, tasks }: Props) => {
           if (!tasks) return
           if (!tasks[taskId]) return
 
-          await axios.put(endpoints.tasks.updateTask(taskId), {
-            ...tasks[taskId],
-            archived: true,
-          })
+          await axios
+            .put(endpoints.tasks.updateTask(taskId), {
+              ...tasks[taskId],
+              archived: true,
+            })
+            .then(() => {
+              enqueueSnackbar('Tarefas arquivadas com sucesso!')
+              mutate(endpoints.tasks.getAllTasks)
+            })
         })
 
-        enqueueSnackbar('Tarefas arquivadas com sucesso!')
-
+        mutate(endpoints.boards.getAllBoards)
         mutate(endpoints.columns.getAllColumns)
-        mutate(endpoints.tasks.getAllTasks)
       })
 
   useEffect(() => {
