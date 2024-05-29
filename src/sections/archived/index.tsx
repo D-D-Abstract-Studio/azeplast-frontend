@@ -1,19 +1,21 @@
-import { DataGridCustom } from '@/components/data-grid-custom'
-import { endpoints } from '@/constants/config'
-import { useRequest } from '@/hooks/use-request'
-import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
-
-import { Label } from '@/components/label'
-
 import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
+import { Label } from '@/components/label'
+
+import { DataGridCustom } from '@/components/data-grid-custom'
+
+import { useRequest } from '@/hooks/use-request'
+
+import { endpoints } from '@/constants/config'
+
 import dayjs from 'dayjs'
 
-export const ArchivedList = () => {
-  const { data: boards } = useRequest<Array<IKanbanBoard>>({
-    url: endpoints.boards.getAllBoards,
-  })
+import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { MenuPopover } from '@/components/MenuPopover'
+import { Button, Divider, MenuItem } from '@mui/material'
+import { Iconify } from '@/components/iconify'
 
+export const ArchivedList = () => {
   const { data: columns } = useRequest<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
@@ -22,9 +24,15 @@ export const ArchivedList = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
+  const row = tasks?.map((task) => {
+    const isExistingColumn = columns?.find((column) => column.taskIds.includes(task.id))
+
+    return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
+  })
+
   return (
-    <DataGridCustom<IKanbanTask | undefined>
-      data={tasks || []}
+    <DataGridCustom<(IKanbanTask & { status: string }) | undefined>
+      row={row || []}
       columns={[
         {
           field: 'id',
@@ -32,7 +40,6 @@ export const ArchivedList = () => {
         {
           field: 'name',
           headerName: 'Nome',
-          flex: 1,
         },
         {
           field: 'priority',
@@ -40,9 +47,12 @@ export const ArchivedList = () => {
           renderCell: ({ row }) => <Label>{String(row?.priority)}</Label>,
         },
         {
+          field: 'status',
+          headerName: 'Status',
+        },
+        {
           field: 'categories',
           headerName: 'Categorias',
-          flex: 1,
           renderCell: ({ row }) => (
             <Stack spacing={1} direction="row">
               {row?.categories?.map((category) => (
@@ -54,14 +64,8 @@ export const ArchivedList = () => {
           ),
         },
         {
-          field: 'description',
-          headerName: 'Descrição',
-          flex: 1,
-        },
-        {
           field: 'assignee',
           headerName: 'Responsáveis',
-          flex: 1,
           renderCell: ({ row }) => (
             <Stack spacing={1} direction="row">
               {row?.assignee?.map((assignee) => (
@@ -71,10 +75,44 @@ export const ArchivedList = () => {
           ),
         },
         {
+          field: 'description',
+          headerName: 'Descrição',
+          flex: 1,
+        },
+
+        {
           field: 'dueDate',
           headerName: 'Data de entrega',
+          width: 130,
           renderCell: ({ row }) => dayjs(row?.dueDate).format('DD/MM/YYYY'),
-          flex: 1,
+        },
+        {
+          headerName: 'Ações',
+          width: 60,
+          renderCell: (launch) => (
+            <MenuPopover arrow="top-right" sx={{ width: 'max-content', p: 1 }}>
+              <MenuItem
+                component={Button}
+                fullWidth
+                onClick={() => onEditLaunch(launch._id)}
+                startIcon={<Iconify icon="mdi:pencil" />}
+              >
+                Editar
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem
+                component={Button}
+                fullWidth
+                onClick={() => onArchiveLaunch(launch._id)}
+                sx={{ color: 'warning.main' }}
+                startIcon={<Iconify icon="eva:archive-outline" />}
+              >
+                Desarquivar
+              </MenuItem>
+            </MenuPopover>
+          ),
         },
       ]}
     />

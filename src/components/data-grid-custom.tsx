@@ -7,6 +7,10 @@ import {
   GridColumnVisibilityModel,
 } from '@mui/x-data-grid'
 
+import { Box } from '@mui/material'
+
+import { useRect } from '@/hooks/use-rect'
+
 type NestedKeyOf<T> = T extends object
   ? {
       [K in keyof T & string]: T[K] extends object ? K | `${K}.${NestedKeyOf<T[K]>}` : K
@@ -24,11 +28,13 @@ export type GridColDef<T> = Partial<Omit<MuiGridColDef, 'field' | 'renderCell' |
 }
 
 type Props<T> = {
-  data: Array<T> | undefined
+  row: Array<T> | undefined
   columns: Array<GridColDef<T>>
 }
 
-export const DataGridCustom = <T,>({ data, columns }: Props<T>) => {
+export const DataGridCustom = <T,>({ row, columns }: Props<T>) => {
+  const { reference, screenHeight } = useRect('resize')
+
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
     id: false,
   })
@@ -37,34 +43,39 @@ export const DataGridCustom = <T,>({ data, columns }: Props<T>) => {
     setColumnVisibilityModel(newModel)
   }, [])
 
-  const hiddenFields = ['id', '_id']
+  const position = reference.current?.getBoundingClientRect()
+  const height = screenHeight - Number(position?.top ?? 0) - 40
 
   return (
-    <DataGrid
-      disableRowSelectionOnClick
-      rows={data || []}
-      columns={columns as MuiGridColDef[]}
-      columnVisibilityModel={columnVisibilityModel}
-      onColumnVisibilityModelChange={handleChangeColumnVisibilityModel}
-      sx={{
-        borderRadius: '10px',
-        backgroundColor: 'background.paper',
-      }}
-      slots={{
-        toolbar: () => (
-          <GridToolbar
-            sx={{
-              backgroundColor: 'background.paper',
-              borderRadius: '10px 0px',
-            }}
-          />
-        ),
-      }}
-      /* slotProps={{
-        columnsPanel: {
-          getTogglableColumns: () => columns.filter((column) => !hiddenFields.includes(column.field)),
-        },
-      }} */
-    />
+    <Box ref={reference} sx={{ height, width: '100%' }}>
+      <DataGrid
+        disableRowSelectionOnClick
+        rows={row || []}
+        columns={columns as MuiGridColDef[]}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={handleChangeColumnVisibilityModel}
+        sx={{
+          backgroundColor: 'background.paper',
+          borderRadius: 2,
+          '&.MuiDataGrid-root .MuiDataGrid-container--top [role=row]': {
+            backgroundColor: 'background.neutral',
+            borderRadius: 0,
+          },
+          '&.MuiDataGrid-root .MuiDataGrid-main>*:first-of-type': {
+            borderRadius: 0,
+          },
+        }}
+        slots={{
+          toolbar: () => (
+            <GridToolbar
+              sx={{
+                backgroundColor: 'background.paper',
+                borderRadius: '10px 0px',
+              }}
+            />
+          ),
+        }}
+      />
+    </Box>
   )
 }

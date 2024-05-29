@@ -49,7 +49,11 @@ export const KanbanView = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
+  const board = boardMescle({ selectedBoard, boards, columns, tasks })
+
   const isPermissionAdmin = user?.permissions === 'admin'
+
+  const isUserValid = userCurrency !== 'anonymous'
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {
@@ -57,96 +61,92 @@ export const KanbanView = () => {
     }
   }, [boards, selectedBoard])
 
-  if (userCurrency === 'anonymous') {
-    return (
-      <Stack p={2}>
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          <Typography variant="body2">
-            Você está visualizando a aplicação como um usuário anônimo. Para ter acesso a todas as
-            funcionalidades, peça ao administrador para criar uma conta de usuário para você.
-          </Typography>
-        </Alert>
-      </Stack>
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <Container maxWidth="xl" sx={{ mt: 1 }}>
+  return (
+    <Container maxWidth="xl" sx={{ mt: 1 }}>
+      {isLoading && (
         <Stack direction="row" alignItems="flex-start" spacing={3}>
           {[...Array(4)].map((_, index) => (
             <KanbanColumnSkeleton key={index} index={index} />
           ))}
         </Stack>
-      </Container>
-    )
-  }
+      )}
 
-  const board = boardMescle({ selectedBoard, boards, columns, tasks })
-
-  return (
-    <Container maxWidth="xl" sx={{ mt: 1 }}>
-      <Stack direction="column" spacing={1}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Paper sx={{ p: 1, borderRadius: 1 }}>
-            <Button variant="soft" onClick={() => setShowArchived((prevState) => !prevState)}>
-              {showArchived ? 'Kanban' : 'Arquivados'}
-            </Button>
-          </Paper>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              p: 1,
-              width: '100%',
-              backgroundColor: 'background.neutral',
-              borderRadius: 1,
-            }}
-          >
-            <BoardsItems {...{ boards, setSelectedBoard, selectedBoard, isPermissionAdmin }} />
-          </Stack>
+      {!isUserValid && (
+        <Stack p={2}>
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            <Typography variant="body2">
+              Você está visualizando a aplicação como um usuário anônimo. Para ter acesso a todas as
+              funcionalidades, peça ao administrador para criar uma conta de usuário para você.
+            </Typography>
+          </Alert>
         </Stack>
+      )}
 
-        <DragDropContext onDragEnd={onDragEnd(board)}>
-          {showArchived ? (
-            <ArchivedList />
-          ) : (
-            <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-              {(provided) => (
-                <Stack
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  spacing={1}
-                  direction="row"
-                  alignItems="flex-start"
-                  sx={{
-                    p: 0.25,
-                    height: 1,
-                    overflowY: 'hidden',
-                    ...hideScroll.x,
-                  }}
-                >
-                  {board?.ordered?.map((columnId, index) => (
-                    <KanbanColumn
-                      key={columnId}
-                      index={index}
-                      column={board?.columns[columnId]}
-                      tasks={board?.tasks}
-                    />
-                  ))}
+      {(isLoading || isUserValid) && (
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Paper sx={{ p: 1, borderRadius: 1 }}>
+              <Button variant="soft" onClick={() => setShowArchived((prevState) => !prevState)}>
+                {showArchived ? 'Kanban' : 'Arquivados'}
+              </Button>
+            </Paper>
 
-                  {provided.placeholder}
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                p: 1,
+                width: '100%',
+                backgroundColor: 'background.neutral',
+                borderRadius: 1,
+              }}
+            >
+              <BoardsItems {...{ boards, setSelectedBoard, selectedBoard, isPermissionAdmin }} />
+            </Stack>
+          </Stack>
 
-                  {selectedBoard && (
-                    <KanbanColumnAdd board={boards?.find((board) => board.id === selectedBoard)} />
-                  )}
-                </Stack>
-              )}
-            </Droppable>
-          )}
-        </DragDropContext>
-      </Stack>
+          <DragDropContext onDragEnd={onDragEnd(board)}>
+            {showArchived ? (
+              <ArchivedList />
+            ) : (
+              <Droppable droppableId="board" type="COLUMN" direction="horizontal">
+                {(provided) => (
+                  <Stack
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    spacing={1}
+                    direction="row"
+                    alignItems="flex-start"
+                    sx={{
+                      p: 0.25,
+                      height: 1,
+                      overflowY: 'hidden',
+                      ...hideScroll.x,
+                    }}
+                  >
+                    {board?.ordered?.map((columnId, index) => (
+                      <KanbanColumn
+                        key={columnId}
+                        index={index}
+                        column={board?.columns[columnId]}
+                        tasks={board?.tasks}
+                      />
+                    ))}
+
+                    {provided.placeholder}
+
+                    {selectedBoard && (
+                      <KanbanColumnAdd
+                        board={boards?.find((board) => board.id === selectedBoard)}
+                      />
+                    )}
+                  </Stack>
+                )}
+              </Droppable>
+            )}
+          </DragDropContext>
+        </Stack>
+      )}
     </Container>
   )
 }
