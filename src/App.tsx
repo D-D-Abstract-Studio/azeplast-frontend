@@ -13,6 +13,9 @@ import { KanbanView } from '@/sections/kanban/kanban-view'
 import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 import { Stack } from '@mui/material'
 
 import { endpoints } from './constants/config'
@@ -42,19 +45,21 @@ export const App = () => {
     >
       <MotionLazy>
         <SnackbarProvider>
-          <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
-            <ProgressBar />
-            {isPermissionAdmin && <SettingsButton />}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MuiLocalizationProvider dateAdapter={AdapterDateFns}>
+              <ProgressBar />
+              {isPermissionAdmin && <SettingsButton />}
 
-            <Stack direction="column" spacing={2}>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<KanbanView />} />
-                  <Route path="*" element={<h1>Not Found</h1>} />
-                </Routes>
-              </BrowserRouter>
-            </Stack>
-          </MuiLocalizationProvider>
+              <Stack direction="column" spacing={2}>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<KanbanView />} />
+                    <Route path="*" element={<h1>Not Found</h1>} />
+                  </Routes>
+                </BrowserRouter>
+              </Stack>
+            </MuiLocalizationProvider>
+          </LocalizationProvider>
         </SnackbarProvider>
       </MotionLazy>
     </ThemeProvider>

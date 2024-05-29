@@ -56,7 +56,12 @@ type Props = {
   onCloseDetails: VoidFunction
 }
 
-export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
+export default function KanbanDetails({
+  task,
+  openDetails,
+
+  onCloseDetails,
+}: Props) {
   const theme = useTheme()
   const confirmArchive = useBoolean()
   const confirmDelete = useBoolean()
@@ -86,12 +91,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     resolver: yupResolver(UpdateUserSchema),
   })
 
-  const {
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = methods
+  const { handleSubmit, setValue, watch } = methods
 
   const { priority } = watch()
 
@@ -207,7 +207,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               <StyledLabel>Criado por</StyledLabel>
 
               <Avatar alt={task.reporter} color="secondary">
-                <Typography variant="button">{task.reporter.slice(0, 3).toUpperCase()}</Typography>
+                <Tooltip title={task.reporter}>
+                  <Typography variant="button">
+                    {task.reporter.slice(0, 3).toUpperCase()}
+                  </Typography>
+                </Tooltip>
               </Avatar>
             </Stack>
 

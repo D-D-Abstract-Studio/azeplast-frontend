@@ -62,6 +62,7 @@ export const MenuPopover = ({
         onClose={handleClose}
         anchorOrigin={anchorOrigin as PopoverOrigin}
         transformOrigin={transformOrigin as PopoverOrigin}
+        sx={{ zIndex: 1 }}
         slotProps={{
           paper: {
             sx: {

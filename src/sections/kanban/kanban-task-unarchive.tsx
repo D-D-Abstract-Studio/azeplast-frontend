@@ -1,6 +1,20 @@
 import { mutate } from 'swr'
 
-import { Button, Divider, MenuItem, Stack, Avatar, Tooltip } from '@mui/material'
+import {
+  Button,
+  Divider,
+  MenuItem,
+  Stack,
+  Avatar,
+  Tooltip,
+  Grid,
+  Box,
+  styled,
+  Typography,
+  ButtonBase,
+  alpha,
+  TextField,
+} from '@mui/material'
 import { Label } from '@/components/label'
 
 import { DataGridCustom } from '@/components/data-grid-custom'
@@ -9,17 +23,35 @@ import { Iconify } from '@/components/iconify'
 
 import { useRequest } from '@/hooks/use-request'
 
-import { endpoints } from '@/constants/config'
+import { COLORS, endpoints } from '@/constants/config'
 
 import dayjs from 'dayjs'
 import { enqueueSnackbar } from 'notistack'
 
 import { axios } from '@/utils/axios'
 
-import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { useBoolean } from '@/hooks/use-boolean'
+
+import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
 import { LabelColor } from '@/components/label/types'
+import { useState } from 'react'
+import { ConfirmDialog } from '@/components/custom-dialog'
+
+import { DatePicker } from '@mui/x-date-pickers'
+
+const StyledLabel = styled('span')(({ theme }) => ({
+  ...theme.typography.caption,
+  width: '100%',
+  flexShrink: 0,
+  color: theme.palette.text.secondary,
+  fontWeight: theme.typography.fontWeightSemiBold,
+}))
 
 export const ArchivedList = () => {
+  const openDetails = useBoolean()
+
+  const [task, setTask] = useState<IKanbanTask>()
+
   const { data: columns } = useRequest<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
@@ -28,11 +60,13 @@ export const ArchivedList = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
-  const row = tasks?.map((task) => {
-    const isExistingColumn = columns?.find((column) => column.taskIds.includes(task.id))
+  const row = tasks
+    ?.filter((task) => task.archived)
+    .map((task) => {
+      const isExistingColumn = columns?.find((column) => column.taskIds.includes(task.id))
 
-    return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
-  })
+      return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
+    })
 
   const onUnarchiveTask = async (id: string) => {
     const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
@@ -66,101 +100,236 @@ export const ArchivedList = () => {
   }
 
   return (
-    <DataGridCustom<(IKanbanTask & { status: string }) | undefined>
-      row={row || []}
-      columns={[
-        {
-          field: 'id',
-        },
-        {
-          field: 'name',
-          headerName: 'Nome',
-        },
-        {
-          field: 'priority',
-          headerName: 'Prioridade',
-          renderCell: ({ row }) => {
-            const priorityColor = priorityColorMap[row?.priority || 'baixa']
-
-            return <Label color={priorityColor}>{row?.priority}</Label>
+    <>
+      <DataGridCustom<(IKanbanTask & { status: string }) | undefined>
+        row={row || []}
+        columns={[
+          {
+            field: 'id',
           },
-        },
-        {
-          field: 'status',
-          headerName: 'Status',
-        },
-        {
-          field: 'categories',
-          headerName: 'Categorias',
-          renderCell: ({ row }) => (
-            <Stack spacing={1} direction="row">
-              {row?.categories?.map((category) => (
-                <Label key={category} color="primary">
+          {
+            field: 'name',
+            headerName: 'Nome',
+          },
+          {
+            field: 'priority',
+            headerName: 'Prioridade',
+            renderCell: ({ row }) => {
+              const priorityColor = priorityColorMap[row?.priority || 'baixa']
+
+              return <Label color={priorityColor}>{row?.priority}</Label>
+            },
+          },
+          {
+            field: 'status',
+            headerName: 'Status',
+          },
+          {
+            field: 'categories',
+            headerName: 'Categorias',
+            width: 200,
+            renderCell: ({ row }) => (
+              <Grid container columnSpacing={0.5} justifyContent="center">
+                {row?.categories.map((category, index) => {
+                  return (
+                    <Grid key={index} item xs="auto" p={0}>
+                      <Tooltip title={category}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'left',
+                            alignContent: 'center',
+                          }}
+                        >
+                          <Label key={category} color="primary">
+                            {category}
+                          </Label>
+                        </Box>
+                      </Tooltip>
+                    </Grid>
+                  )
+                })}
+              </Grid>
+            ),
+          },
+          {
+            field: 'assignee',
+            headerName: 'Responsáveis',
+            width: 200,
+            renderCell: ({ row }) => (
+              <Stack spacing={1} direction="row">
+                {row?.assignee?.map((assignee, index) => (
+                  <Tooltip key={index} title={assignee.name}>
+                    <Avatar>{assignee.name?.slice(0, 3).toUpperCase()}</Avatar>
+                  </Tooltip>
+                ))}
+              </Stack>
+            ),
+          },
+          {
+            field: 'description',
+            headerName: 'Descrição',
+            flex: 1,
+          },
+
+          {
+            field: 'dueDate',
+            headerName: 'Data de entrega',
+            width: 130,
+            renderCell: ({ row }) => dayjs(row?.dueDate).format('DD/MM/YYYY'),
+          },
+          {
+            headerName: 'Ações',
+            width: 60,
+            renderCell: ({ row }) => (
+              <MenuPopover arrow="top-right" sx={{ width: 'max-content', p: 1 }}>
+                <MenuItem
+                  component={Button}
+                  fullWidth
+                  onClick={() => {
+                    setTimeout(() => setTask(row as IKanbanTask), 0)
+                    openDetails.onTrue()
+                  }}
+                >
+                  <Stack direction="row">
+                    <Iconify icon="solar:eye-bold-duotone" />
+                    Visualizar
+                  </Stack>
+                </MenuItem>
+
+                <MenuItem
+                  component={Button}
+                  fullWidth
+                  onClick={() => row?.id && onUnarchiveTask(row.id)}
+                  sx={{ color: 'warning.main' }}
+                >
+                  <Stack direction="row">
+                    <Iconify icon="eva:archive-outline" />
+                    Desarquivar
+                  </Stack>
+                </MenuItem>
+
+                <Divider />
+
+                <MenuItem
+                  component={Button}
+                  fullWidth
+                  onClick={() => row?.id && onDeleteTask(row.id)}
+                  sx={{ color: 'error.main' }}
+                >
+                  <Stack direction="row">
+                    <Iconify icon="eva:trash-fill" />
+                    Deletar
+                  </Stack>
+                </MenuItem>
+              </MenuPopover>
+            ),
+          },
+        ]}
+      />
+
+      <ConfirmDialog
+        open={openDetails.value}
+        onClose={openDetails.onFalse}
+        title=""
+        content={
+          <Stack
+            spacing={3}
+            sx={{
+              pb: 5,
+              px: 2.5,
+            }}
+          >
+            <Stack direction="column" alignItems="left" spacing={1}>
+              <StyledLabel>Criado por</StyledLabel>
+
+              <Avatar alt={task?.reporter} color="secondary">
+                <Tooltip title={task?.reporter}>
+                  <Typography variant="button">
+                    {task?.reporter.slice(0, 3).toUpperCase()}
+                  </Typography>
+                </Tooltip>
+              </Avatar>
+            </Stack>
+            <Stack direction="column" alignItems="left" spacing={1}>
+              <StyledLabel>Responsáveis</StyledLabel>
+
+              <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                {task?.assignee.map((user, index) => (
+                  <Avatar key={index} alt={user.name} color={COLORS[index]}>
+                    <Typography variant="button">
+                      {task?.reporter.slice(0, 3).toUpperCase()}
+                    </Typography>
+                  </Avatar>
+                ))}
+              </Stack>
+            </Stack>
+
+            <DatePicker
+              value={task?.dueDate ? new Date(task.dueDate) : new Date()}
+              label="Data de vencimento"
+              slotProps={{
+                actionBar: {
+                  actions: ['today', 'accept'],
+                },
+              }}
+            />
+
+            <Stack direction="column" alignItems="left" spacing={1}>
+              <StyledLabel>Prioridade</StyledLabel>
+
+              <Stack direction="row" flexWrap="wrap" spacing={1}>
+                {priorityValues.map((option) => (
+                  <ButtonBase
+                    key={option}
+                    sx={{
+                      p: 1,
+                      fontSize: 12,
+                      borderRadius: 1,
+                      lineHeight: '20px',
+                      textTransform: 'capitalize',
+                      fontWeight: 'fontWeightBold',
+                      boxShadow: (theme) =>
+                        `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+                      ...(option === task?.priority && {
+                        boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
+                      }),
+                    }}
+                  >
+                    <Iconify
+                      icon="line-md:circle-twotone"
+                      sx={{
+                        mr: 0.5,
+                        ...(option === 'baixa' && {
+                          color: 'info.main',
+                        }),
+                        ...(option === 'média' && {
+                          color: 'warning.main',
+                        }),
+                        ...(option === 'alta' && {
+                          color: 'error.main',
+                        }),
+                      }}
+                    />
+
+                    {option}
+                  </ButtonBase>
+                ))}
+              </Stack>
+            </Stack>
+
+            <StyledLabel>Categorias</StyledLabel>
+            <Stack direction="row" alignItems="left" spacing={1}>
+              {task?.categories.map((category, index) => (
+                <Label key={index} color="info" variant="soft">
                   {category}
                 </Label>
               ))}
             </Stack>
-          ),
-        },
-        {
-          field: 'assignee',
-          headerName: 'Responsáveis',
-          renderCell: ({ row }) => (
-            <Stack spacing={1} direction="row">
-              {row?.assignee?.map((assignee, index) => (
-                <Tooltip key={index} title={assignee.name}>
-                  <Avatar>{assignee.name?.slice(0, 3).toUpperCase()}</Avatar>
-                </Tooltip>
-              ))}
-            </Stack>
-          ),
-        },
-        {
-          field: 'description',
-          headerName: 'Descrição',
-          flex: 1,
-        },
-
-        {
-          field: 'dueDate',
-          headerName: 'Data de entrega',
-          width: 130,
-          renderCell: ({ row }) => dayjs(row?.dueDate).format('DD/MM/YYYY'),
-        },
-        {
-          headerName: 'Ações',
-          width: 60,
-          renderCell: ({ row }) => (
-            <MenuPopover arrow="top-right" sx={{ width: 'max-content', p: 1 }}>
-              <MenuItem
-                component={Button}
-                fullWidth
-                onClick={() => row?.id && onUnarchiveTask(row.id)}
-                sx={{ color: 'warning.main' }}
-              >
-                <Stack direction="row">
-                  <Iconify icon="eva:archive-outline" />
-                  Desarquivar
-                </Stack>
-              </MenuItem>
-
-              <Divider />
-
-              <MenuItem
-                component={Button}
-                fullWidth
-                onClick={() => row?.id && onDeleteTask(row.id)}
-                sx={{ color: 'error.main' }}
-              >
-                <Stack direction="row">
-                  <Iconify icon="eva:trash-fill" />
-                  Deletar
-                </Stack>
-              </MenuItem>
-            </MenuPopover>
-          ),
-        },
-      ]}
-    />
+            <TextField fullWidth multiline value={task?.description || ''} label="Descrição" />
+          </Stack>
+        }
+      />
+    </>
   )
 }
