@@ -17,19 +17,29 @@ import { Iconify } from '@/components/iconify'
 
 import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
-import KanbanDetailsPriority from './kanban-details-priority'
 
 import { COLORS } from '@/constants/config'
-import { Autocomplete, Box, Chip, Typography, useTheme } from '@mui/material'
+import { Box, ButtonBase, Typography, useTheme } from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { enqueueSnackbar } from 'notistack'
 
-import { IKanbanTask, priorityValues } from '@/types/kanban'
+import FormProvider from '@/components/hook-form/form-provider'
+import { RHFAutocomplete } from '@/components/hook-form'
+import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
+
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+
 import { axios } from '@/utils/axios'
-import { endpoints } from '@/constants/config'
 import { paper } from '@/theme/css'
+
+import { endpoints } from '@/constants/config'
+
+import { IKanbanTask, priorityValues } from '@/types/kanban'
+import { mutate } from 'swr'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -45,19 +55,12 @@ type Props = {
   onCloseDetails: VoidFunction
 }
 
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
-import FormProvider from '@/components/hook-form/form-provider'
-import { RHFTextField } from '@/components/hook-form'
-import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
-
 export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
-  const confirm = useBoolean()
+  const confirmArchive = useBoolean()
+  const confirmDelete = useBoolean()
   const contacts = useBoolean()
 
-  const [priority, setPriority] = useState(task.priority)
   const [taskName, setTaskName] = useState(task.name)
   const [taskDescription, setTaskDescription] = useState(task.description)
 
@@ -85,8 +88,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const {
     handleSubmit,
+    setValue,
     formState: { isDirty },
   } = methods
+
+  const { priority } = task
 
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
@@ -99,7 +105,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         onCloseDetails()
       })
 
-  const onDeleteTask = async (taskId: string) =>
+  const onArchiveTask = async (taskId: string) =>
     await axios
       .put(endpoints.tasks.updateTask(taskId), {
         ...task,
@@ -108,8 +114,17 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       .then(() => {
         enqueueSnackbar('Tarefa arquivada com sucesso')
 
+        mutate(endpoints.tasks.getAllTasks)
         onCloseDetails()
       })
+
+  const onDeleteTask = async (taskId: string) =>
+    await axios.delete(endpoints.tasks.updateTask(taskId)).then(() => {
+      enqueueSnackbar('Tarefa deletada com sucesso')
+
+      mutate(endpoints.tasks.getAllTasks)
+      onCloseDetails()
+    })
 
   const handleUpdate = async (task: IKanbanTask) =>
     await axios
@@ -146,10 +161,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const handleChangeTaskDescription = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskDescription(event.target.value)
-  }, [])
-
-  const handleChangePriority = useCallback((newValue: IKanbanTask['priority']) => {
-    setPriority(newValue)
   }, [])
 
   return (
@@ -200,6 +211,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 <Typography variant="button">{task.reporter.slice(0, 3).toUpperCase()}</Typography>
               </Avatar>
             </Stack>
+
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Responsáveis</StyledLabel>
 
@@ -237,11 +249,52 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Prioridade</StyledLabel>
 
-              <KanbanDetailsPriority priority={priority} onChangePriority={handleChangePriority} />
+              <Stack direction="row" flexWrap="wrap" spacing={1}>
+                {priorityValues.map((option) => (
+                  <ButtonBase
+                    key={option}
+                    onClick={() => setValue('priority', option)}
+                    sx={{
+                      p: 1,
+                      fontSize: 12,
+                      borderRadius: 1,
+                      lineHeight: '20px',
+                      textTransform: 'capitalize',
+                      fontWeight: 'fontWeightBold',
+                      boxShadow: (theme) =>
+                        `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+                      ...(option === priority && {
+                        boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
+                      }),
+                    }}
+                  >
+                    <Iconify
+                      icon="line-md:circle-twotone"
+                      sx={{
+                        mr: 0.5,
+                        ...(option === 'baixa' && {
+                          color: 'info.main',
+                        }),
+                        ...(option === 'média' && {
+                          color: 'warning.main',
+                        }),
+                        ...(option === 'alta' && {
+                          color: 'error.main',
+                        }),
+                      }}
+                    />
+
+                    {option}
+                  </ButtonBase>
+                ))}
+              </Stack>
             </Stack>
-            <Autocomplete
-              multiple
+
+            <RHFAutocomplete
               fullWidth
+              multiple
+              name="categories"
+              label="Categorias"
               options={[
                 'Gestão',
                 'Informática',
@@ -250,44 +303,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 'Comercial',
                 'Marketing',
                 ...task.categories,
-              ]}
-              defaultValue={task.categories}
-              renderInput={(params) => (
-                <TextField {...params} label="Categorias" placeholder="Digite para adicionar" />
-              )}
-              onChange={(_, newValue) => {
-                console.log(newValue)
-              }}
-              filterOptions={(options, params) => {
-                const filtered = options.filter((option) =>
-                  option.toLowerCase().includes(params.inputValue.toLowerCase())
-                )
-
-                if (params.inputValue !== '') {
-                  filtered.push(params.inputValue)
-                }
-
-                return filtered
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    variant="outlined"
-                    label={option}
-                    color="default"
-                    {...getTagProps({ index })}
-                    sx={{
-                      borderColor: 'background.neutral',
-                      backgroundColor: 'background.neutral',
-                      borderRadius: 1,
-                      alignItems: 'center',
-                    }}
-                    deleteIcon={<Iconify icon="eva:close-fill" />}
-                    key={Math.random()}
-                  />
-                ))
-              }
+              ].map((option) => ({ value: option, label: option }))}
             />
+
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Descrição </StyledLabel>
 
@@ -315,9 +333,17 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             }}
           >
             <Stack direction="row" spacing={1}>
+              <IconButton
+                color="error"
+                onClick={confirmDelete.onTrue}
+                sx={{ backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08) }}
+              >
+                <Iconify icon="tabler:trash-filled" />
+              </IconButton>
+
               <Button
                 fullWidth
-                onClick={confirm.onTrue}
+                onClick={confirmArchive.onTrue}
                 startIcon={<Iconify icon="solar:archive-bold" />}
                 variant="outlined"
                 color="warning"
@@ -334,13 +360,26 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       </FormProvider>
 
       <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Arquivar"
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title="Deletar"
         disablePortal={false}
         content={<>Tem certeza que deseja deletar esta tarefa?</>}
         action={
-          <Button variant="contained" color="error" onClick={() => onDeleteTask(task.id)}>
+          <Button variant="contained" color="error" onClick={() => onArchiveTask(task.id)}>
+            Deletar
+          </Button>
+        }
+      />
+
+      <ConfirmDialog
+        open={confirmArchive.value}
+        onClose={confirmArchive.onFalse}
+        title="Arquivar"
+        disablePortal={false}
+        content={<>Tem certeza que deseja arquivar esta tarefa?</>}
+        action={
+          <Button variant="contained" color="warning" onClick={() => onDeleteTask(task.id)}>
             Arquivar
           </Button>
         }

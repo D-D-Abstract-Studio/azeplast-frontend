@@ -2,7 +2,13 @@ import { useFormContext, Controller } from 'react-hook-form'
 
 import { AutocompleteProps, AutocompleteValue } from '@mui/material/Autocomplete'
 
-import { TextField, Autocomplete, InputAdornment, OutlinedTextFieldProps } from '@mui/material'
+import {
+  TextField,
+  Autocomplete,
+  InputAdornment,
+  OutlinedTextFieldProps,
+  Chip,
+} from '@mui/material'
 import { useRequest, UseRequestProps } from '../../hooks/use-request'
 import Image from '../image'
 import { Iconify } from '../iconify'
@@ -140,6 +146,24 @@ export const RHFAutocomplete = <Value, Multiple extends boolean | undefined = fa
                 }}
               />
             )}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  variant="outlined"
+                  label={option.label}
+                  color="default"
+                  {...getTagProps({ index })}
+                  sx={{
+                    borderColor: 'background.neutral',
+                    backgroundColor: 'background.neutral',
+                    borderRadius: 1,
+                    alignItems: 'center',
+                  }}
+                  deleteIcon={<Iconify icon="eva:close-fill" />}
+                  key={Math.random()}
+                />
+              ))
+            }
             renderOption={(props, option) => (
               <li {...props} key={props.id}>
                 <div
