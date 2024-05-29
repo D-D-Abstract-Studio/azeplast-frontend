@@ -18,7 +18,6 @@ import { Alert, Button, Paper, Typography } from '@mui/material'
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
 import { KanbanColumn } from './components/column/kanban-column'
-import { BoardsItems } from './components/BoardsItems'
 
 import { onDragEnd } from './shared/onDragEnd'
 import { boardMescle } from './shared/boardMescle'
@@ -28,6 +27,8 @@ import { ArchivedList } from './kanban-task-unarchive'
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 import { User } from '@/types/user'
+import { KanbanBoardAdd } from '@/sections/kanban/components/board/board-add'
+import { BoardActions } from '@/sections/kanban/components/board/board-actions'
 
 export const KanbanView = () => {
   const [showArchived, setShowArchived] = useState(false)
@@ -50,8 +51,6 @@ export const KanbanView = () => {
   })
 
   const board = boardMescle({ selectedBoard, boards, columns, tasks })
-
-  const isPermissionAdmin = user?.permissions === 'admin'
 
   const isUserValid = userCurrency !== 'anonymous'
 
@@ -101,7 +100,15 @@ export const KanbanView = () => {
                 borderRadius: 1,
               }}
             >
-              <BoardsItems {...{ boards, setSelectedBoard, selectedBoard, isPermissionAdmin }} />
+              <KanbanBoardAdd />
+
+              <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
+                {boards
+                  ?.filter((board) => board.usersIds.includes(user?._id || ''))
+                  .map((board, index) => (
+                    <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
+                  ))}
+              </Stack>
             </Stack>
           </Stack>
 
@@ -124,14 +131,17 @@ export const KanbanView = () => {
                       ...hideScroll.x,
                     }}
                   >
-                    {board?.ordered?.map((columnId, index) => (
-                      <KanbanColumn
-                        key={columnId}
-                        index={index}
-                        column={board?.columns[columnId]}
-                        tasks={board?.tasks}
-                      />
-                    ))}
+                    {board?.ordered?.map(
+                      (columnId, index) =>
+                        board?.columns[columnId].archived && (
+                          <KanbanColumn
+                            key={columnId}
+                            index={index}
+                            column={board?.columns[columnId]}
+                            tasks={board?.tasks}
+                          />
+                        )
+                    )}
 
                     {provided.placeholder}
 

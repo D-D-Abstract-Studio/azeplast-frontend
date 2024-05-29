@@ -14,16 +14,16 @@ import { ConfirmDialog } from '@/components/custom-dialog'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 import KanbanInputName from '../kanban-input-name'
 import { enqueueSnackbar } from 'notistack'
-import { IKanbanColumn } from '@/types/kanban'
+import { IKanban, IKanbanColumn } from '@/types/kanban'
 import { axios } from '@/utils/axios'
 import { endpoints } from '@/constants/config'
 
-type Props = {
+type Props = Partial<Pick<IKanban, 'tasks'>> & {
   columnName: string
   column: IKanbanColumn
 }
 
-export const KanbanColumnToolBar = ({ columnName, column }: Props) => {
+export const KanbanColumnToolBar = ({ columnName, column, tasks }: Props) => {
   const renameRef = useRef<HTMLInputElement>(null)
 
   const popover = usePopover()
@@ -41,11 +41,24 @@ export const KanbanColumnToolBar = ({ columnName, column }: Props) => {
 
   const handleDeleteColumn = async () =>
     await axios
-      .put(endpoints.columns.updateColumn(column.id), { ...column, archived: true })
-      .then(() => {
+      .put<IKanbanColumn>(endpoints.columns.updateColumn(column.id), { ...column, archived: true })
+      .then((column) => {
         enqueueSnackbar('Coluna arquivada com sucesso!')
 
+        column.data.taskIds.forEach(async (taskId) => {
+          if (!tasks) return
+          if (!tasks[taskId]) return
+
+          await axios.put(endpoints.tasks.updateTask(taskId), {
+            ...tasks[taskId],
+            archived: true,
+          })
+        })
+
+        enqueueSnackbar('Tarefas arquivadas com sucesso!')
+
         mutate(endpoints.columns.getAllColumns)
+        mutate(endpoints.tasks.getAllTasks)
       })
 
   useEffect(() => {

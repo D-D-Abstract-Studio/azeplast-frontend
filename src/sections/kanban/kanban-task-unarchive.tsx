@@ -13,7 +13,8 @@ import {
   Typography,
   ButtonBase,
   alpha,
-  TextField,
+  Chip,
+  Container,
 } from '@mui/material'
 import { Label } from '@/components/label'
 
@@ -38,6 +39,7 @@ import { useState } from 'react'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { DatePicker } from '@mui/x-date-pickers'
+import { CopyClipboard } from '@/components/CopyClipboard'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -237,101 +239,112 @@ export const ArchivedList = () => {
         onClose={openDetails.onFalse}
         title=""
         content={
-          <Stack
-            spacing={3}
-            sx={{
-              pb: 5,
-              px: 2.5,
-            }}
-          >
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Criado por</StyledLabel>
+          <Container>
+            <Stack spacing={3}>
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Criado por</StyledLabel>
 
-              <Avatar alt={task?.reporter} color="secondary">
-                <Tooltip title={task?.reporter}>
-                  <Typography variant="button">
-                    {task?.reporter.slice(0, 3).toUpperCase()}
-                  </Typography>
-                </Tooltip>
-              </Avatar>
-            </Stack>
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Responsáveis</StyledLabel>
-
-              <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                {task?.assignee.map((user, index) => (
-                  <Avatar key={index} alt={user.name} color={COLORS[index]}>
+                <Avatar alt={task?.reporter} color="secondary">
+                  <Tooltip title={task?.reporter}>
                     <Typography variant="button">
                       {task?.reporter.slice(0, 3).toUpperCase()}
                     </Typography>
-                  </Avatar>
-                ))}
+                  </Tooltip>
+                </Avatar>
               </Stack>
-            </Stack>
 
-            <DatePicker
-              value={task?.dueDate ? new Date(task.dueDate) : new Date()}
-              label="Data de vencimento"
-              slotProps={{
-                actionBar: {
-                  actions: ['today', 'accept'],
-                },
-              }}
-            />
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Responsáveis</StyledLabel>
 
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Prioridade</StyledLabel>
+                {Boolean(!task?.categories.length) && (
+                  <Avatar sx={{ bgcolor: 'background.neutral', color: 'text.primary' }}>
+                    <Typography variant="button">N/A</Typography>
+                  </Avatar>
+                )}
 
-              <Stack direction="row" flexWrap="wrap" spacing={1}>
-                {priorityValues.map((option) => (
-                  <ButtonBase
-                    key={option}
-                    sx={{
-                      p: 1,
-                      fontSize: 12,
-                      borderRadius: 1,
-                      lineHeight: '20px',
-                      textTransform: 'capitalize',
-                      fontWeight: 'fontWeightBold',
-                      boxShadow: (theme) =>
-                        `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
-                      ...(option === task?.priority && {
-                        boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
-                      }),
-                    }}
-                  >
-                    <Iconify
-                      icon="line-md:circle-twotone"
+                <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                  {task?.assignee.map((user, index) => (
+                    <Avatar key={index} alt={user.name} color={COLORS[index]}>
+                      <Typography variant="button">
+                        {task?.reporter.slice(0, 3).toUpperCase()}
+                      </Typography>
+                    </Avatar>
+                  ))}
+                </Stack>
+              </Stack>
+
+              <DatePicker
+                disabled
+                value={task?.dueDate ? new Date(task.dueDate) : new Date()}
+                label="Data de vencimento"
+                slotProps={{
+                  actionBar: {
+                    actions: ['today', 'accept'],
+                  },
+                }}
+              />
+
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Prioridade</StyledLabel>
+
+                <Stack direction="row" flexWrap="wrap" spacing={1}>
+                  {priorityValues.map((option) => (
+                    <ButtonBase
+                      key={option}
                       sx={{
-                        mr: 0.5,
-                        ...(option === 'baixa' && {
-                          color: 'info.main',
-                        }),
-                        ...(option === 'média' && {
-                          color: 'warning.main',
-                        }),
-                        ...(option === 'alta' && {
-                          color: 'error.main',
+                        p: 1,
+                        fontSize: 12,
+                        borderRadius: 1,
+                        lineHeight: '20px',
+                        textTransform: 'capitalize',
+                        fontWeight: 'fontWeightBold',
+                        boxShadow: (theme) =>
+                          `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+                        ...(option === task?.priority && {
+                          boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
                         }),
                       }}
-                    />
+                    >
+                      <Iconify
+                        icon="line-md:circle-twotone"
+                        sx={{
+                          mr: 0.5,
+                          ...(option === 'baixa' && {
+                            color: 'info.main',
+                          }),
+                          ...(option === 'média' && {
+                            color: 'warning.main',
+                          }),
+                          ...(option === 'alta' && {
+                            color: 'error.main',
+                          }),
+                        }}
+                      />
 
-                    {option}
-                  </ButtonBase>
-                ))}
+                      {option}
+                    </ButtonBase>
+                  ))}
+                </Stack>
               </Stack>
-            </Stack>
 
-            <StyledLabel>Categorias</StyledLabel>
-            <Stack direction="row" alignItems="left" spacing={1}>
-              {task?.categories.map((category, index) => (
-                <Label key={index} color="info" variant="soft">
-                  {category}
-                </Label>
-              ))}
+              <Stack direction="row" flexWrap="wrap" spacing={1}>
+                <StyledLabel>Categorias</StyledLabel>
+
+                {task?.categories?.map((category, index) => (
+                  <Chip key={index} variant="soft" label={category} />
+                ))}
+
+                {Boolean(!task?.categories.length) && <Chip variant="soft" label="Sem categoria" />}
+              </Stack>
+
+              <CopyClipboard
+                fullWidth
+                multiline
+                label="Descrição"
+                value={task?.description || ''}
+              />
             </Stack>
-            <TextField fullWidth multiline value={task?.description || ''} label="Descrição" />
-          </Stack>
+          </Container>
         }
       />
     </>

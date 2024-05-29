@@ -41,7 +41,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
           }}
         >
           <Stack {...provided.dragHandleProps} spacing={2} py={1}>
-            <KanbanColumnToolBar columnName={column.name} column={column} />
+            <KanbanColumnToolBar columnName={column.name} column={column} tasks={tasks} />
 
             <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 255px)' }}>
               <Droppable droppableId={column.id} type="TASK">
@@ -58,6 +58,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                     {column.taskIds.map((taskId, taskIndex) => {
                       if (!tasks) return null
                       if (!tasks[taskId]) return null
+                      if (tasks[taskId].archived) return null
 
                       return <KanbanTaskItem key={taskId} index={taskIndex} task={tasks[taskId]} />
                     })}

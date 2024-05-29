@@ -19,17 +19,17 @@ import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 
 import { COLORS } from '@/constants/config'
-import { ButtonBase, Typography, useTheme } from '@mui/material'
+import { Autocomplete, ButtonBase, Chip, TextField, Typography, useTheme } from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { enqueueSnackbar } from 'notistack'
 
 import FormProvider from '@/components/hook-form/form-provider'
-import { RHFAutocomplete, RHFTextField } from '@/components/hook-form'
+
 import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
@@ -41,6 +41,7 @@ import { endpoints } from '@/constants/config'
 import { IKanbanTask, priorityValues } from '@/types/kanban'
 import { mutate } from 'swr'
 import { isEqual } from 'lodash'
+import { RHFTextField } from '@/components/hook-form'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -56,12 +57,7 @@ type Props = {
   onCloseDetails: VoidFunction
 }
 
-export default function KanbanDetails({
-  task,
-  openDetails,
-
-  onCloseDetails,
-}: Props) {
+export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
   const confirmArchive = useBoolean()
   const confirmDelete = useBoolean()
@@ -91,13 +87,25 @@ export default function KanbanDetails({
     resolver: yupResolver(UpdateUserSchema),
   })
 
-  const { handleSubmit, setValue, watch } = methods
+  const { handleSubmit, setValue, watch, control } = methods
 
   const { priority } = watch()
 
   const values = watch()
 
   const isDirtyTask = isEqual(task, values)
+
+  const categories = [
+    ...new Set([
+      'Gestão',
+      'Informática',
+      'Logística',
+      'Financeiro',
+      'Comercial',
+      'Marketing',
+      ...task?.categories,
+    ]),
+  ]
 
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
@@ -119,6 +127,7 @@ export default function KanbanDetails({
       .then(() => {
         enqueueSnackbar('Tarefa arquivada com sucesso')
 
+        onCloseDetails()
         mutate(endpoints.tasks.getAllTasks)
       })
 
@@ -126,6 +135,7 @@ export default function KanbanDetails({
     await axios.delete(endpoints.tasks.updateTask(taskId)).then(() => {
       enqueueSnackbar('Tarefa deletada com sucesso')
 
+      onCloseDetails()
       mutate(endpoints.tasks.getAllTasks)
     })
 
@@ -293,22 +303,58 @@ export default function KanbanDetails({
               </Stack>
             </Stack>
 
-            <RHFAutocomplete
-              fullWidth
-              multiple
+            <Controller
               name="categories"
-              label="Categorias"
-              options={[
-                ...new Set([
-                  'Gestão',
-                  'Informática',
-                  'Logística',
-                  'Financeiro',
-                  'Comercial',
-                  'Marketing',
-                  ...task?.categories,
-                ]),
-              ].map((option) => ({ value: option, label: option }))}
+              control={control}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              render={({ field: { ref, onChange, ...restField }, fieldState: { error } }) => {
+                return (
+                  <Autocomplete
+                    {...restField}
+                    multiple
+                    fullWidth
+                    options={categories}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        error={Boolean(error)}
+                        label="Categorias"
+                        placeholder="Digite para adicionar"
+                      />
+                    )}
+                    onChange={(_, data) => onChange(data)}
+                    filterOptions={(options, params) => {
+                      const filtered = options.filter((option) =>
+                        option.toLowerCase().includes(params.inputValue.toLowerCase())
+                      )
+
+                      if (params.inputValue !== '') {
+                        filtered.push(params.inputValue)
+                      }
+
+                      return filtered
+                    }}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          variant="outlined"
+                          label={option}
+                          color="default"
+                          {...getTagProps({ index })}
+                          sx={{
+                            borderColor: 'background.neutral',
+                            backgroundColor: 'background.neutral',
+                            borderRadius: 1,
+                            alignItems: 'center',
+                          }}
+                          deleteIcon={<Iconify icon="eva:close-fill" />}
+                          key={Math.random()}
+                        />
+                      ))
+                    }
+                  />
+                )
+              }}
             />
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
