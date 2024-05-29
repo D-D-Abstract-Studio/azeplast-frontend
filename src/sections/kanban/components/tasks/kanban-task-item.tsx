@@ -92,18 +92,34 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
                 <AvatarGroup
                   sx={{
                     [`& .${avatarGroupClasses.avatar}`]: {
-                      width: 24,
-                      height: 24,
+                      width: 30,
+                      height: 30,
                     },
                   }}
                 >
                   {task?.assignee?.map((user, index) => (
                     <Avatar alt={user.name} key={index} color={COLORS[index]}>
-                      {user?.name?.slice(0, 3).toUpperCase()}
+                      <Typography variant="button" sx={{ fontSize: 11 }}>
+                        {user?.name?.slice(0, 3).toUpperCase()}
+                      </Typography>
                     </Avatar>
                   ))}
                 </AvatarGroup>
               </Stack>
+
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: 12,
+                  maxWidth: 300,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {task.description}
+              </Typography>
             </Stack>
           </Paper>
         )}

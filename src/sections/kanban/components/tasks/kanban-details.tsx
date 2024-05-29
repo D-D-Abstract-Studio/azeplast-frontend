@@ -18,7 +18,6 @@ import { Iconify } from '@/components/iconify'
 import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 
-import { COLORS } from '@/constants/config'
 import { Autocomplete, ButtonBase, Chip, TextField, Typography, useTheme } from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
@@ -29,7 +28,7 @@ import FormProvider from '@/components/hook-form/form-provider'
 
 import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
@@ -88,6 +87,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   })
 
   const { handleSubmit, setValue, watch, control } = methods
+
+  const assignee = useFieldArray({
+    control,
+    name: 'assignee',
+  })
 
   const { priority } = watch()
 
@@ -229,12 +233,17 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               <StyledLabel>Responsáveis</StyledLabel>
 
               <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                {task.assignee.map((user, index) => (
-                  <Avatar key={index} alt={user.name} color={COLORS[index]}>
-                    <Typography variant="button">
-                      {task.reporter.slice(0, 3).toUpperCase()}
-                    </Typography>
-                  </Avatar>
+                {values.assignee.map((task, index) => (
+                  <Chip
+                    key={index}
+                    label={task.name}
+                    variant="soft"
+                    onDelete={() => assignee.remove(index)}
+                    sx={{
+                      color: 'text.primary',
+                      borderRadius: 1,
+                    }}
+                  />
                 ))}
 
                 <Tooltip title="Adicionar responsável" arrow>
@@ -250,7 +259,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 </Tooltip>
 
                 <KanbanContactsDialog
-                  assignee={task.assignee}
+                  assignee={assignee}
+                  assigneeValues={values.assignee}
                   open={contacts.value}
                   onClose={contacts.onFalse}
                 />

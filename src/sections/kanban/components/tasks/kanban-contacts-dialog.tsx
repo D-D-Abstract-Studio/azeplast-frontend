@@ -1,37 +1,33 @@
 import { useState, useCallback } from 'react'
 
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import Dialog from '@mui/material/Dialog'
-import ListItem from '@mui/material/ListItem'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import DialogTitle from '@mui/material/DialogTitle'
-import ListItemText from '@mui/material/ListItemText'
 import DialogContent from '@mui/material/DialogContent'
 import InputAdornment from '@mui/material/InputAdornment'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
 
 import { Iconify } from '@/components/iconify'
-
 import SearchNotFound from '@/components/search-not-found'
 
-import { COLORS, userNames } from '@/constants/config'
+import { UseFieldArrayReturn } from 'react-hook-form'
 
-import { getRandomNumber } from '@/utils/get-random-number'
-
+import { userNames } from '@/constants/config'
 import { IKanbanTask } from '@/types/kanban'
+import { Stack } from '@mui/material'
 
 const ITEM_HEIGHT = 64
 
 type Props = {
   open: boolean
   onClose: VoidFunction
-  assignee?: IKanbanTask['assignee']
+  assignee: UseFieldArrayReturn<IKanbanTask, 'assignee', 'id'>
+  assigneeValues: IKanbanTask['assignee']
 }
 
-export default function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
+export default function KanbanContactsDialog({ open, assignee, assigneeValues, onClose }: Props) {
   const [searchContact, setSearchContact] = useState('')
 
   const handleSearchContacts = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,80 +43,92 @@ export default function KanbanContactsDialog({ assignee = [], open, onClose }: P
 
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
-      <DialogTitle sx={{ pb: 0 }}>
+      <DialogTitle sx={{ pb: 1 }}>
         Usuários <Typography component="span">({userNames.length})</Typography>
       </DialogTitle>
 
-      <Box sx={{ px: 3, py: 2.5 }}>
-        <TextField
-          fullWidth
-          value={searchContact}
-          onChange={handleSearchContacts}
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
-
-      <DialogContent sx={{ p: 0 }}>
-        {notFound ? (
-          <SearchNotFound query={searchContact} sx={{ mt: 3, mb: 10 }} />
-        ) : (
-          <Box
-            sx={{
-              px: 2.5,
-              overflowY: 'auto',
-              height: ITEM_HEIGHT * 6,
+      <DialogContent>
+        <Stack spacing={2} direction="column">
+          <TextField
+            fullWidth
+            value={searchContact}
+            onChange={handleSearchContacts}
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
             }}
-          >
-            {dataFiltered.map((contact, index) => {
-              const checked = assignee.map((person) => person.name).includes(contact)
+          />
 
-              return (
-                <ListItem
-                  key={index}
-                  disableGutters
-                  secondaryAction={
-                    <Button
-                      variant="outlined"
-                      color={checked ? 'primary' : 'inherit'}
-                      startIcon={
-                        <Iconify
-                          width={16}
-                          icon={checked ? 'eva:checkmark-fill' : 'mingcute:add-line'}
-                          sx={{ mr: -0.5 }}
-                        />
-                      }
-                    >
-                      {checked ? 'Atribuído' : 'Atribuir'}
-                    </Button>
-                  }
-                  sx={{ height: ITEM_HEIGHT }}
-                >
-                  <ListItemAvatar>
-                    <Avatar alt={contact} color={COLORS[getRandomNumber(0, COLORS.length - 1)]}>
-                      <Typography variant="button">{contact.slice(0, 3).toUpperCase()}</Typography>
-                    </Avatar>
-                  </ListItemAvatar>
+          {notFound ? (
+            <SearchNotFound query={searchContact} sx={{ mt: 3, mb: 10 }} />
+          ) : (
+            <Stack
+              spacing={1}
+              direction="column"
+              sx={{
+                px: 1,
+                overflowY: 'auto',
+                height: ITEM_HEIGHT * 6,
+              }}
+            >
+              {dataFiltered.map((contact, index) => {
+                const checked = assigneeValues.map((person) => person.name).includes(contact)
 
-                  <ListItemText
-                    primaryTypographyProps={{
-                      typography: 'subtitle2',
-                      sx: { mb: 0.25 },
+                return (
+                  <Stack
+                    key={index}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    spacing={1}
+                    sx={{
+                      width: '100%',
+                      p: 1,
+                      height: ITEM_HEIGHT,
+                      backgroundColor: 'background.neutral',
+                      borderRadius: 1,
                     }}
-                    secondaryTypographyProps={{ typography: 'caption' }}
-                    primary={contact}
-                  />
-                </ListItem>
-              )
-            })}
-          </Box>
-        )}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Avatar alt={contact} color="secondary">
+                        <Typography variant="button">
+                          {contact.slice(0, 3).toUpperCase()}
+                        </Typography>
+                      </Avatar>
+                      {contact}
+                    </Stack>
+
+                    {checked ? (
+                      <Button
+                        color="error"
+                        variant="soft"
+                        size="small"
+                        onClick={() => assignee.remove(index)}
+                        startIcon={<Iconify icon="eva:person-remove-fill" />}
+                      >
+                        Remover
+                      </Button>
+                    ) : (
+                      <Button
+                        color="primary"
+                        variant="soft"
+                        size="small"
+                        onClick={() => assignee.append({ name: contact })}
+                        startIcon={<Iconify icon="eva:person-add-fill" />}
+                      >
+                        Atribuir
+                      </Button>
+                    )}
+                  </Stack>
+                )
+              })}
+            </Stack>
+          )}
+        </Stack>
       </DialogContent>
     </Dialog>
   )
