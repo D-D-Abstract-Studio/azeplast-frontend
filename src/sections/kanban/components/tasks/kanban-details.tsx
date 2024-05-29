@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 
 import Tooltip from '@mui/material/Tooltip'
-import TextField from '@mui/material/TextField'
+
 import IconButton from '@mui/material/IconButton'
 
 import { useBoolean } from '@/hooks/use-boolean'
@@ -19,14 +19,14 @@ import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 
 import { COLORS } from '@/constants/config'
-import { Box, ButtonBase, Typography, useTheme } from '@mui/material'
+import { ButtonBase, Typography, useTheme } from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { enqueueSnackbar } from 'notistack'
 
 import FormProvider from '@/components/hook-form/form-provider'
-import { RHFAutocomplete } from '@/components/hook-form'
+import { RHFAutocomplete, RHFTextField } from '@/components/hook-form'
 import { RHFDatePiker } from '@/components/hook-form/rhf-date-piker'
 
 import { useForm } from 'react-hook-form'
@@ -40,6 +40,7 @@ import { endpoints } from '@/constants/config'
 
 import { IKanbanTask, priorityValues } from '@/types/kanban'
 import { mutate } from 'swr'
+import { isEqual } from 'lodash'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -62,7 +63,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const contacts = useBoolean()
 
   const [taskName, setTaskName] = useState(task.name)
-  const [taskDescription, setTaskDescription] = useState(task.description)
 
   const assigneeSchema = Yup.object().shape({
     name: Yup.string().optional(),
@@ -89,10 +89,15 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const {
     handleSubmit,
     setValue,
-    formState: { isDirty },
+    watch,
+    formState: { errors },
   } = methods
 
-  const { priority } = task
+  const { priority } = watch()
+
+  const values = watch()
+
+  const isDirtyTask = isEqual(task, values)
 
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
@@ -102,7 +107,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       .then(() => {
         enqueueSnackbar('Tarefa atualizada com sucesso')
 
-        onCloseDetails()
+        mutate(endpoints.tasks.getAllTasks)
       })
 
   const onArchiveTask = async (taskId: string) =>
@@ -115,7 +120,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         enqueueSnackbar('Tarefa arquivada com sucesso')
 
         mutate(endpoints.tasks.getAllTasks)
-        onCloseDetails()
       })
 
   const onDeleteTask = async (taskId: string) =>
@@ -123,18 +127,17 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       enqueueSnackbar('Tarefa deletada com sucesso')
 
       mutate(endpoints.tasks.getAllTasks)
-      onCloseDetails()
     })
 
   const handleUpdate = async (task: IKanbanTask) =>
     await axios
-      .post(endpoints.tasks.updateTask(task.id), {
+      .put(endpoints.tasks.updateTask(task.id), {
         ...task,
       })
       .then(() => {
-        enqueueSnackbar('Tarefa arquivada com sucesso')
+        enqueueSnackbar('Tarefa salva com sucesso')
 
-        onCloseDetails()
+        mutate(endpoints.tasks.getAllTasks)
       })
 
   const handleChangeTaskName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,47 +162,43 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     [onUpdateTask, task, taskName]
   )
 
-  const handleChangeTaskDescription = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setTaskDescription(event.target.value)
-  }, [])
-
   return (
-    <Drawer
-      open={openDetails}
-      onClose={onCloseDetails}
-      anchor="right"
-      slotProps={{
-        backdrop: { invisible: true },
-      }}
-      PaperProps={{
-        sx: {
-          width: {
-            xs: 1,
-            sm: 480,
+    <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>
+      <Drawer
+        disablePortal
+        open={openDetails}
+        onClose={onCloseDetails}
+        anchor="right"
+        slotProps={{
+          backdrop: { invisible: true },
+        }}
+        PaperProps={{
+          sx: {
+            width: {
+              xs: 1,
+              sm: 480,
+            },
           },
-        },
-      }}
-    >
-      <Stack direction="row" alignItems="center" spacing={1} p={2}>
-        <KanbanInputName
-          fullWidth
-          placeholder="Nome da tarefa"
-          value={taskName}
-          onChange={handleChangeTaskName}
-          onKeyUp={handleUpdateTask}
-        />
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1} p={2}>
+          <KanbanInputName
+            fullWidth
+            placeholder="Nome da tarefa"
+            value={taskName}
+            onChange={handleChangeTaskName}
+            onKeyUp={handleUpdateTask}
+          />
 
-        <IconButton color="default" onClick={onCloseDetails}>
-          <Iconify icon="eva:close-fill" size={2.5} />
-        </IconButton>
-      </Stack>
+          <IconButton color="default" onClick={onCloseDetails}>
+            <Iconify icon="eva:close-fill" size={2.5} />
+          </IconButton>
+        </Stack>
 
-      <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>
-        <Stack direction="column" justifyContent="space-between" sx={{ height: '100%' }}>
+        <Stack direction="column" justifyContent="space-between" height="100%">
           <Stack
             spacing={3}
             sx={{
-              pt: 3,
               pb: 5,
               px: 2.5,
             }}
@@ -306,84 +305,71 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               ].map((option) => ({ value: option, label: option }))}
             />
 
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Descrição </StyledLabel>
-
-              <TextField
-                fullWidth
-                multiline
-                value={taskDescription}
-                onChange={handleChangeTaskDescription}
-                InputProps={{
-                  sx: { typography: 'body2' },
-                }}
-              />
-            </Stack>
+            <RHFTextField fullWidth multiline name="description" label="Descrição" />
           </Stack>
 
-          <Box
+          <Stack
+            direction="row"
+            spacing={1}
             sx={{
               p: 2,
-              borderTop: 1,
-              borderColor: 'divider',
-              position: 'sticky',
               bottom: 0,
-              zIndex: 999,
+              borderTop: 1,
+              position: 'sticky',
+              borderColor: 'divider',
               ...paper({ theme }),
             }}
           >
-            <Stack direction="row" spacing={1}>
-              <IconButton
-                color="error"
-                onClick={confirmDelete.onTrue}
-                sx={{ backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08) }}
-              >
-                <Iconify icon="tabler:trash-filled" />
-              </IconButton>
+            <IconButton
+              color="error"
+              onClick={confirmDelete.onTrue}
+              sx={{ backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08) }}
+            >
+              <Iconify icon="tabler:trash-filled" />
+            </IconButton>
 
-              <Button
-                fullWidth
-                onClick={confirmArchive.onTrue}
-                startIcon={<Iconify icon="solar:archive-bold" />}
-                variant="outlined"
-                color="warning"
-              >
-                Arquivar
-              </Button>
+            <Button
+              fullWidth
+              onClick={confirmArchive.onTrue}
+              startIcon={<Iconify icon="solar:archive-bold" />}
+              variant="outlined"
+              color="warning"
+            >
+              Arquivar
+            </Button>
 
-              <Button fullWidth disabled={!isDirty} type="submit" variant="contained">
-                Salvar
-              </Button>
-            </Stack>
-          </Box>
+            <Button fullWidth disabled={isDirtyTask} type="submit" variant="contained">
+              Salvar
+            </Button>
+          </Stack>
         </Stack>
-      </FormProvider>
 
-      <ConfirmDialog
-        open={confirmDelete.value}
-        onClose={confirmDelete.onFalse}
-        title="Deletar"
-        disablePortal={false}
-        content={<>Tem certeza que deseja deletar esta tarefa?</>}
-        action={
-          <Button variant="contained" color="error" onClick={() => onArchiveTask(task.id)}>
-            Deletar
-          </Button>
-        }
-      />
+        <ConfirmDialog
+          open={confirmDelete.value}
+          onClose={confirmDelete.onFalse}
+          title="Deletar"
+          disablePortal={false}
+          content={<>Tem certeza que deseja deletar esta tarefa?</>}
+          action={
+            <Button variant="contained" color="error" onClick={() => onArchiveTask(task.id)}>
+              Deletar
+            </Button>
+          }
+        />
 
-      <ConfirmDialog
-        open={confirmArchive.value}
-        onClose={confirmArchive.onFalse}
-        title="Arquivar"
-        disablePortal={false}
-        content={<>Tem certeza que deseja arquivar esta tarefa?</>}
-        action={
-          <Button variant="contained" color="warning" onClick={() => onDeleteTask(task.id)}>
-            Arquivar
-          </Button>
-        }
-      />
-    </Drawer>
+        <ConfirmDialog
+          open={confirmArchive.value}
+          onClose={confirmArchive.onFalse}
+          title="Arquivar"
+          disablePortal={false}
+          content={<>Tem certeza que deseja arquivar esta tarefa?</>}
+          action={
+            <Button variant="contained" color="warning" onClick={() => onDeleteTask(task.id)}>
+              Arquivar
+            </Button>
+          }
+        />
+      </Drawer>
+    </FormProvider>
   )
 }

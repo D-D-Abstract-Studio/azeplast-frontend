@@ -164,6 +164,19 @@ export const RHFAutocomplete = <Value, Multiple extends boolean | undefined = fa
                 />
               ))
             }
+            /*
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.label.toLowerCase().includes(params.inputValue.toLowerCase())
+              )
+
+              if (params.inputValue !== '') {
+                filtered.push(params.inputValue)
+              }
+
+              return filtered
+            }}
+            */
             renderOption={(props, option) => (
               <li {...props} key={props.id}>
                 <div
