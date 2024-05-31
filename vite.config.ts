@@ -10,6 +10,11 @@ export default defineConfig({
       input: {
         main: 'index.html',
       },
+      output: {
+        entryFileNames: 'assets/main.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name][extname]',
+      },
     },
   },
   resolve: {
