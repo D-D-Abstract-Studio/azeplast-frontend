@@ -38,6 +38,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
             ...(snapshot.isDragging && {
               bgcolor: (theme) => alpha(theme.palette.grey[500], 0.24),
             }),
+            backgroundColor: 'background.neutral',
           }}
         >
           <Stack {...provided.dragHandleProps} spacing={2} py={1}>

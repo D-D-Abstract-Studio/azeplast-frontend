@@ -86,7 +86,7 @@ export const KanbanView = () => {
       {(isLoading || isUserValid) && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Paper sx={{ p: 1, borderRadius: 1 }}>
+            <Paper sx={{ p: 1, borderRadius: 1, backgroundColor: 'background.neutral' }}>
               <Button variant="soft" onClick={() => setShowArchived((prevState) => !prevState)}>
                 {showArchived ? 'Kanban' : 'Arquivados'}
               </Button>
