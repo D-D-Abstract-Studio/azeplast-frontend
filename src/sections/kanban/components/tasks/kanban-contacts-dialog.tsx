@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
@@ -30,9 +30,8 @@ type Props = {
 export default function KanbanContactsDialog({ open, assignee, assigneeValues, onClose }: Props) {
   const [searchContact, setSearchContact] = useState('')
 
-  const handleSearchContacts = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchContacts = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchContact(event.target.value)
-  }, [])
 
   const dataFiltered = applyFilter({
     inputData: userNames,

@@ -55,13 +55,9 @@ export default function NavList({ data, depth, hasChild, config }: NavListRootPr
     }
   }, [open])
 
-  const handleOpen = useCallback(() => {
-    setOpen(true)
-  }, [])
+  const handleOpen = useCallback(() => setOpen(true), [])
 
-  const handleClose = useCallback(() => {
-    setOpen(false)
-  }, [])
+  const handleClose = useCallback(() => setOpen(false), [])
 
   return (
     <>

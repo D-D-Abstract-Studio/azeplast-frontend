@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import {
   DataGrid,
@@ -39,12 +39,12 @@ export const DataGridCustom = <T,>({ row, columns }: Props<T>) => {
     id: false,
   })
 
-  const handleChangeColumnVisibilityModel = useCallback((newModel: GridColumnVisibilityModel) => {
-    setColumnVisibilityModel(newModel)
-  }, [])
-
   const position = reference.current?.getBoundingClientRect()
   const height = screenHeight - Number(position?.top ?? 0) - 20
+
+  const handleChangeColumnVisibilityModel = (newModel: GridColumnVisibilityModel) => {
+    setColumnVisibilityModel(newModel)
+  }
 
   return (
     <Box ref={reference} sx={{ height, width: '100%' }}>

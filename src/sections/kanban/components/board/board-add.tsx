@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
@@ -40,30 +40,22 @@ export const KanbanBoardAdd = () => {
       .then(() => mutate(endpoints.boards.getAllBoards))
   }
 
-  const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setBoardName(event.target.value)
-  }, [])
 
-  const handleCreateBoard = useCallback(async () => {
-    try {
-      if (boardName) {
-        createBoard({ name: boardName })
-        setBoardName('')
-      }
-      openAddBoard.onFalse()
-    } catch (error) {
-      console.error(error)
+  const handleCreateBoard = async () => {
+    if (boardName) {
+      createBoard({ name: boardName })
+      setBoardName('')
     }
-  }, [boardName, openAddBoard])
+    openAddBoard.onFalse()
+  }
 
-  const handleKeyUpCreateColumn = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        handleCreateBoard()
-      }
-    },
-    [handleCreateBoard]
-  )
+  const handleKeyUpCreateColumn = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleCreateBoard()
+    }
+  }
 
   return (
     <Paper>

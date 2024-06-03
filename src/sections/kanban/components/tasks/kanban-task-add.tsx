@@ -1,5 +1,5 @@
 import { mutate } from 'swr'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
@@ -43,26 +43,22 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
     onCloseAddTask()
   }
 
-  const handleKeyUpAddTask = useCallback(
-    async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        await handleAddTask(name)
-      }
-    },
-    [name, handleAddTask]
-  )
+  const handleKeyUpAddTask = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      await handleAddTask(name)
+    }
+  }
 
-  const handleClickAddTask = useCallback(() => {
+  const handleClickAddTask = () => {
     if (name) {
       handleAddTask(name)
     } else {
       onCloseAddTask()
     }
-  }, [name, handleAddTask, onCloseAddTask])
+  }
 
-  const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setName(event.target.value)
-  }, [])
 
   return (
     <ClickAwayListener onClickAway={handleClickAddTask}>

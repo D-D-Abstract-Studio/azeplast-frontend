@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { mutate } from 'swr'
 
 import Paper from '@mui/material/Paper'
@@ -25,9 +25,8 @@ export const KanbanColumnAdd = ({ board }: Props) => {
 
   const openAddColumn = useBoolean()
 
-  const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setColumnName(event.target.value)
-  }, [])
 
   if (!board) return null
 
@@ -52,27 +51,20 @@ export const KanbanColumnAdd = ({ board }: Props) => {
         mutate(endpoints.columns.getAllColumns)
       })
 
-  const handleCreateColumn = useCallback(async () => {
-    try {
-      if (columnName) {
-        createColumn({ name: columnName })
-        setColumnName('')
-      }
-
-      openAddColumn.onFalse()
-    } catch (error) {
-      console.error(error)
+  const handleCreateColumn = () => {
+    if (columnName) {
+      createColumn({ name: columnName })
+      setColumnName('')
     }
-  }, [columnName, openAddColumn])
 
-  const handleKeyUpCreateColumn = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        handleCreateColumn()
-      }
-    },
-    [handleCreateColumn]
-  )
+    openAddColumn.onFalse()
+  }
+
+  const handleKeyUpCreateColumn = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleCreateColumn()
+    }
+  }
 
   return (
     <Paper>

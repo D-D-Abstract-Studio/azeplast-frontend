@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import { styled, alpha } from '@mui/material/styles'
 
@@ -154,27 +154,19 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         mutate(endpoints.tasks.getAllTasks)
       })
 
-  const handleChangeTaskName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeTaskName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setTaskName(event.target.value)
-  }, [])
 
-  const handleUpdateTask = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      try {
-        if (event.key === 'Enter') {
-          if (taskName) {
-            onUpdateTask({
-              ...task,
-              name: taskName,
-            })
-          }
-        }
-      } catch (error) {
-        console.error(error)
+  const handleUpdateTask = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (taskName) {
+        onUpdateTask({
+          ...task,
+          name: taskName,
+        })
       }
-    },
-    [onUpdateTask, task, taskName]
-  )
+    }
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>

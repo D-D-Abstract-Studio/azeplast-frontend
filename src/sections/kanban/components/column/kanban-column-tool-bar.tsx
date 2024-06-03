@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { mutate } from 'swr'
 
 import Box from '@mui/material/Box'
@@ -72,22 +72,18 @@ export const KanbanColumnToolBar = ({ columnName, column, tasks }: Props) => {
     }
   }, [popover.open])
 
-  const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setName(event.target.value)
-  }, [])
 
-  const handleKeyUpUpdateColumn = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        if (renameRef.current) {
-          renameRef.current.blur()
-        }
-
-        handleUpdateColumn(name)
+  const handleKeyUpUpdateColumn = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (renameRef.current) {
+        renameRef.current.blur()
       }
-    },
-    [name]
-  )
+
+      handleUpdateColumn(name)
+    }
+  }
 
   return (
     <>

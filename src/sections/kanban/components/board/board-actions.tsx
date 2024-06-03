@@ -30,6 +30,10 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
   const confirmDialogDelete = useBoolean()
   const dialogEdit = useBoolean()
 
+  const { data: columns } = useRequest<Array<any>>({
+    url: endpoints.columns.getAllColumns,
+  })
+
   const { data: user } = useRequest<User>({
     url: endpoints.user.getUser,
   })
@@ -51,6 +55,29 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
   }
 
   const handleClose = () => setAnchorEl(null)
+
+  const deleteBoardData = async (board: IKanbanBoard) => {
+    const columnDeletionPromises = board.columnIds.map(async (columnId: string) => {
+      columns?.map(async (column) => {
+        if (column.id === columnId) await axios.delete(endpoints.tasks.updateTask(columnId))
+      })
+
+      await axios.delete(endpoints.columns.updateColumn(columnId))
+    })
+
+    await Promise.all(columnDeletionPromises).then(() => {
+      mutate(endpoints.columns.getAllColumns)
+      mutate(endpoints.tasks.getAllTasks)
+    })
+
+    await axios.delete(endpoints.boards.updateBoard(board.id)).then(() => {
+      enqueueSnackbar('Quadro deletado com sucesso')
+      setSelectedBoard(null)
+
+      mutate(endpoints.boards.getAllBoards)
+      confirmDialogDelete.onFalse()
+    })
+  }
 
   const handleContextMenu = (event: Event) => event.preventDefault()
 
@@ -131,22 +158,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
           </>
         }
         action={
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={async () =>
-              await axios
-                .put(endpoints.boards.updateBoard(board.id), { ...board, archived: true })
-                .then(() => {
-                  enqueueSnackbar('Quadro arquivado com sucesso')
-
-                  setSelectedBoard(null)
-
-                  mutate(endpoints.boards.getAllBoards)
-                  confirmDialogDelete.onFalse()
-                })
-            }
-          >
+          <Button variant="outlined" color="error" onClick={() => deleteBoardData(board)}>
             Deletar
           </Button>
         }
