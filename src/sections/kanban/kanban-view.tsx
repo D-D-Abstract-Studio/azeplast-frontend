@@ -58,7 +58,7 @@ export const KanbanView = () => {
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {
-      setSelectedBoard(boards.filter((board) => !board.archived)[0].id)
+      setSelectedBoard(boards.filter((board) => !board.archived)[0]?.id || null)
     }
   }, [boards, selectedBoard])
 
