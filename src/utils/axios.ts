@@ -1,4 +1,4 @@
-import { HOST_API, userCurrency } from '@/constants/config'
+import { HOST_API, userCurrencyStorage } from '@/constants/config'
 
 import axiosInstance, { AxiosResponse, AxiosRequestConfig } from 'axios'
 
@@ -67,7 +67,7 @@ axios.interceptors.response.use(
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   const [url, config] = Array.isArray(args) ? args : [args]
 
-  const params = { ...(config?.params || {}), ...{ user: userCurrency } }
+  const params = { ...(config?.params || {}), ...{ user: userCurrencyStorage } }
 
   const res = await axiosInstance.get(url, { ...config, params })
 

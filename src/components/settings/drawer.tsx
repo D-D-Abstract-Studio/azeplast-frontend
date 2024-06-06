@@ -23,7 +23,7 @@ import { Iconify } from '@/components/iconify'
 import { useRequest } from '@/hooks/use-request'
 
 import { SettingsContextProps } from '.'
-import { endpoints, userCurrency, userNames } from '@/constants/config'
+import { endpoints, userCurrencyStorage, userNamesStorage } from '@/constants/config'
 
 import { useForm } from 'react-hook-form'
 import { RHFSelect, RHFTextField } from '../hook-form'
@@ -137,7 +137,7 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack direction="column" spacing={1}>
-                      {userNames.map((name, index) => (
+                      {userNamesStorage.map((name, index) => (
                         <CopyClipboard key={index} value={name} />
                       ))}
                     </Stack>
@@ -237,7 +237,7 @@ const UserUpdate = ({ user }: { user: User }) => {
     formState: { isDirty },
   } = methods
 
-  const isActualUser = user.name === userCurrency
+  const isActualUser = user.name === userCurrencyStorage
 
   const handleDelete = async (userId: string) => {
     await axios.delete(endpoints.user.deleteUser(userId)).then(() => {

@@ -13,7 +13,7 @@ import SearchNotFound from '@/components/search-not-found'
 
 import { UseFieldArrayReturn } from 'react-hook-form'
 
-import { userNames } from '@/constants/config'
+import { userNamesStorage } from '@/constants/config'
 import { IKanbanTask } from '@/types/kanban'
 import { Stack } from '@mui/material'
 
@@ -33,7 +33,7 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
     setSearchContact(event.target.value)
 
   const dataFiltered = applyFilter({
-    inputData: userNames,
+    inputData: userNamesStorage,
     query: searchContact,
   })
 
@@ -42,7 +42,7 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 1 }}>
-        Usuários <Typography component="span">({userNames.length})</Typography>
+        Usuários <Typography component="span">({userNamesStorage.length})</Typography>
       </DialogTitle>
 
       <DialogContent>

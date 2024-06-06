@@ -8,7 +8,7 @@ import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
 import { axios } from '@/utils/axios'
 import { enqueueSnackbar } from 'notistack'
 
-import { endpoints, userCurrency } from '@/constants/config'
+import { endpoints, userCurrencyStorage } from '@/constants/config'
 import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
 
 type Props = {
@@ -28,7 +28,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
       description: '...',
       assignee: [],
       dueDate: new Date(),
-      reporter: userCurrency,
+      reporter: userCurrencyStorage,
     })
 
     await axios.put(endpoints.columns.updateColumn(column.id), {

@@ -11,7 +11,7 @@ import { hideScroll } from '@/theme/css'
 
 import { useRequest } from '@/hooks/use-request'
 
-import { endpoints, userCurrency } from '@/constants/config'
+import { endpoints, userCurrencyStorage } from '@/constants/config'
 
 import { Alert, Button, Grid, Paper, Typography } from '@mui/material'
 
@@ -54,7 +54,7 @@ export const KanbanView = () => {
 
   const board = boardMescle({ selectedBoard, boards, columns, tasks })
 
-  const isUserValid = userCurrency !== 'anonymous'
+  const isUserValid = userCurrencyStorage !== 'anonymous'
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {

@@ -1,16 +1,20 @@
 type Id = string | number
 
-export const userCurrency = localStorage.getItem('userName') || 'anonymous'
+export const userCurrencyStorage = localStorage.getItem('userName') || 'anonymous'
 
-export const userNames: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
+export const categoriesStorage: Array<string> = JSON.parse(
+  localStorage.getItem('categories') || '[]'
+)
 
-const urlEndpointsParams = new URLSearchParams({ user: userCurrency }).toString()
+export const userNamesStorage: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
+
+const urlEndpointsParams = new URLSearchParams({ user: userCurrencyStorage }).toString()
 
 export const endpoints = {
   user: {
     getAllUsers: '/users',
     createUser: '/users',
-    getUser: `/users/${userCurrency}`,
+    getUser: `/users/${userCurrencyStorage}`,
     updateUser: (id: Id) => `/users/${id}`,
     deleteUser: (id: Id) => `/users/${id}`,
   },

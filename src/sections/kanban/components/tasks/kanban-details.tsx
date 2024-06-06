@@ -35,7 +35,7 @@ import * as Yup from 'yup'
 import { axios } from '@/utils/axios'
 import { paper } from '@/theme/css'
 
-import { endpoints } from '@/constants/config'
+import { categoriesStorage, endpoints } from '@/constants/config'
 
 import { IKanbanTask, priorityValues } from '@/types/kanban'
 import { mutate } from 'swr'
@@ -99,17 +99,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const isDirtyTask = isEqual(task, values)
 
-  const categories = [
-    ...new Set([
-      'Gestão',
-      'Informática',
-      'Logística',
-      'Financeiro',
-      'Comercial',
-      'Marketing',
-      ...task?.categories,
-    ]),
-  ]
+  const categories = [...new Set([...categoriesStorage, ...task?.categories])]
 
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
