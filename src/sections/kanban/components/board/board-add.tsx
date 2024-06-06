@@ -33,7 +33,6 @@ export const KanbanBoardAdd = () => {
       .post(endpoints.boards.createBoard, {
         name,
         usersIds: [user?._id],
-        archived: false,
         ordered: [],
         columnIds: [],
       })

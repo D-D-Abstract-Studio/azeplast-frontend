@@ -3,27 +3,33 @@
 import { useMemo } from 'react'
 
 import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { User } from '@/types/user'
 
 type Props = {
   selectedBoard: string | null
+  user: User | undefined
   boards: IKanbanBoard[] | undefined
   columns: IKanbanColumn[] | undefined
   tasks: IKanbanTask[] | undefined
 }
 
-export const boardMescle = ({ selectedBoard, boards, columns, tasks }: Props) => {
+export const boardMescle = ({ selectedBoard, boards, columns, tasks, user }: Props) => {
   return useMemo(() => {
-    if (!selectedBoard) {
+    if (!selectedBoard || !user) {
       return null
     }
 
-    const board = boards?.find((board) => board.id === selectedBoard)
+    const board = boards?.find(
+      (board) => board.id === selectedBoard && board.usersIds.includes(user._id)
+    )
 
     if (!board) {
       return null
     }
 
-    const columnsFiltered = columns?.filter((column) => column.boardId === selectedBoard)
+    const columnsFiltered = columns?.filter(
+      (column) => column.boardId === selectedBoard && !column.archived
+    )
 
     const columnsMapped = columnsFiltered?.reduce((acc, column) => {
       acc[column.id] = column

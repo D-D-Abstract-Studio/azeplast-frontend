@@ -50,15 +50,19 @@ export const KanbanView = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
-  const board = boardMescle({ selectedBoard, boards, columns, tasks })
-
   const isPermissionAdmin = user?.permissions === 'admin'
+
+  const board = boardMescle({ selectedBoard, boards, columns, tasks, user })
 
   const isUserValid = userCurrency !== 'anonymous'
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {
-      setSelectedBoard(boards.filter((board) => !board.archived)[0]?.id || null)
+      setSelectedBoard(
+        // seleciona o primeiro board que o usuário tem acesso ou é admin
+        boards.find((board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin)?.id ||
+          null
+      )
     }
   }, [boards, selectedBoard])
 
