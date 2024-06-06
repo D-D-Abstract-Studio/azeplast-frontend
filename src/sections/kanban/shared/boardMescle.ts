@@ -3,25 +3,21 @@
 import { useMemo } from 'react'
 
 import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
-import { User } from '@/types/user'
 
 type Props = {
   selectedBoard: string | null
-  user: User | undefined
   boards: IKanbanBoard[] | undefined
   columns: IKanbanColumn[] | undefined
   tasks: IKanbanTask[] | undefined
 }
 
-export const boardMescle = ({ selectedBoard, boards, columns, tasks, user }: Props) => {
+export const boardMescle = ({ selectedBoard, boards, columns, tasks }: Props) => {
   return useMemo(() => {
-    if (!selectedBoard || !user) {
+    if (!selectedBoard) {
       return null
     }
 
-    const board = boards?.find(
-      (board) => board.id === selectedBoard && board.usersIds.includes(user._id)
-    )
+    const board = boards?.find((board) => board.id === selectedBoard)
 
     if (!board) {
       return null

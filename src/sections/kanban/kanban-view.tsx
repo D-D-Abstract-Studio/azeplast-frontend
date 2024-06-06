@@ -52,7 +52,7 @@ export const KanbanView = () => {
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
-  const board = boardMescle({ selectedBoard, boards, columns, tasks, user })
+  const board = boardMescle({ selectedBoard, boards, columns, tasks })
 
   const isUserValid = userCurrency !== 'anonymous'
 
@@ -64,7 +64,7 @@ export const KanbanView = () => {
           null
       )
     }
-  }, [boards, selectedBoard])
+  }, [boards, user])
 
   return (
     <Container maxWidth="xl" sx={{ mt: 1 }}>

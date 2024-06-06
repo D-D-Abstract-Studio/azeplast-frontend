@@ -49,7 +49,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         setSelectedBoard(board.id)
         break
       case 2:
-        setAnchorEl(event.currentTarget)
+        isPermissionAdmin && setAnchorEl(event.currentTarget)
         break
     }
   }
@@ -102,7 +102,7 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
     <>
       <Button
         variant="soft"
-        onMouseDown={isPermissionAdmin ? handleMouseDown : undefined}
+        onMouseDown={handleMouseDown}
         onContextMenu={(event) => event.preventDefault()}
         sx={{
           minWidth: '150px',
