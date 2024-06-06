@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
-import InputAdornment from '@mui/material/InputAdornment'
 
 import { Iconify } from '@/components/iconify'
 import SearchNotFound from '@/components/search-not-found'
@@ -53,13 +52,6 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
             value={searchContact}
             onChange={handleSearchContacts}
             placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
           />
 
           {notFound ? (
