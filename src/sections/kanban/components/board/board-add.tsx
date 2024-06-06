@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { inputBaseClasses } from '@mui/material/InputBase'
@@ -57,7 +56,7 @@ export const KanbanBoardAdd = () => {
   }
 
   return (
-    <Paper>
+    <>
       {openAddBoard.value ? (
         <ClickAwayListener onClickAway={handleCreateBoard}>
           <TextField
@@ -81,13 +80,13 @@ export const KanbanBoardAdd = () => {
       ) : (
         <Button
           variant="soft"
-          sx={{ border: '1px dashed', borderColor: 'text.secondary' }}
+          sx={{ border: '1px dashed', borderColor: 'text.secondary', minWidth: '150px' }}
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={openAddBoard.onTrue}
         >
           Quadro
         </Button>
       )}
-    </Paper>
+    </>
   )
 }

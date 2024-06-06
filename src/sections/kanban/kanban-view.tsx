@@ -13,7 +13,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrency } from '@/constants/config'
 
-import { Alert, Button, Paper, Typography } from '@mui/material'
+import { Alert, Button, Grid, Paper, Typography } from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
@@ -99,6 +99,8 @@ export const KanbanView = () => {
             <Stack
               direction="row"
               spacing={1}
+              justifyContent="center"
+              alignItems="center"
               sx={{
                 p: 1,
                 width: '100%',
@@ -108,13 +110,24 @@ export const KanbanView = () => {
             >
               <KanbanBoardAdd />
 
-              <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
-                {boards
-                  ?.filter((board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin)
-                  .map((board, index) => (
-                    <BoardActions key={index} {...{ setSelectedBoard, selectedBoard, board }} />
-                  ))}
-              </Stack>
+              <Grid container sx={{ borderRadius: '0 0 10px 10px', width: '100%' }}>
+                <Grid item xs={12} sx={{ width: 100 }}>
+                  <Stack sx={{ width: '100%', maxHeight: 500 }}>
+                    <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
+                      {boards
+                        ?.filter(
+                          (board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin
+                        )
+                        .map((board, index) => (
+                          <BoardActions
+                            key={index}
+                            {...{ setSelectedBoard, selectedBoard, board }}
+                          />
+                        ))}
+                    </Stack>
+                  </Stack>
+                </Grid>
+              </Grid>
             </Stack>
           </Stack>
 
