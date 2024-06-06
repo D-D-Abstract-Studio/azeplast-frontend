@@ -21,6 +21,16 @@ export function cssBaseline() {
           width: '100%',
           height: '100%',
 
+          'textarea:not(.form-control), input:not(.submit):not(.form-control):not([type=submit]):not([type=color]):not([type=reset]):not([type=checkbox]):not([type=radio]):not(.select2-search__field):not(.numInput):not(.tox-textfield)':
+            {
+              color: 'inherit !importnt',
+              backgroundColor: 'inherit !important',
+              backgroundClip: 'inherit !important',
+              border: 'inherit !important',
+              borderRadius: 'inherit !important',
+              padding: '16px 14px !important',
+            },
+
           input: {
             '&[type=number]': {
               MozAppearance: 'textfield',

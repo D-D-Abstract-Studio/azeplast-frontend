@@ -82,6 +82,7 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   return (
     <Drawer
       anchor="right"
+      disablePortal
       open={drawer.open}
       onClose={drawer.onClose}
       slotProps={{
@@ -149,7 +150,7 @@ export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
                 onSubmit={handleSubmit((data) => handleCreateUser(data))}
               >
                 <Stack direction="column" spacing={1}>
-                  <Stack direction="row" spacing={1}>
+                  <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <RHFTextField name="name" label="Nome" />
 
                     <RHFSelect name="permissions" label="Permissões" sx={{ width: 180 }}>

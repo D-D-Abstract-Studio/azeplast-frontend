@@ -321,6 +321,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                         {...params}
                         error={Boolean(error)}
                         label="Categorias"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            padding: '0px 10px !important',
+                          },
+                        }}
                         placeholder="Digite para adicionar"
                       />
                     )}

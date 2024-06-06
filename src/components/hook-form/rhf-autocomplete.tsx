@@ -131,7 +131,7 @@ export const RHFAutocomplete = <Value, Multiple extends boolean | undefined = fa
                 helperText={error ? error?.message : helperText}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    paddingRight: '10px!important',
+                    padding: '0px 10px !important',
                   },
                 }}
                 InputProps={{
