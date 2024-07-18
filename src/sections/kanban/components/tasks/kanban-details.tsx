@@ -35,12 +35,13 @@ import * as Yup from 'yup'
 import { axios } from '@/utils/axios'
 import { paper } from '@/theme/css'
 
-import { categoriesStorage, endpoints } from '@/constants/config'
+import { categoriesStorage, endpoints, userCurrencyStorage } from '@/constants/config'
 
 import { IKanbanTask, priorityValues } from '@/types/kanban'
 import { mutate } from 'swr'
 import { isEqual } from 'lodash'
 import { RHFTextField } from '@/components/hook-form'
+import dayjs from 'dayjs'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -60,6 +61,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const theme = useTheme()
   const confirmArchive = useBoolean()
   const confirmDelete = useBoolean()
+  const viewHistory = useBoolean()
   const contacts = useBoolean()
 
   const [taskName, setTaskName] = useState(task.name)
@@ -99,12 +101,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const isDirtyTask = isEqual(task, values)
 
-  const categories = [...new Set([...categoriesStorage, ...task?.categories])]
-
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
       .put(endpoints.tasks.updateTask(task.id), {
         ...task,
+        user: userCurrencyStorage,
       })
       .then(() => {
         enqueueSnackbar('Tarefa atualizada com sucesso')
@@ -137,6 +138,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     await axios
       .put(endpoints.tasks.updateTask(task.id), {
         ...task,
+        user: userCurrencyStorage,
       })
       .then(() => {
         enqueueSnackbar('Tarefa salva com sucesso')
@@ -305,7 +307,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                     {...restField}
                     multiple
                     fullWidth
-                    options={categories}
+                    options={[...new Set([...categoriesStorage, ...task?.categories])]}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -355,6 +357,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             />
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
+
+            <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
+              Ver histórico
+            </Button>
           </Stack>
 
           <Stack
@@ -403,6 +409,29 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             <Button variant="contained" color="error" onClick={() => onDeleteTask(task.id)}>
               Deletar
             </Button>
+          }
+        />
+
+        <ConfirmDialog
+          open={viewHistory.value}
+          onClose={viewHistory.onFalse}
+          title="Histórico"
+          disablePortal={false}
+          content={
+            <>
+              <Stack direction="column" spacing={1}>
+                <Typography variant="body2">Histórico de alterações da tarefa</Typography>
+
+                {task.history?.map((history, index) => (
+                  <Stack key={index} direction="row" spacing={1}>
+                    <Typography variant="body2">{history?.user}</Typography>
+                    <Typography variant="body2">
+                      {dayjs(history?.date).format('DD/MM/YYYY HH:mm')}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </>
           }
         />
 
