@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { styled, alpha } from '@mui/material/styles'
 
@@ -37,11 +37,12 @@ import { paper } from '@/theme/css'
 
 import { categoriesStorage, endpoints, userCurrencyStorage } from '@/constants/config'
 
-import { IKanbanTask, priorityValues } from '@/types/kanban'
+import { IKanbanTask, PriorityValues, priorityValues } from '@/types/kanban'
 import { mutate } from 'swr'
 import { isEqual } from 'lodash'
 import { RHFTextField } from '@/components/hook-form'
 import dayjs from 'dayjs'
+import { RHFUpload } from '@/components/hook-form/rhf-upload'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -66,26 +67,34 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const [taskName, setTaskName] = useState(task.name)
 
-  const assigneeSchema = Yup.object().shape({
-    name: Yup.string().optional(),
-  })
-
-  const UpdateUserSchema = Yup.object().shape({
+  const UpdateUserSchema = Yup.object<IKanbanTask>().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
+    images: Yup.mixed<File[]>().optional(),
+    history: Yup.array().of(
+      Yup.object().shape({
+        user: Yup.string().required(),
+        date: Yup.date().required(),
+      })
+    ),
     archived: Yup.boolean().required(),
-    priority: Yup.mixed().oneOf(priorityValues).required(),
+    priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).required(),
     description: Yup.string().required(),
-    assignee: Yup.array().of(assigneeSchema).required(),
+    assignee: Yup.array()
+      .of(
+        Yup.object({
+          name: Yup.string().optional(),
+        })
+      )
+      .required(),
     dueDate: Yup.date().required(),
     reporter: Yup.string().required(),
   })
 
   const methods = useForm<IKanbanTask>({
     defaultValues: task,
-    /* @ts-ignore */
-    resolver: yupResolver(UpdateUserSchema),
+    resolver: yupResolver<IKanbanTask>(UpdateUserSchema),
   })
 
   const { handleSubmit, setValue, watch, control } = methods
@@ -98,6 +107,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const { priority } = watch()
 
   const values = watch()
+
+  console.log(watch())
 
   const isDirtyTask = isEqual(task, values)
 
@@ -159,6 +170,35 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       }
     }
   }
+
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const files = values.images || []
+
+      const newFiles = acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+
+      console.log(newFiles)
+
+      setValue('images', [...files, ...newFiles], { shouldValidate: true })
+    },
+    [setValue, values.images]
+  )
+
+  const handleRemoveFile = useCallback(
+    (inputFile: File | string) => {
+      const filtered = values.images && values.images?.filter((file) => file !== inputFile)
+      setValue('images', filtered)
+    },
+    [setValue, values.images]
+  )
+
+  const handleRemoveAllFiles = useCallback(() => {
+    setValue('images', [])
+  }, [setValue])
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>
@@ -357,6 +397,16 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             />
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
+
+            <RHFUpload
+              multiple
+              thumbnail
+              name="images"
+              onDrop={handleDrop}
+              onRemove={handleRemoveFile}
+              onRemoveAll={handleRemoveAllFiles}
+              onUpload={() => console.info('ON UPLOAD')}
+            />
 
             <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
               Ver histórico

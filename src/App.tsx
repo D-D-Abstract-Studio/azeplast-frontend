@@ -33,7 +33,7 @@ export const App = () => {
   return (
     <ThemeProvider
       settings={{
-        themeMode: 'light',
+        themeMode: 'dark',
         themeDirection: 'ltr',
         themeContrast: 'default',
         themeLayout: 'vertical',

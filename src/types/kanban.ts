@@ -1,10 +1,12 @@
 export const priorityValues = ['baixa', 'média', 'alta'] as const
 
+export type PriorityValues = (typeof priorityValues)[number]
+
 export type IKanbanTask = {
   id: string
   name: string
   archived: boolean
-  priority: (typeof priorityValues)[number]
+  priority: PriorityValues
   categories: string[]
   description: string
   history?: Array<{
@@ -16,6 +18,7 @@ export type IKanbanTask = {
   }>
   dueDate: Date
   reporter: string
+  images?: File[]
 }
 
 export type IKanbanColumn = {
