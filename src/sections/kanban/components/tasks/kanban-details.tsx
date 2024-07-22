@@ -70,7 +70,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const UpdateUserSchema = Yup.object<IKanbanTask>().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
-    images: Yup.mixed<Array<File>>().optional(),
+    files: Yup.mixed<Array<File>>().optional(),
     history: Yup.array().of(
       Yup.object().shape({
         user: Yup.string().required(),
@@ -173,7 +173,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const files = values.images || []
+      const files = values.files || []
 
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -181,21 +181,21 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         })
       )
 
-      setValue('images', [...files, ...newFiles], { shouldValidate: true })
+      setValue('files', [...files, ...newFiles], { shouldValidate: true })
     },
-    [setValue, values.images]
+    [setValue, values.files]
   )
 
   const handleRemoveFile = useCallback(
     (inputFile: File | string) => {
-      const filtered = values.images && values.images?.filter((file) => file !== inputFile)
-      setValue('images', filtered)
+      const filtered = values.files && values.files?.filter((file) => file !== inputFile)
+      setValue('files', filtered)
     },
-    [setValue, values.images]
+    [setValue, values.files]
   )
 
   const handleRemoveAllFiles = useCallback(() => {
-    setValue('images', [])
+    setValue('files', [])
   }, [setValue])
 
   return (
@@ -399,7 +399,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             <RHFUpload
               multiple
               thumbnail
-              name="images"
+              name="files"
               onDrop={handleDrop}
               onRemove={handleRemoveFile}
               onRemoveAll={handleRemoveAllFiles}

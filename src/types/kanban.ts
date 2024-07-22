@@ -18,7 +18,7 @@ export type IKanbanTask = {
   }>
   dueDate: Date
   reporter: string
-  images?: File[]
+  files?: File[]
 }
 
 export type IKanbanColumn = {
