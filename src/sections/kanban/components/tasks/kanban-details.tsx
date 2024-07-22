@@ -70,7 +70,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const UpdateUserSchema = Yup.object<IKanbanTask>().shape({
     id: Yup.string().required(),
     name: Yup.string().required(),
-    images: Yup.mixed<File[]>().optional(),
+    images: Yup.mixed<Array<File>>().optional(),
     history: Yup.array().of(
       Yup.object().shape({
         user: Yup.string().required(),
@@ -180,8 +180,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           preview: URL.createObjectURL(file),
         })
       )
-
-      console.log(newFiles)
 
       setValue('images', [...files, ...newFiles], { shouldValidate: true })
     },

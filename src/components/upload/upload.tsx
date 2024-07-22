@@ -47,8 +47,6 @@ export default function Upload({
 
   const hasError = isDragReject || !!error
 
-  console.log(file)
-
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
       <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
