@@ -3,29 +3,21 @@ import { m, AnimatePresence } from 'framer-motion'
 import { alpha } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
 
-import { fData } from '@/utils/format-number'
 import { Iconify } from '@/components/iconify'
 import { varFade } from '../animate'
 import FileThumbnail, { fileData } from '../file-thumbnail'
 import { UploadProps } from './types'
+import { Tooltip } from '@mui/material'
 
-export default function MultiFilePreview({
-  thumbnail,
-  files,
-  onRemove,
-  sx,
-}: Omit<UploadProps, 'onChange'>) {
+export default function MultiFilePreview({ files, onRemove, sx }: Omit<UploadProps, 'onChange'>) {
   return (
     <AnimatePresence initial={false}>
       {files?.map((file) => {
-        const { key, name = '', size = 0 } = fileData(file)
+        const { key, name } = fileData(file)
 
-        const isNotFormatFile = typeof file === 'string'
-
-        if (thumbnail) {
-          return (
+        return (
+          <Tooltip title={name} arrow placement="bottom">
             <Stack
               key={key}
               component={m.div}
@@ -71,43 +63,7 @@ export default function MultiFilePreview({
                 </IconButton>
               )}
             </Stack>
-          )
-        }
-
-        return (
-          <Stack
-            key={key}
-            component={m.div}
-            {...varFade().inUp}
-            spacing={2}
-            direction="row"
-            alignItems="center"
-            sx={{
-              my: 1,
-              py: 1,
-              px: 1.5,
-              borderRadius: 1,
-              border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
-              ...sx,
-            }}
-          >
-            <FileThumbnail file={file} />
-
-            <ListItemText
-              primary={isNotFormatFile ? file : name}
-              secondary={isNotFormatFile ? '' : fData(size)}
-              secondaryTypographyProps={{
-                component: 'span',
-                typography: 'caption',
-              }}
-            />
-
-            {onRemove && (
-              <IconButton size="small" onClick={() => onRemove(file)}>
-                <Iconify icon="mingcute:close-line" width={16} />
-              </IconButton>
-            )}
-          </Stack>
+          </Tooltip>
         )
       })}
     </AnimatePresence>

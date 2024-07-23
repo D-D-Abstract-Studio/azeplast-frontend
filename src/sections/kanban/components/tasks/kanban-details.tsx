@@ -367,7 +367,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
-            <RHFUpload multiple name="files" thumbnail onUpdateFiles={onUpdateFiles} />
+            <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
 
             <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
               Ver histórico

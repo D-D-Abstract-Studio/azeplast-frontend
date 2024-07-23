@@ -3,13 +3,9 @@ import { useDropzone } from 'react-dropzone'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Button from '@mui/material/Button'
-
 import Typography from '@mui/material/Typography'
 
 import { UploadIllustration } from '@/assets/illustrations'
-
-import { Iconify } from '@/components'
 
 import { UploadProps } from './types'
 import RejectionFiles from './errors-rejection-files'
@@ -30,7 +26,6 @@ export default function Upload({
   error,
   helperText,
   files = [],
-  thumbnail,
   sx,
   onUpdateFiles,
   onChange,
@@ -88,15 +83,6 @@ export default function Upload({
     })
   }
 
-  const onRemoveAll = async () => {
-    files.forEach(async (file) => {
-      await axios.delete(endpoints.uploads.deleteUploads(file.name))
-    })
-
-    onChange([])
-    onUpdateFiles([])
-  }
-
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
       <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
@@ -119,27 +105,6 @@ export default function Upload({
           no seu dispositivo
         </Typography>
       </Stack>
-    </Stack>
-  )
-
-  const renderMultiPreview = (
-    <Stack spacing={1} direction="column" sx={{ my: 3 }}>
-      <Box sx={{ width: 1, position: 'relative', ...sx }}>
-        <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
-      </Box>
-
-      {Boolean(files.length) && (
-        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<Iconify icon="bi:trash" />}
-            onClick={onRemoveAll}
-          >
-            Remover todos os arquivos
-          </Button>
-        </Stack>
-      )}
     </Stack>
   )
 
@@ -183,7 +148,9 @@ export default function Upload({
 
       <RejectionFiles fileRejections={fileRejections} />
 
-      {renderMultiPreview}
+      <Box sx={{ width: 1, position: 'relative', ...sx }}>
+        <MultiFilePreview files={files} onRemove={onRemove} />
+      </Box>
     </Box>
   )
 }

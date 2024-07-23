@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
 import { Theme, SxProps } from '@mui/material/styles'
 import { Link } from '@mui/material'
 
@@ -18,7 +17,7 @@ type FileIconProps = {
 }
 
 export default function FileThumbnail({ file, imageView, onDownload, sx, imgSx }: FileIconProps) {
-  const { name = '', path = '', preview = '' } = fileData(file)
+  const { path = '', preview = '' } = fileData(file)
 
   const format = fileFormat(path || preview)
 
@@ -49,22 +48,20 @@ export default function FileThumbnail({ file, imageView, onDownload, sx, imgSx }
     )
 
   return (
-    <Tooltip title={name}>
-      <Link href={file.preview} target="_blank">
-        <Stack
-          flexShrink={0}
-          component="span"
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            width: 'fit-content',
-            height: 'inherit',
-          }}
-        >
-          {renderContent}
-          {onDownload && <DownloadButton onDownload={onDownload} />}
-        </Stack>
-      </Link>
-    </Tooltip>
+    <Link href={file.preview} target="_blank">
+      <Stack
+        flexShrink={0}
+        component="span"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          width: 'fit-content',
+          height: 'inherit',
+        }}
+      >
+        {renderContent}
+        {onDownload && <DownloadButton onDownload={onDownload} />}
+      </Stack>
+    </Link>
   )
 }

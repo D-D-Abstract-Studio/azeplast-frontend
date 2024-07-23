@@ -11,7 +11,6 @@ export type CustomFile = File & {
 export interface UploadProps extends DropzoneOptions {
   error?: boolean
   sx?: SxProps<Theme>
-  thumbnail?: boolean
   placeholder?: React.ReactNode
   helperText?: React.ReactNode
   disableMultiple?: boolean
