@@ -13,7 +13,7 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrencyStorage } from '@/constants/config'
 
-import { Alert, Button, Grid, Paper, Typography } from '@mui/material'
+import { Alert, Badge, Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
@@ -29,6 +29,7 @@ import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import { User } from '@/types/user'
 import { KanbanBoardAdd } from '@/sections/kanban/components/board/board-add'
 import { BoardActions } from '@/sections/kanban/components/board/board-actions'
+import { Iconify } from '@/components'
 
 export const KanbanView = () => {
   const [showArchived, setShowArchived] = useState(false)
@@ -90,10 +91,34 @@ export const KanbanView = () => {
       {(isLoading || isUserValid) && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Paper sx={{ p: 1, borderRadius: 1, backgroundColor: 'background.neutral' }}>
-              <Button variant="soft" onClick={() => setShowArchived((prevState) => !prevState)}>
-                {showArchived ? 'Kanban' : 'Arquivados'}
-              </Button>
+            <Paper
+              sx={{
+                p: 1,
+                borderRadius: 1,
+                backgroundColor: 'background.neutral',
+              }}
+            >
+              <ButtonGroup>
+                <Button
+                  variant="soft"
+                  color="inherit"
+                  onClick={() => setShowArchived((prevState) => !prevState)}
+                >
+                  {showArchived ? 'Quadros' : 'Arquivados'}
+                </Button>
+
+                <Button
+                  variant="soft"
+                  color="inherit"
+                  onClick={() => setShowArchived((prevState) => !prevState)}
+                >
+                  {/* codicon:circle */}
+                  {/* codicon:circle-filled */}
+                  <Badge badgeContent={<Iconify icon="codicon:circle" />}>
+                    <Iconify icon="mdi:bell" />
+                  </Badge>
+                </Button>
+              </ButtonGroup>
             </Paper>
 
             <Stack

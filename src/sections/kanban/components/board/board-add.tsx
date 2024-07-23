@@ -61,16 +61,21 @@ export const KanbanBoardAdd = () => {
         <ClickAwayListener onClickAway={handleCreateBoard}>
           <TextField
             size="small"
-            autoFocus
-            fullWidth
             placeholder="Novo Quadro"
             value={boardName}
             onChange={handleChangeName}
             onKeyUp={handleKeyUpCreateColumn}
             sx={{
+              mx: 2,
+              minWidth: 250,
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              padding: 0,
               [`& .${inputBaseClasses.input}`]: {
-                height: 21,
-                minWidth: 150,
+                padding: 0,
+                height: 10,
+                minWidth: 250,
                 border: 'none',
                 typography: 'h6',
               },
