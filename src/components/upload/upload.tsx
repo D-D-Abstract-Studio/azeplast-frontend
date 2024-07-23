@@ -122,7 +122,7 @@ export default function Upload({
             <Typography variant="h6">Arraste ou selecione arquivos</Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Solte os arquivos aqui ou clique para
+              Solte os arquivos aqui ou clique para{' '}
               <Box
                 component="span"
                 sx={{
@@ -131,9 +131,8 @@ export default function Upload({
                   textDecoration: 'underline',
                 }}
               >
-                {' '}
-                Navegar{' '}
-              </Box>
+                Navegar
+              </Box>{' '}
               no seu dispositivo
             </Typography>
           </Stack>
