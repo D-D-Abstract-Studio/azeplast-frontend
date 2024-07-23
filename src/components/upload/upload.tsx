@@ -93,15 +93,20 @@ export default function Upload({
 
   const hasError = isDragReject || !!error
 
-  const onRemove = (data: File | string) => {
-    if (Array.isArray(files)) {
+  const onRemove = async (data: File) => {
+    await axios.delete(endpoints.uploads.deleteUploads(data.name)).then(({ data }) => {
       const newFiles = files.filter((item) => item !== data)
-      onChange && onChange(newFiles)
-    }
+
+      onChange(newFiles)
+    })
   }
 
-  const onRemoveAll = () => {
-    onChange && onChange([])
+  const onRemoveAll = async () => {
+    files.forEach(async (file) => {
+      await axios.delete(endpoints.uploads.deleteUploads(file.name))
+    })
+
+    onChange([])
   }
 
   const onUpload = () => {

@@ -19,7 +19,7 @@ export interface UploadProps extends DropzoneOptions {
   onDelete?: VoidFunction
   files?: File[]
   onUpload?: VoidFunction
-  onRemove?: (file: CustomFile | string) => void
+  onRemove?: (file: CustomFile) => void
   onRemoveAll?: VoidFunction
   onChange: (...event: any[]) => void
 }
