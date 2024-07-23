@@ -83,33 +83,8 @@ export default function Upload({
     })
   }
 
-  const renderPlaceholder = (
-    <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
-      <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
-      <Stack spacing={1} sx={{ textAlign: 'center' }}>
-        <Typography variant="h6">Arraste ou selecione arquivos</Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Solte os arquivos aqui ou clique para
-          <Box
-            component="span"
-            sx={{
-              mx: 0.5,
-              color: 'primary.main',
-              textDecoration: 'underline',
-            }}
-          >
-            {' '}
-            Navegar{' '}
-          </Box>
-          no seu dispositivo
-        </Typography>
-      </Stack>
-    </Stack>
-  )
-
   return (
-    <Box sx={{ width: 1, position: 'relative', ...sx }}>
+    <Stack spacing={2} direction="column" sx={{ width: 1, ...sx }}>
       <Box
         {...getRootProps()}
         sx={{
@@ -141,7 +116,28 @@ export default function Upload({
       >
         <input {...getInputProps()} />
 
-        {renderPlaceholder}
+        <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
+          <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
+          <Stack spacing={1} sx={{ textAlign: 'center' }}>
+            <Typography variant="h6">Arraste ou selecione arquivos</Typography>
+
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Solte os arquivos aqui ou clique para
+              <Box
+                component="span"
+                sx={{
+                  mx: 0.5,
+                  color: 'primary.main',
+                  textDecoration: 'underline',
+                }}
+              >
+                {' '}
+                Navegar{' '}
+              </Box>
+              no seu dispositivo
+            </Typography>
+          </Stack>
+        </Stack>
       </Box>
 
       {helperText && helperText}
@@ -151,6 +147,6 @@ export default function Upload({
       <Box sx={{ width: 1, position: 'relative', ...sx }}>
         <MultiFilePreview files={files} onRemove={onRemove} />
       </Box>
-    </Box>
+    </Stack>
   )
 }
