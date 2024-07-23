@@ -68,15 +68,17 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const [taskName, setTaskName] = useState(task.name)
 
   const UpdateUserSchema = Yup.object<IKanbanTask>().shape({
-    id: Yup.string().required(),
+    _id: Yup.string().required(),
     name: Yup.string().required(),
     files: Yup.mixed<Array<File>>().optional(),
-    history: Yup.array().of(
-      Yup.object().shape({
-        user: Yup.string().required(),
-        date: Yup.date().required(),
-      })
-    ),
+    history: Yup.array()
+      .of(
+        Yup.object().shape({
+          user: Yup.string().required(),
+          date: Yup.date().required(),
+        })
+      )
+      .optional(),
     archived: Yup.boolean().required(),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).required(),
@@ -108,13 +110,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const values = watch()
 
-  console.log(watch())
-
   const isDirtyTask = isEqual(task, values)
 
   const onUpdateTask = async (task: IKanbanTask) =>
     await axios
-      .put(endpoints.tasks.updateTask(task.id), {
+      .put(endpoints.tasks.updateTask(task._id), {
         ...task,
         user: userCurrencyStorage,
       })
@@ -145,17 +145,36 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       mutate(endpoints.tasks.getAllTasks)
     })
 
-  const handleUpdate = async (task: IKanbanTask) =>
+  const handleSubmitForm = async (data: IKanbanTask) => {
+    const formData = new FormData()
+
+    console.log(data)
+
+    Object.keys(data).forEach((key) => {
+      if (key !== 'files') {
+        /* @ts-ignore */
+        formData.append(key, JSON.stringify(data[key]))
+      }
+    })
+
+    if (data.files) {
+      data.files.forEach((file: File) => {
+        formData.append('files', file)
+      })
+    }
+
     await axios
-      .put(endpoints.tasks.updateTask(task.id), {
-        ...task,
-        user: userCurrencyStorage,
+      .put(endpoints.tasks.updateTask(data._id), formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
       .then(() => {
-        enqueueSnackbar('Tarefa salva com sucesso')
+        enqueueSnackbar('Tarefa atualizada com sucesso')
 
         mutate(endpoints.tasks.getAllTasks)
       })
+  }
 
   const handleChangeTaskName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setTaskName(event.target.value)
@@ -171,35 +190,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     }
   }
 
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const files = values.files || []
-
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      )
-
-      setValue('files', [...files, ...newFiles], { shouldValidate: true })
-    },
-    [setValue, values.files]
-  )
-
-  const handleRemoveFile = useCallback(
-    (inputFile: File | string) => {
-      const filtered = values.files && values.files?.filter((file) => file !== inputFile)
-      setValue('files', filtered)
-    },
-    [setValue, values.files]
-  )
-
-  const handleRemoveAllFiles = useCallback(() => {
-    setValue('files', [])
-  }, [setValue])
-
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleUpdate(data))}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
       <Drawer
         disablePortal
         open={openDetails}
@@ -396,15 +388,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
-            <RHFUpload
-              multiple
-              thumbnail
-              name="files"
-              onDrop={handleDrop}
-              onRemove={handleRemoveFile}
-              onRemoveAll={handleRemoveAllFiles}
-              onUpload={() => console.info('ON UPLOAD')}
-            />
+            <RHFUpload multiple name="files" thumbnail />
 
             <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
               Ver histórico
@@ -454,7 +438,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           disablePortal={false}
           content={<>Tem certeza que deseja deletar esta tarefa?</>}
           action={
-            <Button variant="contained" color="error" onClick={() => onDeleteTask(task.id)}>
+            <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
               Deletar
             </Button>
           }
@@ -490,7 +474,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           disablePortal={false}
           content={<>Tem certeza que deseja arquivar esta tarefa?</>}
           action={
-            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task.id)}>
+            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task._id)}>
               Arquivar
             </Button>
           }

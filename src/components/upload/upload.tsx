@@ -1,10 +1,10 @@
 import { useDropzone } from 'react-dropzone'
-// @mui
+
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
+
 import Typography from '@mui/material/Typography'
 
 import { UploadIllustration } from '@/assets/illustrations'
@@ -14,38 +14,99 @@ import { Iconify } from '@/components'
 import { UploadProps } from './types'
 import RejectionFiles from './errors-rejection-files'
 import MultiFilePreview from './preview-multi-file'
-import SingleFilePreview from './preview-single-file'
 
-// ----------------------------------------------------------------------
+import { useCallback } from 'react'
+import { axios } from '@/utils/axios'
+import { endpoints } from '@/constants/config'
+
+type UploudFile = Array<File & { preview?: string }>
 
 export default function Upload({
   disabled,
   multiple = false,
   error,
   helperText,
-  //
-  file,
-  onDelete,
-  //
-  files,
+  files = [],
   thumbnail,
-  onUpload,
-  onRemove,
-  onRemoveAll,
   sx,
+  onChange,
   ...other
 }: UploadProps) {
+  const onDrop = useCallback(
+    (acceptedFiles: UploudFile) => {
+      const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result as ArrayBuffer)
+          reader.onerror = reject
+          reader.readAsArrayBuffer(file)
+        })
+      }
+
+      const processFiles = async (files: UploudFile) => {
+        const formData = new FormData()
+
+        await Promise.all(
+          files.map(async (file) => {
+            const binaryData = await readFileAsArrayBuffer(file)
+            const blob = new Blob([binaryData], { type: file.type })
+            formData.append('files', blob, file.name)
+
+            file.preview = URL.createObjectURL(file)
+          })
+        )
+
+        axios
+          .post(endpoints.uploads.createUploads, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then(({ data }) => onChange(data))
+      }
+
+      processFiles(acceptedFiles)
+    },
+    [onChange]
+  )
+
+  console.log(files)
+
+  /* const handleRemoveFile = useCallback(
+    (inputFile: File | string) => {
+      const filtered = values.files && values.files?.filter((file) => file !== inputFile)
+      setValue('files', filtered)
+    },
+    [setValue, values.files]
+  )
+
+  const handleRemoveAllFiles = useCallback(() => {
+    setValue('files', [])
+  }, [setValue]) */
+
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple,
     disabled,
+    onDrop,
     ...other,
   })
 
-  const hasFile = !!file && !multiple
-
-  const hasFiles = !!files && multiple && !!files.length
-
   const hasError = isDragReject || !!error
+
+  const onRemove = (data: File | string) => {
+    if (Array.isArray(files)) {
+      const newFiles = files.filter((item) => item !== data)
+      onChange && onChange(newFiles)
+    }
+  }
+
+  const onRemoveAll = () => {
+    onChange && onChange([])
+  }
+
+  const onUpload = () => {
+    console.log('Upload files', files)
+  }
 
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
@@ -70,53 +131,25 @@ export default function Upload({
     </Stack>
   )
 
-  const renderSinglePreview = (
-    <SingleFilePreview imgUrl={typeof file === 'string' ? file : file?.preview} />
-  )
-
-  const removeSinglePreview = hasFile && onDelete && (
-    <IconButton
-      size="small"
-      onClick={onDelete}
-      sx={{
-        top: 16,
-        right: 16,
-        zIndex: 9,
-        position: 'absolute',
-        color: (theme) => alpha(theme.palette.common.white, 0.8),
-        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-        '&:hover': {
-          bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-        },
-      }}
-    >
-      <Iconify icon="mingcute:close-line" width={18} />
-    </IconButton>
-  )
-
-  const renderMultiPreview = hasFiles && (
+  const renderMultiPreview = (
     <>
       <Box sx={{ my: 3 }}>
         <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
       </Box>
 
       <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-        {onRemoveAll && (
-          <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
-            Remove All
-          </Button>
-        )}
+        <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
+          Remove All
+        </Button>
 
-        {onUpload && (
-          <Button
-            size="small"
-            variant="contained"
-            onClick={onUpload}
-            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-          >
-            Upload
-          </Button>
-        )}
+        <Button
+          size="small"
+          variant="contained"
+          onClick={onUpload}
+          startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+        >
+          Upload
+        </Button>
       </Stack>
     </>
   )
@@ -150,17 +183,12 @@ export default function Upload({
             borderColor: 'error.main',
             bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
           }),
-          ...(hasFile && {
-            padding: '24% 0',
-          }),
         }}
       >
         <input {...getInputProps()} />
 
-        {hasFile ? renderSinglePreview : renderPlaceholder}
+        {renderPlaceholder}
       </Box>
-
-      {removeSinglePreview}
 
       {helperText && helperText}
 

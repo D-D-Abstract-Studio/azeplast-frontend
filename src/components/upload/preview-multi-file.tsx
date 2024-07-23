@@ -11,7 +11,12 @@ import { varFade } from '../animate'
 import FileThumbnail, { fileData } from '../file-thumbnail'
 import { UploadProps } from './types'
 
-export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {
+export default function MultiFilePreview({
+  thumbnail,
+  files,
+  onRemove,
+  sx,
+}: Omit<UploadProps, 'onChange'>) {
   return (
     <AnimatePresence initial={false}>
       {files?.map((file) => {

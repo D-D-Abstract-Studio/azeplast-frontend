@@ -3,7 +3,7 @@ export const priorityValues = ['baixa', 'média', 'alta'] as const
 export type PriorityValues = (typeof priorityValues)[number]
 
 export type IKanbanTask = {
-  id: string
+  _id: string
   name: string
   archived: boolean
   priority: PriorityValues

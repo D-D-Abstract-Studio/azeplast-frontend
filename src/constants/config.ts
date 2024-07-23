@@ -11,6 +11,10 @@ export const userNamesStorage: Array<string> = JSON.parse(localStorage.getItem('
 const urlEndpointsParams = new URLSearchParams({ user: userCurrencyStorage }).toString()
 
 export const endpoints = {
+  uploads: {
+    createUploads: '/uploads',
+    deleteUploads: (id: Id) => `/uploads/${id}`,
+  },
   user: {
     getAllUsers: '/users',
     createUser: '/users',
@@ -40,6 +44,7 @@ export const endpoints = {
   },
 }
 
-export const HOST_API = 'http://localhost:8000'
+export const HOST_API =
+  process.env.NODE_ENV === 'production' ? 'http://192.168.2.15' : 'http://localhost:8000'
 
 export const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
