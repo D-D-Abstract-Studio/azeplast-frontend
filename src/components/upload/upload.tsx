@@ -79,10 +79,9 @@ export default function Upload({
 
   const hasError = isDragReject || !!error
 
-  const onRemove = async (data: File) => {
-    console.log(data)
-    await axios.delete(endpoints.uploads.deleteUploads(data.name)).then(({ data }) => {
-      const newFiles = files.filter((item) => item !== data)
+  const onRemove = async ({ name }: File) => {
+    await axios.delete(endpoints.uploads.deleteUploads(name)).then(() => {
+      const newFiles = files.filter((item) => item.name !== name)
 
       onChange(newFiles)
     })
@@ -122,11 +121,15 @@ export default function Upload({
   )
 
   const renderMultiPreview = (
-    <Box sx={{ my: 3 }}>
-      {Boolean(files) && (
+    <Stack spacing={1} direction="column" sx={{ my: 3 }}>
+      <Box sx={{ width: 1, position: 'relative', ...sx }}>
+        <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+      </Box>
+
+      {Boolean(files.length) && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
           <Button
-            variant="text"
+            variant="outlined"
             color="error"
             startIcon={<Iconify icon="bi:trash" />}
             onClick={onRemoveAll}
@@ -135,9 +138,7 @@ export default function Upload({
           </Button>
         </Stack>
       )}
-
-      <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
-    </Box>
+    </Stack>
   )
 
   return (
