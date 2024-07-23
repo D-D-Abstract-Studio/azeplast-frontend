@@ -146,34 +146,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     })
 
   const handleSubmitForm = async (data: IKanbanTask) => {
-    const formData = new FormData()
+    await axios.put(endpoints.tasks.updateTask(data._id), data).then(() => {
+      enqueueSnackbar('Tarefa atualizada com sucesso')
 
-    console.log(data)
-
-    Object.keys(data).forEach((key) => {
-      if (key !== 'files') {
-        /* @ts-ignore */
-        formData.append(key, JSON.stringify(data[key]))
-      }
+      mutate(endpoints.tasks.getAllTasks)
     })
-
-    if (data.files) {
-      data.files.forEach((file: File) => {
-        formData.append('files', file)
-      })
-    }
-
-    await axios
-      .put(endpoints.tasks.updateTask(data._id), formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(() => {
-        enqueueSnackbar('Tarefa atualizada com sucesso')
-
-        mutate(endpoints.tasks.getAllTasks)
-      })
   }
 
   const handleChangeTaskName = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -189,6 +166,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       }
     }
   }
+
+  console.log(watch().files)
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>

@@ -1,3 +1,4 @@
+import { CustomFile, UploadProps } from '@/components/upload'
 import { ExtendFile } from './types'
 
 // Define more types here

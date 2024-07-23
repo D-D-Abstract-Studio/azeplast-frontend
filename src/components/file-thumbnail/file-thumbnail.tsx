@@ -1,27 +1,23 @@
-import { Theme, SxProps } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { Theme, SxProps } from '@mui/material/styles'
+import { Link } from '@mui/material'
+
 import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './download-button'
 
+import type { ExtendFile } from '@/components/file-thumbnail/types'
+
 type FileIconProps = {
-  file: File | string
-  tooltip?: boolean
+  file: ExtendFile
   imageView?: boolean
   onDownload?: VoidFunction
   sx?: SxProps<Theme>
   imgSx?: SxProps<Theme>
 }
 
-export default function FileThumbnail({
-  file,
-  tooltip,
-  imageView,
-  onDownload,
-  sx,
-  imgSx,
-}: FileIconProps) {
+export default function FileThumbnail({ file, imageView, onDownload, sx, imgSx }: FileIconProps) {
   const { name = '', path = '', preview = '' } = fileData(file)
 
   const format = fileFormat(path || preview)
@@ -52,9 +48,9 @@ export default function FileThumbnail({
       />
     )
 
-  if (tooltip) {
-    return (
-      <Tooltip title={name}>
+  return (
+    <Tooltip title={name}>
+      <Link href={file.preview} target="_blank">
         <Stack
           flexShrink={0}
           component="span"
@@ -68,14 +64,7 @@ export default function FileThumbnail({
           {renderContent}
           {onDownload && <DownloadButton onDownload={onDownload} />}
         </Stack>
-      </Tooltip>
-    )
-  }
-
-  return (
-    <>
-      {renderContent}
-      {onDownload && <DownloadButton onDownload={onDownload} />}
-    </>
+      </Link>
+    </Tooltip>
   )
 }

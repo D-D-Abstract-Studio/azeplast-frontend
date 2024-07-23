@@ -45,7 +45,6 @@ export default function MultiFilePreview({
               }}
             >
               <FileThumbnail
-                tooltip
                 imageView
                 file={file}
                 sx={{ position: 'absolute' }}
