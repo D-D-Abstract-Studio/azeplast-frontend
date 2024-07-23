@@ -70,20 +70,6 @@ export default function Upload({
     [onChange]
   )
 
-  console.log(files)
-
-  /* const handleRemoveFile = useCallback(
-    (inputFile: File | string) => {
-      const filtered = values.files && values.files?.filter((file) => file !== inputFile)
-      setValue('files', filtered)
-    },
-    [setValue, values.files]
-  )
-
-  const handleRemoveAllFiles = useCallback(() => {
-    setValue('files', [])
-  }, [setValue]) */
-
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple,
     disabled,
@@ -94,6 +80,7 @@ export default function Upload({
   const hasError = isDragReject || !!error
 
   const onRemove = async (data: File) => {
+    console.log(data)
     await axios.delete(endpoints.uploads.deleteUploads(data.name)).then(({ data }) => {
       const newFiles = files.filter((item) => item !== data)
 
@@ -109,17 +96,14 @@ export default function Upload({
     onChange([])
   }
 
-  const onUpload = () => {
-    console.log('Upload files', files)
-  }
-
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
       <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
       <Stack spacing={1} sx={{ textAlign: 'center' }}>
-        <Typography variant="h6">Drop or Select file</Typography>
+        <Typography variant="h6">Arraste ou selecione arquivos</Typography>
+
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
+          Solte os arquivos aqui ou clique para
           <Box
             component="span"
             sx={{
@@ -128,35 +112,32 @@ export default function Upload({
               textDecoration: 'underline',
             }}
           >
-            browse
+            {' '}
+            Navegar{' '}
           </Box>
-          thorough your machine
+          no seu dispositivo
         </Typography>
       </Stack>
     </Stack>
   )
 
   const renderMultiPreview = (
-    <>
-      <Box sx={{ my: 3 }}>
-        <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
-      </Box>
+    <Box sx={{ my: 3 }}>
+      {Boolean(files) && (
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Button
+            variant="text"
+            color="error"
+            startIcon={<Iconify icon="bi:trash" />}
+            onClick={onRemoveAll}
+          >
+            Remover todos os arquivos
+          </Button>
+        </Stack>
+      )}
 
-      <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-        <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
-          Remove All
-        </Button>
-
-        <Button
-          size="small"
-          variant="contained"
-          onClick={onUpload}
-          startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-        >
-          Upload
-        </Button>
-      </Stack>
-    </>
+      <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+    </Box>
   )
 
   return (
