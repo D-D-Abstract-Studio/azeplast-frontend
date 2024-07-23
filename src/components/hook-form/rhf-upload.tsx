@@ -7,6 +7,7 @@ import { Upload, UploadProps } from '../upload'
 interface Props extends Omit<UploadProps, 'file' | 'onChange'> {
   name: string
   multiple?: boolean
+  onUpdateFiles: (file: Array<File>) => Promise<void>
 }
 export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
   const { control } = useFormContext()

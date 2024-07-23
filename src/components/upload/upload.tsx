@@ -15,11 +15,14 @@ import { UploadProps } from './types'
 import RejectionFiles from './errors-rejection-files'
 import MultiFilePreview from './preview-multi-file'
 
-import { useCallback } from 'react'
 import { axios } from '@/utils/axios'
 import { endpoints } from '@/constants/config'
 
 type UploudFile = Array<File & { preview?: string }>
+
+type Props = UploadProps & {
+  onUpdateFiles: (file: UploudFile) => Promise<void>
+}
 
 export default function Upload({
   disabled,
@@ -29,46 +32,43 @@ export default function Upload({
   files = [],
   thumbnail,
   sx,
+  onUpdateFiles,
   onChange,
   ...other
-}: UploadProps) {
-  const onDrop = useCallback(
-    (acceptedFiles: UploudFile) => {
-      const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onload = () => resolve(reader.result as ArrayBuffer)
-          reader.onerror = reject
-          reader.readAsArrayBuffer(file)
+}: Props) {
+  const onDrop = (acceptedFiles: UploudFile) => {
+    const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as ArrayBuffer)
+        reader.onerror = reject
+        reader.readAsArrayBuffer(file)
+      })
+    }
+
+    const processFiles = async (filesDrop: UploudFile) => {
+      const formData = new FormData()
+      await Promise.all(
+        filesDrop.map(async (file) => {
+          const binaryData = await readFileAsArrayBuffer(file)
+          const blob = new Blob([binaryData], { type: file.type })
+          formData.append('files', blob, file.name)
+
+          file.preview = URL.createObjectURL(file)
         })
-      }
+      )
 
-      const processFiles = async (files: UploudFile) => {
-        const formData = new FormData()
+      axios
+        .post(endpoints.uploads.createUploads, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(({ data }) => onChange([...files, ...data]))
+    }
 
-        await Promise.all(
-          files.map(async (file) => {
-            const binaryData = await readFileAsArrayBuffer(file)
-            const blob = new Blob([binaryData], { type: file.type })
-            formData.append('files', blob, file.name)
-
-            file.preview = URL.createObjectURL(file)
-          })
-        )
-
-        axios
-          .post(endpoints.uploads.createUploads, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(({ data }) => onChange(data))
-      }
-
-      processFiles(acceptedFiles)
-    },
-    [onChange]
-  )
+    processFiles(acceptedFiles)
+  }
 
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple,
@@ -84,6 +84,7 @@ export default function Upload({
       const newFiles = files.filter((item) => item.name !== name)
 
       onChange(newFiles)
+      onUpdateFiles(newFiles)
     })
   }
 
@@ -93,6 +94,7 @@ export default function Upload({
     })
 
     onChange([])
+    onUpdateFiles([])
   }
 
   const renderPlaceholder = (

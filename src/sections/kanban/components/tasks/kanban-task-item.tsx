@@ -52,7 +52,7 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
 
   return (
     <>
-      <Draggable draggableId={task.id} index={index}>
+      <Draggable draggableId={task._id} index={index}>
         {(provided, snapshot) => (
           <Paper
             ref={provided.innerRef}
@@ -125,11 +125,13 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
         )}
       </Draggable>
 
-      <KanbanDetails
-        task={task}
-        openDetails={openDetails.value}
-        onCloseDetails={openDetails.onFalse}
-      />
+      {openDetails.value && (
+        <KanbanDetails
+          task={task}
+          openDetails={openDetails.value}
+          onCloseDetails={openDetails.onFalse}
+        />
+      )}
     </>
   )
 }

@@ -81,7 +81,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       .optional(),
     archived: Yup.boolean().required(),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
-    categories: Yup.array().of(Yup.string().required()).required(),
+    categories: Yup.array().of(Yup.string().required()).optional(),
     description: Yup.string().required(),
     assignee: Yup.array()
       .of(
@@ -142,6 +142,13 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       enqueueSnackbar('Tarefa deletada com sucesso')
 
       onCloseDetails()
+      mutate(endpoints.tasks.getAllTasks)
+    })
+
+  const onUpdateFiles = async (files: Array<File>) =>
+    await axios.put(endpoints.tasks.updateTask(task._id), { ...task, files }).then(() => {
+      enqueueSnackbar('Arquivo deletado com sucesso')
+
       mutate(endpoints.tasks.getAllTasks)
     })
 
@@ -316,7 +323,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                     {...restField}
                     multiple
                     fullWidth
-                    options={[...new Set([...categoriesStorage, ...task?.categories])]}
+                    options={[...new Set([...categoriesStorage, ...(task?.categories || [])])]}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -367,7 +374,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
-            <RHFUpload multiple name="files" thumbnail />
+            <RHFUpload multiple name="files" thumbnail onUpdateFiles={onUpdateFiles} />
 
             <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
               Ver histórico

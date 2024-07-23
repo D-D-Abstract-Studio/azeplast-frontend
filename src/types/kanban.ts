@@ -7,7 +7,7 @@ export type IKanbanTask = {
   name: string
   archived: boolean
   priority: PriorityValues
-  categories: string[]
+  categories?: string[]
   description: string
   history?: Array<{
     user: string
