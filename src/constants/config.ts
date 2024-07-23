@@ -39,7 +39,7 @@ export const endpoints = {
     createTask: '/tasks',
     archiveTask: (id: Id) => `/tasks/${id}/archive`,
     getTask: (id: Id) => `/tasks/${id}`,
-    updateTask: (id: Id) => `/tasks/${id}`,
+    updateTask: (id: Id) => `/tasks/${id}?${urlEndpointsParams}`,
     deleteTask: (id: Id) => `/tasks/${id}`,
   },
 }

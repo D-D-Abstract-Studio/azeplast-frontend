@@ -72,12 +72,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     name: Yup.string().required(),
     files: Yup.mixed<Array<File>>().optional(),
     history: Yup.array()
-      .of(
-        Yup.object().shape({
-          user: Yup.string().required(),
-          date: Yup.date().required(),
-        })
-      )
+      .of(Yup.object().shape({ user: Yup.string().required(), date: Yup.date().required() }))
       .optional(),
     archived: Yup.boolean().required(),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
@@ -173,8 +168,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       }
     }
   }
-
-  console.log(watch().files)
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
