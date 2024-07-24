@@ -1,13 +1,7 @@
 'use client'
 
-import { mutate } from 'swr'
-
-import Stack from '@mui/material/Stack'
-import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
 import {
   alpha,
-  ButtonBase,
   ButtonGroup,
   Chip,
   Dialog,
@@ -16,8 +10,12 @@ import {
   Paper,
   styled,
   Tooltip,
+  Stack,
+  IconButton,
+  Button,
 } from '@mui/material'
 
+import { mutate } from 'swr'
 import { enqueueSnackbar } from 'notistack'
 
 import { Iconify } from '@/components/iconify'
@@ -37,6 +35,7 @@ import FormProvider, { RHFTextField } from '@/components/hook-form'
 import { priorityValues, PriorityValues } from '@/shared/priorityValues'
 import { Notification } from '@/types/Notification'
 import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
+import { PriorityStatus } from '@/components/PriorityStatus'
 
 export const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -167,49 +166,10 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
                 </Stack>
               </Stack>
 
-              <Stack direction="column" alignItems="left" spacing={1}>
-                <StyledLabel>Prioridade</StyledLabel>
-
-                <Stack direction="row" flexWrap="wrap" spacing={1}>
-                  {priorityValues.map((option) => (
-                    <ButtonBase
-                      key={option}
-                      onClick={() => setValue('priority', option)}
-                      sx={{
-                        p: 1,
-                        fontSize: 12,
-                        borderRadius: 1,
-                        lineHeight: '20px',
-                        textTransform: 'capitalize',
-                        fontWeight: 'fontWeightBold',
-                        boxShadow: (theme) =>
-                          `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
-                        ...(option === priority && {
-                          boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
-                        }),
-                      }}
-                    >
-                      <Iconify
-                        icon="line-md:circle-twotone"
-                        sx={{
-                          mr: 0.5,
-                          ...(option === 'baixa' && {
-                            color: 'info.main',
-                          }),
-                          ...(option === 'média' && {
-                            color: 'warning.main',
-                          }),
-                          ...(option === 'alta' && {
-                            color: 'error.main',
-                          }),
-                        }}
-                      />
-
-                      {option}
-                    </ButtonBase>
-                  ))}
-                </Stack>
-              </Stack>
+              <PriorityStatus
+                priority={priority}
+                onChange={(priority) => setValue('priority', priority)}
+              />
 
               <RHFTextField name="title" label="Título" />
 

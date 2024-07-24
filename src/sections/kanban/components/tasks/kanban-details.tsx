@@ -20,7 +20,6 @@ import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
 
 import {
   Autocomplete,
-  ButtonBase,
   ButtonGroup,
   Chip,
   Divider,
@@ -56,10 +55,11 @@ import { useRequest } from '@/hooks/use-request'
 import { NotificationAdd } from '@/sections/notifications/notification-add'
 
 import { IKanbanTask } from '@/types/kanban'
+import { Notification } from '@/types/Notification'
+import { PriorityStatus } from '@/components/PriorityStatus'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
-  width: '100%',
   flexShrink: 0,
   color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightSemiBold,
@@ -190,6 +190,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     }
   }
 
+  const isNotification = notifications?.some(({ taskId }) => taskId === task._id)
+
   return (
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
@@ -226,6 +228,43 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
           <Stack direction="column" justifyContent="space-between" height="100%">
             <Stack spacing={3} sx={{ p: 2 }}>
+              {isNotification && (
+                <>
+                  <Stack direction="column" alignItems="left" spacing={1}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <StyledLabel>Notificações Abertas</StyledLabel>
+
+                      <Tooltip
+                        arrow
+                        title="Para ver as notificações abra o icone de notificações na home"
+                      >
+                        <IconButton>
+                          <Iconify icon="eva:question-mark-circle-fill" />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+
+                    <Stack direction="row" flexWrap="wrap" spacing={1}>
+                      {notifications
+                        ?.filter((notification) => notification.taskId === task._id)
+                        .map((notification) => (
+                          <Chip
+                            key={notification._id}
+                            label={notification.title}
+                            variant="soft"
+                            sx={{
+                              color: 'text.primary',
+                              borderRadius: 1,
+                            }}
+                          />
+                        ))}
+                    </Stack>
+                  </Stack>
+
+                  <Divider />
+                </>
+              )}
+
               <Stack direction="column" alignItems="left" spacing={1}>
                 <StyledLabel>Criado por</StyledLabel>
 
@@ -279,49 +318,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
               <RHFDatePiker<{ dueDate: Date }> label="Data de vencimento" name="dueDate" />
 
-              <Stack direction="column" alignItems="left" spacing={1}>
-                <StyledLabel>Prioridade</StyledLabel>
-
-                <Stack direction="row" flexWrap="wrap" spacing={1}>
-                  {priorityValues.map((option) => (
-                    <ButtonBase
-                      key={option}
-                      onClick={() => setValue('priority', option)}
-                      sx={{
-                        p: 1,
-                        fontSize: 12,
-                        borderRadius: 1,
-                        lineHeight: '20px',
-                        textTransform: 'capitalize',
-                        fontWeight: 'fontWeightBold',
-                        boxShadow: (theme) =>
-                          `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
-                        ...(option === priority && {
-                          boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
-                        }),
-                      }}
-                    >
-                      <Iconify
-                        icon="line-md:circle-twotone"
-                        sx={{
-                          mr: 0.5,
-                          ...(option === 'baixa' && {
-                            color: 'info.main',
-                          }),
-                          ...(option === 'média' && {
-                            color: 'warning.main',
-                          }),
-                          ...(option === 'alta' && {
-                            color: 'error.main',
-                          }),
-                        }}
-                      />
-
-                      {option}
-                    </ButtonBase>
-                  ))}
-                </Stack>
-              </Stack>
+              <PriorityStatus
+                priority={priority}
+                onChange={(priority) => setValue('priority', priority)}
+              />
 
               <Controller
                 name="categories"
@@ -415,6 +415,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               direction="row"
               spacing={1}
               sx={{
+                zIndex: 1,
                 p: 2,
                 bottom: 0,
                 borderTop: 1,
@@ -498,10 +499,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
                   {task.history?.map((history, index) => (
                     <Stack key={index} direction="row" spacing={1}>
-                      <Typography variant="body2">{history?.user}</Typography>
                       <Typography variant="body2">
                         {dayjs(history?.date).format('DD/MM/YYYY HH:mm')}
                       </Typography>
+
+                      <Typography variant="body2">{history?.user}</Typography>
                     </Stack>
                   ))}
                 </Stack>
