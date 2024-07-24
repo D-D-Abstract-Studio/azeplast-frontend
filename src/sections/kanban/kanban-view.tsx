@@ -13,7 +13,18 @@ import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrencyStorage } from '@/constants/config'
 
-import { Alert, Badge, Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material'
+import {
+  Alert,
+  Badge,
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  Typography,
+} from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/kanban-skeleton'
 import { KanbanColumnAdd } from './components/column/kanban-column-add'
@@ -27,11 +38,16 @@ import { ArchivedList } from './kanban-task-unarchive'
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 import { User } from '@/types/user'
+import { Notification } from '@/types/Notification'
+
 import { KanbanBoardAdd } from '@/sections/kanban/components/board/board-add'
 import { BoardActions } from '@/sections/kanban/components/board/board-actions'
 import { Iconify } from '@/components'
+import { useBoolean } from '@/hooks/use-boolean'
+import { Notifications } from '@/sections/notifications'
 
 export const KanbanView = () => {
+  const dialogNotifications = useBoolean()
   const [showArchived, setShowArchived] = useState(false)
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
 
@@ -51,11 +67,17 @@ export const KanbanView = () => {
     url: endpoints.tasks.getAllTasks,
   })
 
+  const { data: notifications } = useRequest<Array<Notification>>({
+    url: endpoints.notifications.getAllNotifications,
+  })
+
   const isPermissionAdmin = user?.permissions === 'admin'
 
   const board = boardMescle({ selectedBoard, boards, columns, tasks })
 
   const isUserValid = userCurrencyStorage !== 'anonymous'
+
+  const isUnreadNotification = notifications?.some((notification) => !notification.view)
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {
@@ -107,14 +129,12 @@ export const KanbanView = () => {
                   {showArchived ? 'Quadros' : 'Arquivados'}
                 </Button>
 
-                <Button
-                  variant="soft"
-                  color="inherit"
-                  onClick={() => setShowArchived((prevState) => !prevState)}
-                >
-                  {/* codicon:circle */}
-                  {/* codicon:circle-filled */}
-                  <Badge badgeContent={<Iconify icon="codicon:circle" />}>
+                <Button variant="soft" color="inherit" onClick={dialogNotifications.onTrue}>
+                  <Badge
+                    {...(isUnreadNotification && {
+                      badgeContent: <Iconify icon="codicon:circle-filled" color="warning.main" />,
+                    })}
+                  >
                     <Iconify icon="mdi:bell" />
                   </Badge>
                 </Button>
@@ -201,6 +221,19 @@ export const KanbanView = () => {
           </DragDropContext>
         </Stack>
       )}
+
+      <Dialog
+        fullWidth
+        maxWidth="xl"
+        open={dialogNotifications.value}
+        onClose={() => dialogNotifications.onFalse()}
+      >
+        <DialogTitle sx={{ pb: 2 }}>Notificações</DialogTitle>
+
+        <DialogContent sx={{ typography: 'body2' }}>
+          <Notifications />
+        </DialogContent>
+      </Dialog>
     </Container>
   )
 }

@@ -42,6 +42,11 @@ export const endpoints = {
     updateTask: (id: Id) => `/tasks/${id}?${urlEndpointsParams}`,
     deleteTask: (id: Id) => `/tasks/${id}`,
   },
+  notifications: {
+    getAllNotifications: '/notifications',
+    createNotification: '/notifications',
+    deleteNotification: (id: Id) => `/notifications/${id}`,
+  },
 }
 
 export const HOST_API =
