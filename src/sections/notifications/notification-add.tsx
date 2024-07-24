@@ -12,19 +12,27 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Button from '@mui/material/Button'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
-import { Alert, alpha, Box, Dialog, MenuItem, Paper } from '@mui/material'
+import {
+  Alert,
+  alpha,
+  Box,
+  ButtonBase,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Paper,
+  styled,
+  Tooltip,
+} from '@mui/material'
 
 import { enqueueSnackbar } from 'notistack'
 
-import { paper } from '@/theme/css'
-
 import { Iconify } from '@/components/iconify'
-
-import { useRequest } from '@/hooks/use-request'
 
 import { endpoints, userCurrencyStorage, userNamesStorage } from '@/constants/config'
 
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 
 import { axios } from '@/utils/axios'
 
@@ -36,6 +44,15 @@ import FormProvider, { RHFTextField } from '@/components/hook-form'
 
 import { priorityValues, PriorityValues } from '@/shared/priorityValues'
 import { Notification } from '@/types/Notification'
+import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
+
+export const StyledLabel = styled('span')(({ theme }) => ({
+  ...theme.typography.caption,
+  width: '100%',
+  flexShrink: 0,
+  color: theme.palette.text.secondary,
+  fontWeight: theme.typography.fontWeightSemiBold,
+}))
 
 type Props = {
   taskId: string
@@ -43,6 +60,8 @@ type Props = {
 }
 
 export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
+  const viewContacts = useBoolean()
+
   const CreateNotificationSchema = Yup.object().shape({
     title: Yup.string().required(),
     description: Yup.string().required(),
@@ -69,8 +88,20 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
 
   const {
     handleSubmit,
+    setValue,
+    watch,
+    control,
     formState: { isDirty },
   } = methods
+
+  const assignee = useFieldArray({
+    control,
+    name: 'assignee',
+  })
+
+  const values = watch()
+
+  const [priority] = watch(['priority'])
 
   const handleCreateUser = async (userData: Omit<Notification, '_id'>) => {
     await axios.post(endpoints.user.createUser, userData).then(() => {
@@ -79,34 +110,119 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
         preventDuplicate: true,
       })
 
-      mutate(endpoints.user.getAllUsers)
+      mutate(endpoints.notifications.getAllNotifications)
     })
   }
 
   return (
     <Dialog
       fullWidth
-      maxWidth="xs"
-      title="Adicionar Notificação"
-      disablePortal={false}
+      maxWidth="sm"
       open={openAddNotification.value}
       onClose={openAddNotification.onFalse}
     >
-      <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
-        <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleCreateUser(data))}>
-          <Stack direction="column" spacing={1}>
-            <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-              <RHFTextField name="name" label="Nome" />
-            </Stack>
+      <DialogTitle sx={{ pb: 2 }}>Adicionar Notificação</DialogTitle>
 
-            <Stack justifyContent="flex-end" spacing={1}>
-              <Button type="submit" variant="contained" color="inherit" disabled={!isDirty}>
-                Criar
-              </Button>
+      <DialogContent>
+        <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleCreateUser(data))}>
+          <Paper elevation={1} sx={{ py: 1 }}>
+            <Stack direction="column" spacing={2}>
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Responsáveis</StyledLabel>
+
+                <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                  {values?.assignee?.map((task, index) => (
+                    <Chip
+                      key={index}
+                      label={task.name}
+                      variant="soft"
+                      onDelete={() => assignee.remove(index)}
+                      sx={{
+                        color: 'text.primary',
+                        borderRadius: 1,
+                      }}
+                    />
+                  ))}
+
+                  <Tooltip title="Adicionar responsável" arrow>
+                    <IconButton
+                      onClick={viewContacts.onTrue}
+                      sx={{
+                        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+                        border: (theme) => `dashed 1px ${theme.palette.divider}`,
+                      }}
+                    >
+                      <Iconify icon="mingcute:add-line" />
+                    </IconButton>
+                  </Tooltip>
+
+                  <KanbanContactsDialog
+                    onRemove={assignee.remove}
+                    onAppend={assignee.append}
+                    assigneeValues={values.assignee}
+                    open={viewContacts.value}
+                    onClose={viewContacts.onFalse}
+                  />
+                </Stack>
+              </Stack>
+
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Prioridade</StyledLabel>
+
+                <Stack direction="row" flexWrap="wrap" spacing={1}>
+                  {priorityValues.map((option) => (
+                    <ButtonBase
+                      key={option}
+                      onClick={() => setValue('priority', option)}
+                      sx={{
+                        p: 1,
+                        fontSize: 12,
+                        borderRadius: 1,
+                        lineHeight: '20px',
+                        textTransform: 'capitalize',
+                        fontWeight: 'fontWeightBold',
+                        boxShadow: (theme) =>
+                          `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+                        ...(option === priority && {
+                          boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
+                        }),
+                      }}
+                    >
+                      <Iconify
+                        icon="line-md:circle-twotone"
+                        sx={{
+                          mr: 0.5,
+                          ...(option === 'baixa' && {
+                            color: 'info.main',
+                          }),
+                          ...(option === 'média' && {
+                            color: 'warning.main',
+                          }),
+                          ...(option === 'alta' && {
+                            color: 'error.main',
+                          }),
+                        }}
+                      />
+
+                      {option}
+                    </ButtonBase>
+                  ))}
+                </Stack>
+              </Stack>
+
+              <RHFTextField name="title" label="Título" />
+
+              <RHFTextField fullWidth multiline name="description" label="Descrição" />
+
+              <Stack justifyContent="flex-end" spacing={1}>
+                <Button type="submit" variant="contained" color="inherit" disabled={!isDirty}>
+                  Criar
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
+          </Paper>
         </FormProvider>
-      </Paper>
+      </DialogContent>
     </Dialog>
   )
 }

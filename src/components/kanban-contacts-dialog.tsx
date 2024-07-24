@@ -7,26 +7,34 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
+import { Stack } from '@mui/material'
+
+import { userNamesStorage } from '@/constants/config'
 
 import { Iconify } from '@/components/iconify'
 import SearchNotFound from '@/components/search-not-found'
-
-import { UseFieldArrayReturn } from 'react-hook-form'
-
-import { userNamesStorage } from '@/constants/config'
-import { IKanbanTask } from '@/types/kanban'
-import { Stack } from '@mui/material'
 
 const ITEM_HEIGHT = 64
 
 type Props = {
   open: boolean
   onClose: VoidFunction
-  assignee: UseFieldArrayReturn<IKanbanTask, 'assignee', 'id'>
-  assigneeValues: IKanbanTask['assignee']
+  onRemove: (index: number) => void
+  onAppend: (value: { name: string }) => void
+  assigneeValues:
+    | {
+        name?: string
+      }[]
+    | undefined
 }
 
-export default function KanbanContactsDialog({ open, assignee, assigneeValues, onClose }: Props) {
+export const KanbanContactsDialog = ({
+  open,
+  onClose,
+  onRemove,
+  onAppend,
+  assigneeValues,
+}: Props) => {
   const [searchContact, setSearchContact] = useState('')
 
   const handleSearchContacts = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -67,7 +75,7 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
               }}
             >
               {dataFiltered.map((contact, index) => {
-                const checked = assigneeValues.map((person) => person.name).includes(contact)
+                const checked = assigneeValues?.map((person) => person.name).includes(contact)
 
                 return (
                   <Stack
@@ -98,7 +106,7 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
                         color="error"
                         variant="soft"
                         size="small"
-                        onClick={() => assignee.remove(index)}
+                        onClick={() => onRemove(index)}
                         startIcon={<Iconify icon="eva:person-remove-fill" />}
                       >
                         Remover
@@ -108,7 +116,7 @@ export default function KanbanContactsDialog({ open, assignee, assigneeValues, o
                         color="primary"
                         variant="soft"
                         size="small"
-                        onClick={() => assignee.append({ name: contact })}
+                        onClick={() => onAppend({ name: contact })}
                         startIcon={<Iconify icon="eva:person-add-fill" />}
                       >
                         Atribuir

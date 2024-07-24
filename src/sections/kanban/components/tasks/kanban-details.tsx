@@ -16,7 +16,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 import { Iconify } from '@/components/iconify'
 
 import KanbanInputName from '../kanban-input-name'
-import KanbanContactsDialog from './kanban-contacts-dialog'
+import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
 
 import {
   Autocomplete,
@@ -267,7 +267,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 </Tooltip>
 
                 <KanbanContactsDialog
-                  assignee={assignee}
+                  onRemove={assignee.remove}
+                  onAppend={assignee.append}
                   assigneeValues={values.assignee}
                   open={viewContacts.value}
                   onClose={viewContacts.onFalse}
