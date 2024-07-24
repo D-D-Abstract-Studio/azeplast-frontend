@@ -65,7 +65,7 @@ export const ArchivedList = () => {
   const row = tasks
     ?.filter((task) => task.archived)
     .map((task) => {
-      const isExistingColumn = columns?.find((column) => column.taskIds.includes(task.id))
+      const isExistingColumn = columns?.find((column) => column.taskIds.includes(task._id))
 
       return { ...task, status: isExistingColumn ? isExistingColumn.name : '' }
     })
@@ -74,7 +74,7 @@ export const ArchivedList = () => {
     const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
 
     await axios
-      .put<IKanbanTask>(endpoints.tasks.updateTask(task.data.id), {
+      .put<IKanbanTask>(endpoints.tasks.updateTask(task.data._id), {
         ...task.data,
         archived: false,
       })
@@ -88,7 +88,7 @@ export const ArchivedList = () => {
   const onDeleteTask = async (id: string) => {
     const task = await axios.get<IKanbanTask>(endpoints.tasks.getTask(id))
 
-    await axios.delete<IKanbanTask>(endpoints.tasks.deleteTask(task.data.id)).then(() => {
+    await axios.delete<IKanbanTask>(endpoints.tasks.deleteTask(task.data._id)).then(() => {
       enqueueSnackbar('Tarefa deletada com sucesso')
 
       mutate(endpoints.tasks.getAllTasks)
@@ -107,7 +107,7 @@ export const ArchivedList = () => {
         row={row || []}
         columns={[
           {
-            field: 'id',
+            field: '_id',
           },
           {
             field: 'name',
@@ -132,7 +132,7 @@ export const ArchivedList = () => {
             width: 200,
             renderCell: ({ row }) => (
               <Grid container columnSpacing={0.5} justifyContent="center">
-                {row?.categories.map((category, index) => {
+                {row?.categories?.map((category, index) => {
                   return (
                     <Grid key={index} item xs="auto" p={0}>
                       <Tooltip title={category}>
@@ -188,7 +188,7 @@ export const ArchivedList = () => {
                 <MenuItem
                   component={Button}
                   fullWidth
-                  onClick={() => row?.id && onUnarchiveTask(row.id)}
+                  onClick={() => row?._id && onUnarchiveTask(row._id)}
                   sx={{ color: 'warning.main' }}
                 >
                   <Stack direction="row">
@@ -202,7 +202,7 @@ export const ArchivedList = () => {
                 <MenuItem
                   component={Button}
                   fullWidth
-                  onClick={() => row?.id && onDeleteTask(row.id)}
+                  onClick={() => row?._id && onDeleteTask(row._id)}
                   sx={{ color: 'error.main' }}
                 >
                   <Stack direction="row">
@@ -238,7 +238,7 @@ export const ArchivedList = () => {
               <Stack direction="column" alignItems="left" spacing={1}>
                 <StyledLabel>Responsáveis</StyledLabel>
 
-                {Boolean(!task?.categories.length) && (
+                {Boolean(!task?.categories?.length) && (
                   <Avatar sx={{ bgcolor: 'background.neutral', color: 'text.primary' }}>
                     <Typography variant="button">N/A</Typography>
                   </Avatar>
@@ -316,7 +316,9 @@ export const ArchivedList = () => {
                   <Chip key={index} variant="soft" label={category} />
                 ))}
 
-                {Boolean(!task?.categories.length) && <Chip variant="soft" label="Sem categoria" />}
+                {Boolean(!task?.categories?.length) && (
+                  <Chip variant="soft" label="Sem categoria" />
+                )}
               </Stack>
 
               <CopyClipboard

@@ -33,7 +33,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
 
     await axios.put(endpoints.columns.updateColumn(column.id), {
       ...column,
-      taskIds: [...column.taskIds, response.data.id],
+      taskIds: [...column.taskIds, response.data._id],
     })
 
     enqueueSnackbar('Tarefa criada com sucesso')

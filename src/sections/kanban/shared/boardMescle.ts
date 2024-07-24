@@ -33,11 +33,11 @@ export const boardMescle = ({ selectedBoard, boards, columns, tasks }: Props) =>
     }, {} as Record<string, IKanbanColumn>)
 
     const tasksFiltered = tasks?.filter((task) =>
-      columnsFiltered?.some((column) => column.taskIds.includes(task.id))
+      columnsFiltered?.some((column) => column.taskIds.includes(task._id))
     )
 
     const tasksMapped = tasksFiltered?.reduce((acc, task) => {
-      acc[task.id] = task
+      acc[task._id] = task
       return acc
     }, {} as Record<string, IKanbanTask>)
 
