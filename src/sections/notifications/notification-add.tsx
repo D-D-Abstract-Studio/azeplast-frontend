@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import {
   alpha,
   ButtonBase,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogContent,
@@ -67,13 +68,17 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
   })
 
+  const defaultValues = {
+    taskId,
+    title: '',
+    description: '',
+    view: false,
+    priority: priorityValues[0],
+    reporter: userCurrencyStorage,
+  }
+
   const methods = useForm<Omit<Notification, '_id'>>({
-    defaultValues: {
-      taskId,
-      view: false,
-      priority: priorityValues[0],
-      reporter: userCurrencyStorage,
-    },
+    defaultValues,
     resolver: yupResolver(CreateNotificationSchema),
   })
 
@@ -81,6 +86,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     handleSubmit,
     setValue,
     watch,
+    reset,
     control,
     formState: { isDirty },
   } = methods
@@ -93,6 +99,8 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
   const values = watch()
 
   const [priority] = watch(['priority'])
+
+  const handleClear = () => reset(defaultValues)
 
   const handleCreateUser = async (data: Omit<Notification, '_id'>) => {
     await axios.post(endpoints.notifications.createNotification, data).then(() => {
@@ -208,13 +216,23 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
               <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
               <Stack direction="row" spacing={1} justifyContent="flex-end">
-                <Button
-                  variant="soft"
-                  onClick={openAddNotification.onFalse}
-                  startIcon={<Iconify icon="ant-design:close-outlined" />}
-                >
-                  Cancelar
-                </Button>
+                <ButtonGroup variant="contained" color="inherit">
+                  <Button
+                    variant="soft"
+                    onClick={handleClear}
+                    startIcon={<Iconify icon="ant-design:delete-outlined" />}
+                  >
+                    Limpar
+                  </Button>
+
+                  <Button
+                    variant="soft"
+                    onClick={openAddNotification.onFalse}
+                    startIcon={<Iconify icon="ant-design:close-outlined" />}
+                  >
+                    Cancelar
+                  </Button>
+                </ButtonGroup>
 
                 <Button
                   type="submit"
