@@ -33,13 +33,14 @@ import { axios } from '@/utils/axios'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
+import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import { LabelColor } from '@/components/label/types'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { DatePicker } from '@mui/x-date-pickers'
 import { CopyClipboard } from '@/components/CopyClipboard'
+import { priorityValues } from '@/shared/priorityValues'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,

@@ -1,6 +1,4 @@
-export const priorityValues = ['baixa', 'média', 'alta'] as const
-
-export type PriorityValues = (typeof priorityValues)[number]
+import { PriorityValues } from '@/shared/priorityValues'
 
 export type IKanbanTask = {
   _id: string

@@ -1,3 +1,5 @@
+import { PriorityValues } from '@/shared/priorityValues'
+
 export type Notification = {
   _id: string
   title: string
@@ -5,10 +7,8 @@ export type Notification = {
   reporter: string
   view: boolean
   taskId: string
-  assignee: Array<{
-    name?: string
+  assignee?: Array<{
+    name: string
   }>
-  priority: string
-  createdAt: string
-  updatedAt: string
+  priority: PriorityValues
 }

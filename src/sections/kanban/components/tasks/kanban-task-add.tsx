@@ -8,8 +8,10 @@ import InputBase, { inputBaseClasses } from '@mui/material/InputBase'
 import { axios } from '@/utils/axios'
 import { enqueueSnackbar } from 'notistack'
 
+import { priorityValues } from '@/shared/priorityValues'
+
 import { endpoints, userCurrencyStorage } from '@/constants/config'
-import { IKanbanColumn, IKanbanTask, priorityValues } from '@/types/kanban'
+import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 type Props = {
   onCloseAddTask: VoidFunction

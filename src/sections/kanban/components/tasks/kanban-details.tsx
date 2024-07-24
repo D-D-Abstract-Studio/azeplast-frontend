@@ -18,7 +18,15 @@ import { Iconify } from '@/components/iconify'
 import KanbanInputName from '../kanban-input-name'
 import KanbanContactsDialog from './kanban-contacts-dialog'
 
-import { Autocomplete, ButtonBase, Chip, TextField, Typography, useTheme } from '@mui/material'
+import {
+  Autocomplete,
+  ButtonBase,
+  ButtonGroup,
+  Chip,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material'
 
 import { ConfirmDialog } from '@/components/custom-dialog'
 
@@ -37,12 +45,16 @@ import { paper } from '@/theme/css'
 
 import { categoriesStorage, endpoints, userCurrencyStorage } from '@/constants/config'
 
-import { IKanbanTask, PriorityValues, priorityValues } from '@/types/kanban'
+import { PriorityValues, priorityValues } from '@/shared/priorityValues'
 import { mutate } from 'swr'
 import { isEqual } from 'lodash'
 import { RHFTextField } from '@/components/hook-form'
 import dayjs from 'dayjs'
 import { RHFUpload } from '@/components/hook-form/rhf-upload'
+import { useRequest } from '@/hooks/use-request'
+import { NotificationAdd } from '@/sections/notifications/notification-add'
+
+import { IKanbanTask } from '@/types/kanban'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -60,10 +72,18 @@ type Props = {
 
 export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
+
+  const openAddNotification = useBoolean()
+
   const confirmArchive = useBoolean()
   const confirmDelete = useBoolean()
+
   const viewHistory = useBoolean()
-  const contacts = useBoolean()
+  const viewContacts = useBoolean()
+
+  const { data: notifications } = useRequest<Array<Notification>>({
+    url: endpoints.notifications.getAllNotifications,
+  })
 
   const [taskName, setTaskName] = useState(task.name)
 
@@ -206,8 +226,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           <Stack
             spacing={3}
             sx={{
-              pb: 5,
-              px: 2.5,
+              pb: 1,
+              px: 2,
             }}
           >
             <Stack direction="column" alignItems="left" spacing={1}>
@@ -241,7 +261,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
                 <Tooltip title="Adicionar responsável" arrow>
                   <IconButton
-                    onClick={contacts.onTrue}
+                    onClick={viewContacts.onTrue}
                     sx={{
                       bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
                       border: (theme) => `dashed 1px ${theme.palette.divider}`,
@@ -254,8 +274,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 <KanbanContactsDialog
                   assignee={assignee}
                   assigneeValues={values.assignee}
-                  open={contacts.value}
-                  onClose={contacts.onFalse}
+                  open={viewContacts.value}
+                  onClose={viewContacts.onFalse}
                 />
               </Stack>
             </Stack>
@@ -369,9 +389,27 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
             <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
 
-            <Button fullWidth onClick={viewHistory.onTrue} variant="contained">
-              Ver histórico
-            </Button>
+            <ButtonGroup fullWidth>
+              <Button
+                fullWidth
+                onClick={openAddNotification.onTrue}
+                startIcon={<Iconify icon="mdi:bell-plus" />}
+                variant="soft"
+                color="inherit"
+              >
+                Notificação
+              </Button>
+
+              <Button
+                fullWidth
+                onClick={viewHistory.onTrue}
+                startIcon={<Iconify icon="mdi:file-restore" />}
+                variant="soft"
+                color="inherit"
+              >
+                Ver histórico
+              </Button>
+            </ButtonGroup>
           </Stack>
 
           <Stack
@@ -424,6 +462,32 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         />
 
         <ConfirmDialog
+          open={confirmDelete.value}
+          onClose={confirmDelete.onFalse}
+          title="Deletar"
+          disablePortal={false}
+          content={<>Tem certeza que deseja deletar esta tarefa?</>}
+          action={
+            <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
+              Deletar
+            </Button>
+          }
+        />
+
+        <ConfirmDialog
+          open={confirmArchive.value}
+          onClose={confirmArchive.onFalse}
+          title="Arquivar"
+          disablePortal={false}
+          content={<>Tem certeza que deseja arquivar esta tarefa?</>}
+          action={
+            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task._id)}>
+              Arquivar
+            </Button>
+          }
+        />
+
+        <ConfirmDialog
           open={viewHistory.value}
           onClose={viewHistory.onFalse}
           title="Histórico"
@@ -446,18 +510,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           }
         />
 
-        <ConfirmDialog
-          open={confirmArchive.value}
-          onClose={confirmArchive.onFalse}
-          title="Arquivar"
-          disablePortal={false}
-          content={<>Tem certeza que deseja arquivar esta tarefa?</>}
-          action={
-            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task._id)}>
-              Arquivar
-            </Button>
-          }
-        />
+        <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} />
       </Drawer>
     </FormProvider>
   )
