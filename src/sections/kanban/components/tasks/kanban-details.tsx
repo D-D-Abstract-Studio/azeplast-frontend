@@ -191,325 +191,327 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
-      <Drawer
-        disablePortal
-        open={openDetails}
-        onClose={onCloseDetails}
-        anchor="right"
-        slotProps={{
-          backdrop: { invisible: true },
-        }}
-        PaperProps={{
-          sx: {
-            width: {
-              xs: 1,
-              sm: 480,
+    <>
+      <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
+        <Drawer
+          disablePortal
+          open={openDetails}
+          onClose={onCloseDetails}
+          anchor="right"
+          slotProps={{
+            backdrop: { invisible: true },
+          }}
+          PaperProps={{
+            sx: {
+              width: {
+                xs: 1,
+                sm: 480,
+              },
             },
-          },
-        }}
-      >
-        <Stack direction="row" alignItems="center" spacing={1} p={2}>
-          <KanbanInputName
-            fullWidth
-            placeholder="Nome da tarefa"
-            value={taskName}
-            onChange={handleChangeTaskName}
-            onKeyUp={handleUpdateTask}
-          />
-
-          <IconButton color="default" onClick={onCloseDetails}>
-            <Iconify icon="eva:close-fill" size={2.5} />
-          </IconButton>
-        </Stack>
-
-        <Stack direction="column" justifyContent="space-between" height="100%">
-          <Stack spacing={3} sx={{ p: 2 }}>
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Criado por</StyledLabel>
-
-              <Avatar alt={task.reporter} color="secondary">
-                <Tooltip title={task.reporter}>
-                  <Typography variant="button">
-                    {task.reporter.slice(0, 3).toUpperCase()}
-                  </Typography>
-                </Tooltip>
-              </Avatar>
-            </Stack>
-
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Responsáveis</StyledLabel>
-
-              <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                {values.assignee.map((task, index) => (
-                  <Chip
-                    key={index}
-                    label={task.name}
-                    variant="soft"
-                    onDelete={() => assignee.remove(index)}
-                    sx={{
-                      color: 'text.primary',
-                      borderRadius: 1,
-                    }}
-                  />
-                ))}
-
-                <Tooltip title="Adicionar responsável" arrow>
-                  <IconButton
-                    onClick={viewContacts.onTrue}
-                    sx={{
-                      bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-                      border: (theme) => `dashed 1px ${theme.palette.divider}`,
-                    }}
-                  >
-                    <Iconify icon="mingcute:add-line" />
-                  </IconButton>
-                </Tooltip>
-
-                <KanbanContactsDialog
-                  onRemove={assignee.remove}
-                  onAppend={assignee.append}
-                  assigneeValues={values.assignee}
-                  open={viewContacts.value}
-                  onClose={viewContacts.onFalse}
-                />
-              </Stack>
-            </Stack>
-
-            <RHFDatePiker<{ dueDate: Date }> label="Data de vencimento" name="dueDate" />
-
-            <Stack direction="column" alignItems="left" spacing={1}>
-              <StyledLabel>Prioridade</StyledLabel>
-
-              <Stack direction="row" flexWrap="wrap" spacing={1}>
-                {priorityValues.map((option) => (
-                  <ButtonBase
-                    key={option}
-                    onClick={() => setValue('priority', option)}
-                    sx={{
-                      p: 1,
-                      fontSize: 12,
-                      borderRadius: 1,
-                      lineHeight: '20px',
-                      textTransform: 'capitalize',
-                      fontWeight: 'fontWeightBold',
-                      boxShadow: (theme) =>
-                        `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
-                      ...(option === priority && {
-                        boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
-                      }),
-                    }}
-                  >
-                    <Iconify
-                      icon="line-md:circle-twotone"
-                      sx={{
-                        mr: 0.5,
-                        ...(option === 'baixa' && {
-                          color: 'info.main',
-                        }),
-                        ...(option === 'média' && {
-                          color: 'warning.main',
-                        }),
-                        ...(option === 'alta' && {
-                          color: 'error.main',
-                        }),
-                      }}
-                    />
-
-                    {option}
-                  </ButtonBase>
-                ))}
-              </Stack>
-            </Stack>
-
-            <Controller
-              name="categories"
-              control={control}
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              render={({ field: { ref, onChange, ...restField }, fieldState: { error } }) => {
-                return (
-                  <Autocomplete
-                    {...restField}
-                    multiple
-                    fullWidth
-                    options={[...new Set([...categoriesStorage, ...(task?.categories || [])])]}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        error={Boolean(error)}
-                        label="Categorias"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            padding: '0px 10px !important',
-                          },
-                        }}
-                        placeholder="Digite para adicionar"
-                      />
-                    )}
-                    onChange={(_, data) => onChange(data)}
-                    filterOptions={(options, params) => {
-                      const filtered = options.filter((option) =>
-                        option.toLowerCase().includes(params.inputValue.toLowerCase())
-                      )
-
-                      if (params.inputValue !== '') {
-                        filtered.push(params.inputValue)
-                      }
-
-                      return filtered
-                    }}
-                    renderTags={(value, getTagProps) =>
-                      value.map((option, index) => (
-                        <Chip
-                          variant="outlined"
-                          label={option}
-                          color="default"
-                          {...getTagProps({ index })}
-                          sx={{
-                            borderColor: 'background.neutral',
-                            backgroundColor: 'background.neutral',
-                            borderRadius: 1,
-                            alignItems: 'center',
-                          }}
-                          deleteIcon={<Iconify icon="eva:close-fill" />}
-                          key={Math.random()}
-                        />
-                      ))
-                    }
-                  />
-                )
-              }}
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={1} p={2}>
+            <KanbanInputName
+              fullWidth
+              placeholder="Nome da tarefa"
+              value={taskName}
+              onChange={handleChangeTaskName}
+              onKeyUp={handleUpdateTask}
             />
 
-            <RHFTextField fullWidth multiline name="description" label="Descrição" />
-
-            <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
-
-            <Divider />
-
-            <ButtonGroup fullWidth>
-              <Button
-                fullWidth
-                onClick={openAddNotification.onTrue}
-                startIcon={<Iconify icon="mdi:bell-plus" />}
-                variant="soft"
-                color="inherit"
-              >
-                Notificação
-              </Button>
-
-              <Button
-                fullWidth
-                onClick={viewHistory.onTrue}
-                startIcon={<Iconify icon="mdi:file-restore" />}
-                variant="soft"
-                color="inherit"
-              >
-                Ver histórico
-              </Button>
-            </ButtonGroup>
-          </Stack>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              p: 2,
-              bottom: 0,
-              borderTop: 1,
-              position: 'sticky',
-              borderColor: 'divider',
-              ...paper({ theme }),
-            }}
-          >
-            <IconButton
-              color="error"
-              onClick={confirmDelete.onTrue}
-              sx={{ backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08) }}
-            >
-              <Iconify icon="tabler:trash-filled" />
+            <IconButton color="default" onClick={onCloseDetails}>
+              <Iconify icon="eva:close-fill" size={2.5} />
             </IconButton>
-
-            <Button
-              fullWidth
-              onClick={confirmArchive.onTrue}
-              startIcon={<Iconify icon="solar:archive-bold" />}
-              variant="outlined"
-              color="warning"
-            >
-              Arquivar
-            </Button>
-
-            <Button fullWidth disabled={isDirtyTask} type="submit" variant="contained">
-              Salvar
-            </Button>
           </Stack>
-        </Stack>
 
-        <ConfirmDialog
-          open={confirmDelete.value}
-          onClose={confirmDelete.onFalse}
-          title="Deletar"
-          disablePortal={false}
-          content={<>Tem certeza que deseja deletar esta tarefa?</>}
-          action={
-            <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
-              Deletar
-            </Button>
-          }
-        />
+          <Stack direction="column" justifyContent="space-between" height="100%">
+            <Stack spacing={3} sx={{ p: 2 }}>
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Criado por</StyledLabel>
 
-        <ConfirmDialog
-          open={confirmDelete.value}
-          onClose={confirmDelete.onFalse}
-          title="Deletar"
-          disablePortal={false}
-          content={<>Tem certeza que deseja deletar esta tarefa?</>}
-          action={
-            <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
-              Deletar
-            </Button>
-          }
-        />
-
-        <ConfirmDialog
-          open={confirmArchive.value}
-          onClose={confirmArchive.onFalse}
-          title="Arquivar"
-          disablePortal={false}
-          content={<>Tem certeza que deseja arquivar esta tarefa?</>}
-          action={
-            <Button variant="contained" color="warning" onClick={() => onArchiveTask(task._id)}>
-              Arquivar
-            </Button>
-          }
-        />
-
-        <ConfirmDialog
-          open={viewHistory.value}
-          onClose={viewHistory.onFalse}
-          title="Histórico"
-          disablePortal={false}
-          content={
-            <>
-              <Stack direction="column" spacing={1}>
-                <Typography variant="body2">Histórico de alterações da tarefa</Typography>
-
-                {task.history?.map((history, index) => (
-                  <Stack key={index} direction="row" spacing={1}>
-                    <Typography variant="body2">{history?.user}</Typography>
-                    <Typography variant="body2">
-                      {dayjs(history?.date).format('DD/MM/YYYY HH:mm')}
+                <Avatar alt={task.reporter} color="secondary">
+                  <Tooltip title={task.reporter}>
+                    <Typography variant="button">
+                      {task.reporter.slice(0, 3).toUpperCase()}
                     </Typography>
-                  </Stack>
-                ))}
+                  </Tooltip>
+                </Avatar>
               </Stack>
-            </>
-          }
-        />
 
-        <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} />
-      </Drawer>
-    </FormProvider>
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Responsáveis</StyledLabel>
+
+                <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                  {values.assignee.map((task, index) => (
+                    <Chip
+                      key={index}
+                      label={task.name}
+                      variant="soft"
+                      onDelete={() => assignee.remove(index)}
+                      sx={{
+                        color: 'text.primary',
+                        borderRadius: 1,
+                      }}
+                    />
+                  ))}
+
+                  <Tooltip title="Adicionar responsável" arrow>
+                    <IconButton
+                      onClick={viewContacts.onTrue}
+                      sx={{
+                        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+                        border: (theme) => `dashed 1px ${theme.palette.divider}`,
+                      }}
+                    >
+                      <Iconify icon="mingcute:add-line" />
+                    </IconButton>
+                  </Tooltip>
+
+                  <KanbanContactsDialog
+                    onRemove={assignee.remove}
+                    onAppend={assignee.append}
+                    assigneeValues={values.assignee}
+                    open={viewContacts.value}
+                    onClose={viewContacts.onFalse}
+                  />
+                </Stack>
+              </Stack>
+
+              <RHFDatePiker<{ dueDate: Date }> label="Data de vencimento" name="dueDate" />
+
+              <Stack direction="column" alignItems="left" spacing={1}>
+                <StyledLabel>Prioridade</StyledLabel>
+
+                <Stack direction="row" flexWrap="wrap" spacing={1}>
+                  {priorityValues.map((option) => (
+                    <ButtonBase
+                      key={option}
+                      onClick={() => setValue('priority', option)}
+                      sx={{
+                        p: 1,
+                        fontSize: 12,
+                        borderRadius: 1,
+                        lineHeight: '20px',
+                        textTransform: 'capitalize',
+                        fontWeight: 'fontWeightBold',
+                        boxShadow: (theme) =>
+                          `inset 0 0 0 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+                        ...(option === priority && {
+                          boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.text.primary}`,
+                        }),
+                      }}
+                    >
+                      <Iconify
+                        icon="line-md:circle-twotone"
+                        sx={{
+                          mr: 0.5,
+                          ...(option === 'baixa' && {
+                            color: 'info.main',
+                          }),
+                          ...(option === 'média' && {
+                            color: 'warning.main',
+                          }),
+                          ...(option === 'alta' && {
+                            color: 'error.main',
+                          }),
+                        }}
+                      />
+
+                      {option}
+                    </ButtonBase>
+                  ))}
+                </Stack>
+              </Stack>
+
+              <Controller
+                name="categories"
+                control={control}
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                render={({ field: { ref, onChange, ...restField }, fieldState: { error } }) => {
+                  return (
+                    <Autocomplete
+                      {...restField}
+                      multiple
+                      fullWidth
+                      options={[...new Set([...categoriesStorage, ...(task?.categories || [])])]}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={Boolean(error)}
+                          label="Categorias"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              padding: '0px 10px !important',
+                            },
+                          }}
+                          placeholder="Digite para adicionar"
+                        />
+                      )}
+                      onChange={(_, data) => onChange(data)}
+                      filterOptions={(options, params) => {
+                        const filtered = options.filter((option) =>
+                          option.toLowerCase().includes(params.inputValue.toLowerCase())
+                        )
+
+                        if (params.inputValue !== '') {
+                          filtered.push(params.inputValue)
+                        }
+
+                        return filtered
+                      }}
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip
+                            variant="outlined"
+                            label={option}
+                            color="default"
+                            {...getTagProps({ index })}
+                            sx={{
+                              borderColor: 'background.neutral',
+                              backgroundColor: 'background.neutral',
+                              borderRadius: 1,
+                              alignItems: 'center',
+                            }}
+                            deleteIcon={<Iconify icon="eva:close-fill" />}
+                            key={Math.random()}
+                          />
+                        ))
+                      }
+                    />
+                  )
+                }}
+              />
+
+              <RHFTextField fullWidth multiline name="description" label="Descrição" />
+
+              <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
+
+              <Divider />
+
+              <ButtonGroup fullWidth>
+                <Button
+                  fullWidth
+                  onClick={openAddNotification.onTrue}
+                  startIcon={<Iconify icon="mdi:bell-plus" />}
+                  variant="soft"
+                  color="inherit"
+                >
+                  Notificação
+                </Button>
+
+                <Button
+                  fullWidth
+                  onClick={viewHistory.onTrue}
+                  startIcon={<Iconify icon="mdi:file-restore" />}
+                  variant="soft"
+                  color="inherit"
+                >
+                  Ver histórico
+                </Button>
+              </ButtonGroup>
+            </Stack>
+
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                p: 2,
+                bottom: 0,
+                borderTop: 1,
+                position: 'sticky',
+                borderColor: 'divider',
+                ...paper({ theme }),
+              }}
+            >
+              <IconButton
+                color="error"
+                onClick={confirmDelete.onTrue}
+                sx={{ backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08) }}
+              >
+                <Iconify icon="tabler:trash-filled" />
+              </IconButton>
+
+              <Button
+                fullWidth
+                onClick={confirmArchive.onTrue}
+                startIcon={<Iconify icon="solar:archive-bold" />}
+                variant="outlined"
+                color="warning"
+              >
+                Arquivar
+              </Button>
+
+              <Button fullWidth disabled={isDirtyTask} type="submit" variant="contained">
+                Salvar
+              </Button>
+            </Stack>
+          </Stack>
+
+          <ConfirmDialog
+            open={confirmDelete.value}
+            onClose={confirmDelete.onFalse}
+            title="Deletar"
+            disablePortal={false}
+            content={<>Tem certeza que deseja deletar esta tarefa?</>}
+            action={
+              <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
+                Deletar
+              </Button>
+            }
+          />
+
+          <ConfirmDialog
+            open={confirmDelete.value}
+            onClose={confirmDelete.onFalse}
+            title="Deletar"
+            disablePortal={false}
+            content={<>Tem certeza que deseja deletar esta tarefa?</>}
+            action={
+              <Button variant="contained" color="error" onClick={() => onDeleteTask(task._id)}>
+                Deletar
+              </Button>
+            }
+          />
+
+          <ConfirmDialog
+            open={confirmArchive.value}
+            onClose={confirmArchive.onFalse}
+            title="Arquivar"
+            disablePortal={false}
+            content={<>Tem certeza que deseja arquivar esta tarefa?</>}
+            action={
+              <Button variant="contained" color="warning" onClick={() => onArchiveTask(task._id)}>
+                Arquivar
+              </Button>
+            }
+          />
+
+          <ConfirmDialog
+            open={viewHistory.value}
+            onClose={viewHistory.onFalse}
+            title="Histórico"
+            disablePortal={false}
+            content={
+              <>
+                <Stack direction="column" spacing={1}>
+                  <Typography variant="body2">Histórico de alterações da tarefa</Typography>
+
+                  {task.history?.map((history, index) => (
+                    <Stack key={index} direction="row" spacing={1}>
+                      <Typography variant="body2">{history?.user}</Typography>
+                      <Typography variant="body2">
+                        {dayjs(history?.date).format('DD/MM/YYYY HH:mm')}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </>
+            }
+          />
+        </Drawer>
+      </FormProvider>
+
+      <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} />
+    </>
   )
 }

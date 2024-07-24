@@ -2,20 +2,11 @@
 
 import { mutate } from 'swr'
 
-import { useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import Button from '@mui/material/Button'
-import Drawer, { drawerClasses } from '@mui/material/Drawer'
 import {
-  Alert,
   alpha,
-  Box,
   ButtonBase,
   Chip,
   Dialog,
@@ -30,7 +21,7 @@ import { enqueueSnackbar } from 'notistack'
 
 import { Iconify } from '@/components/iconify'
 
-import { endpoints, userCurrencyStorage, userNamesStorage } from '@/constants/config'
+import { endpoints, userCurrencyStorage } from '@/constants/config'
 
 import { useFieldArray, useForm } from 'react-hook-form'
 
@@ -103,20 +94,22 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
 
   const [priority] = watch(['priority'])
 
-  const handleCreateUser = async (userData: Omit<Notification, '_id'>) => {
-    await axios.post(endpoints.user.createUser, userData).then(() => {
+  const handleCreateUser = async (data: Omit<Notification, '_id'>) => {
+    await axios.post(endpoints.notifications.createNotification, data).then(() => {
       enqueueSnackbar('Notificão criada com sucesso!', {
         variant: 'success',
         preventDuplicate: true,
       })
 
       mutate(endpoints.notifications.getAllNotifications)
+      openAddNotification.onFalse()
     })
   }
 
   return (
     <Dialog
       fullWidth
+      disablePortal
       maxWidth="sm"
       open={openAddNotification.value}
       onClose={openAddNotification.onFalse}
@@ -124,7 +117,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
       <DialogTitle sx={{ pb: 2 }}>Adicionar Notificação</DialogTitle>
 
       <DialogContent>
-        <FormProvider methods={methods} onSubmit={handleSubmit((data) => handleCreateUser(data))}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(handleCreateUser)}>
           <Paper elevation={1} sx={{ py: 1 }}>
             <Stack direction="column" spacing={2}>
               <Stack direction="column" alignItems="left" spacing={1}>
@@ -214,9 +207,23 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
 
               <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
-              <Stack justifyContent="flex-end" spacing={1}>
-                <Button type="submit" variant="contained" color="inherit" disabled={!isDirty}>
-                  Criar
+              <Stack direction="row" spacing={1} justifyContent="flex-end">
+                <Button
+                  variant="soft"
+                  onClick={openAddNotification.onFalse}
+                  startIcon={<Iconify icon="ant-design:close-outlined" />}
+                >
+                  Cancelar
+                </Button>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="inherit"
+                  disabled={!isDirty}
+                  startIcon={<Iconify icon="ant-design:plus-outlined" />}
+                >
+                  Cadastrar
                 </Button>
               </Stack>
             </Stack>
