@@ -133,7 +133,7 @@ export const KanbanView = () => {
                 <Button
                   variant="soft"
                   color="inherit"
-                  onClick={() => !isUnreadNotification && dialogNotifications.onTrue()}
+                  onClick={() => isUnreadNotification && dialogNotifications.onTrue()}
                 >
                   <Badge
                     {...(isUnreadNotification && {
