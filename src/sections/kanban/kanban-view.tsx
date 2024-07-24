@@ -229,7 +229,7 @@ export const KanbanView = () => {
 
       <Dialog
         fullWidth
-        maxWidth="xl"
+        maxWidth="md"
         open={dialogNotifications.value}
         onClose={() => dialogNotifications.onFalse()}
       >

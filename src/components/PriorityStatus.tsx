@@ -18,7 +18,7 @@ export const StyledLabel = styled('span')(({ theme }) => ({
 
 type Props = {
   priority: PriorityValues
-  onChange: (value: PriorityValues) => void
+  onChange?: (value: PriorityValues) => void
 }
 
 export const PriorityStatus = ({ priority, onChange }: Props) => {
@@ -30,7 +30,7 @@ export const PriorityStatus = ({ priority, onChange }: Props) => {
         {priorityValues.map((option) => (
           <ButtonBase
             key={option}
-            onClick={() => onChange(option)}
+            onClick={() => onChange?.(option)}
             sx={{
               p: 1,
               fontSize: 12,

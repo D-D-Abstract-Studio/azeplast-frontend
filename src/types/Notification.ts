@@ -11,4 +11,6 @@ export type Notification = {
     name: string
   }>
   priority: PriorityValues
+  createdAt: string
+  updatedAt: string
 }

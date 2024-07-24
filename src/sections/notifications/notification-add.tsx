@@ -45,6 +45,8 @@ export const StyledLabel = styled('span')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightSemiBold,
 }))
 
+type CreateNotification = Omit<Notification, '_id' | 'createdAt' | 'updatedAt'>
+
 type Props = {
   taskId: string
   openAddNotification: ReturnType<typeof useBoolean>
@@ -76,7 +78,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     reporter: userCurrencyStorage,
   }
 
-  const methods = useForm<Omit<Notification, '_id'>>({
+  const methods = useForm<CreateNotification>({
     defaultValues,
     resolver: yupResolver(CreateNotificationSchema),
   })
@@ -101,7 +103,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
 
   const handleClear = () => reset(defaultValues)
 
-  const handleCreateUser = async (data: Omit<Notification, '_id'>) => {
+  const handleCreateUser = async (data: CreateNotification) => {
     await axios.post(endpoints.notifications.createNotification, data).then(() => {
       enqueueSnackbar('Notificão criada com sucesso!', {
         variant: 'success',
