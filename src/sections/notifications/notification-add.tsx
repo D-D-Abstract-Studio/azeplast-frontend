@@ -105,7 +105,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
 
   const handleCreateUser = async (userData: Omit<Notification, '_id'>) => {
     await axios.post(endpoints.user.createUser, userData).then(() => {
-      enqueueSnackbar('Notificaão criado com sucesso!', {
+      enqueueSnackbar('Notificão criada com sucesso!', {
         variant: 'success',
         preventDuplicate: true,
       })
