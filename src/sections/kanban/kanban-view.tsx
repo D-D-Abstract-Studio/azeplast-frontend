@@ -22,6 +22,7 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
   Paper,
   Typography,
 } from '@mui/material'
@@ -129,7 +130,11 @@ export const KanbanView = () => {
                   {showArchived ? 'Quadros' : 'Arquivados'}
                 </Button>
 
-                <Button variant="soft" color="inherit" onClick={dialogNotifications.onTrue}>
+                <Button
+                  variant="soft"
+                  color="inherit"
+                  onClick={() => !isUnreadNotification && dialogNotifications.onTrue()}
+                >
                   <Badge
                     {...(isUnreadNotification && {
                       badgeContent: <Iconify icon="codicon:circle-filled" color="warning.main" />,
@@ -228,10 +233,16 @@ export const KanbanView = () => {
         open={dialogNotifications.value}
         onClose={() => dialogNotifications.onFalse()}
       >
-        <DialogTitle sx={{ pb: 2 }}>Notificações</DialogTitle>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <DialogTitle>Notificações</DialogTitle>
+
+          <IconButton onClick={dialogNotifications.onFalse} sx={{ mx: 2 }}>
+            <Iconify icon="mdi:close" />
+          </IconButton>
+        </Stack>
 
         <DialogContent sx={{ typography: 'body2' }}>
-          <Notifications />
+          <Notifications notifications={notifications} />
         </DialogContent>
       </Dialog>
     </Container>
