@@ -23,6 +23,7 @@ import {
   ButtonBase,
   ButtonGroup,
   Chip,
+  Divider,
   TextField,
   Typography,
   useTheme,
@@ -223,13 +224,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         </Stack>
 
         <Stack direction="column" justifyContent="space-between" height="100%">
-          <Stack
-            spacing={3}
-            sx={{
-              pb: 1,
-              px: 2,
-            }}
-          >
+          <Stack spacing={3} sx={{ p: 2 }}>
             <Stack direction="column" alignItems="left" spacing={1}>
               <StyledLabel>Criado por</StyledLabel>
 
@@ -388,6 +383,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             <RHFTextField fullWidth multiline name="description" label="Descrição" />
 
             <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
+
+            <Divider />
 
             <ButtonGroup fullWidth>
               <Button
