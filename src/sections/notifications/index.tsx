@@ -4,6 +4,7 @@ import { endpoints } from '@/constants/config'
 import { useRequest } from '@/hooks/use-request'
 import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
+import { User } from '@/types/user'
 import { axios } from '@/utils/axios'
 import { Button, Chip, Divider, Paper, Stack, styled, Typography } from '@mui/material'
 
@@ -24,6 +25,10 @@ type Props = {
 export const Notifications = ({ notifications }: Props) => {
   const { data: tasks } = useRequest<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
+  })
+
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
   })
 
   const handleMarkAsRead = (notification: Notification) =>
@@ -71,17 +76,21 @@ export const Notifications = ({ notifications }: Props) => {
                   <StyledLabel>Responsáveis</StyledLabel>
 
                   <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                    {notification.assignee?.map((notification, index) => (
-                      <Chip
-                        key={index}
-                        label={notification.userId}
-                        variant="soft"
-                        sx={{
-                          color: 'text.primary',
-                          borderRadius: 1,
-                        }}
-                      />
-                    ))}
+                    {notification.assignee?.map((notification, index) => {
+                      const user = users?.find((user) => user._id === notification.userId)
+
+                      return (
+                        <Chip
+                          key={index}
+                          label={user?.name}
+                          variant="soft"
+                          sx={{
+                            color: 'text.primary',
+                            borderRadius: 1,
+                          }}
+                        />
+                      )
+                    })}
                   </Stack>
                 </Stack>
 
