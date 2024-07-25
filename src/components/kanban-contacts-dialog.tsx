@@ -22,9 +22,10 @@ type Props = {
   onRemove: (index: number) => void
   onAppend: (value: { name: string }) => void
   assigneeValues:
-    | {
-        name?: string
-      }[]
+    | Array<{
+        _id: string
+        userId: string
+      }>
     | undefined
 }
 

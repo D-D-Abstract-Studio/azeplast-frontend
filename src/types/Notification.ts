@@ -4,7 +4,7 @@ export type Notification = {
   _id: string
   title: string
   description: string
-  reporter: string
+  userId: string
   view: boolean
   taskId: string
   assignee?: Array<{

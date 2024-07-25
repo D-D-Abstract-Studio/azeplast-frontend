@@ -55,10 +55,10 @@ type Props = {
 export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
   const viewContacts = useBoolean()
 
-  const CreateNotificationSchema = Yup.object().shape({
+  const CreateNotificationSchema = Yup.object<CreateNotification>().shape({
     title: Yup.string().required(),
     description: Yup.string().required(),
-    reporter: Yup.string().required(),
+    userId: Yup.string().required(),
     view: Yup.boolean().required(),
     taskId: Yup.string().required(),
     assignee: Yup.array().of(
@@ -75,12 +75,12 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     description: '',
     view: false,
     priority: priorityValues[0],
-    reporter: userCurrencyStorage,
+    userId: userCurrencyStorage,
   }
 
   const methods = useForm<CreateNotification>({
     defaultValues,
-    resolver: yupResolver(CreateNotificationSchema),
+    resolver: yupResolver<CreateNotification>(CreateNotificationSchema),
   })
 
   const {

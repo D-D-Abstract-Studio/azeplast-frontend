@@ -1,5 +1,7 @@
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
+import { useEffect } from 'react'
+
 import ThemeProvider from './theme'
 
 import ProgressBar from './components/progress-bar'
@@ -29,6 +31,12 @@ export const App = () => {
   })
 
   const isPermissionAdmin = user?.permissions === 'admin'
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('userId', user._id)
+    }
+  }, [user])
 
   return (
     <ThemeProvider

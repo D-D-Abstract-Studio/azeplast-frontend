@@ -227,10 +227,10 @@ export const ArchivedList = () => {
               <Stack direction="column" alignItems="left" spacing={1}>
                 <StyledLabel>Criado por</StyledLabel>
 
-                <Avatar alt={task?.reporter} color="secondary">
-                  <Tooltip title={task?.reporter}>
+                <Avatar alt={task?.userId} color="secondary">
+                  <Tooltip title={task?.userId}>
                     <Typography variant="button">
-                      {task?.reporter.slice(0, 3).toUpperCase()}
+                      {task?.userId.slice(0, 3).toUpperCase()}
                     </Typography>
                   </Tooltip>
                 </Avatar>
@@ -249,7 +249,7 @@ export const ArchivedList = () => {
                   {task?.assignee.map((user, index) => (
                     <Avatar key={index} alt={user.name} color={COLORS[index]}>
                       <Typography variant="button">
-                        {task?.reporter.slice(0, 3).toUpperCase()}
+                        {task?.userId.slice(0, 3).toUpperCase()}
                       </Typography>
                     </Avatar>
                   ))}

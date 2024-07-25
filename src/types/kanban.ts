@@ -8,14 +8,16 @@ export type IKanbanTask = {
   categories?: string[]
   description: string
   history?: Array<{
-    user: string
-    date: Date
+    _id: string
+    userId: string
+    date: string
   }>
-  assignee: Array<{
-    name?: string
+  assignee?: Array<{
+    _id: string
+    userId: string
   }>
   dueDate: Date
-  reporter: string
+  userId: string
   files?: File[]
 }
 

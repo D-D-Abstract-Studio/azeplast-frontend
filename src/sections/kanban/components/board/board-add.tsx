@@ -60,6 +60,7 @@ export const KanbanBoardAdd = () => {
       {openAddBoard.value ? (
         <ClickAwayListener onClickAway={handleCreateBoard}>
           <TextField
+            autoFocus
             size="small"
             placeholder="Novo Quadro"
             value={boardName}
