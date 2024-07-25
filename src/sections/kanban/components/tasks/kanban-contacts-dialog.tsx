@@ -80,8 +80,6 @@ export const KanbanContactsDialog = ({
               {dataFiltered?.map((contact, index) => {
                 const checked = assigneeValues?.map((person) => person.userId).includes(contact._id)
 
-                console.log(assigneeValues)
-
                 return (
                   <Stack
                     key={index}
