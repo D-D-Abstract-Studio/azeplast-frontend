@@ -17,7 +17,7 @@ export default function MultiFilePreview({ files, onRemove, sx }: Omit<UploadPro
         const { key, name } = fileData(file)
 
         return (
-          <Tooltip title={name} arrow placement="bottom">
+          <Tooltip title={name} arrow placement="bottom" key={key}>
             <Stack
               key={key}
               component={m.div}

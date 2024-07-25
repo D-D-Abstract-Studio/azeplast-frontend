@@ -90,6 +90,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     url: endpoints.user.getUserById(task.userId),
   })
 
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+
   const { data: notifications } = useRequest<Array<Notification>>({
     url: endpoints.notifications.getAllNotifications,
   })
@@ -113,14 +117,12 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).optional(),
     description: Yup.string().required(),
-    assignee: Yup.array()
-      .of(
-        Yup.object({
-          _id: Yup.string().required(),
-          userId: Yup.string().required(),
-        })
-      )
-      .required(),
+    assignee: Yup.array().of(
+      Yup.object({
+        _id: Yup.string().required(),
+        userId: Yup.string().required(),
+      })
+    ),
     dueDate: Yup.date().required(),
     userId: Yup.string().required(),
   })
@@ -130,7 +132,15 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     resolver: yupResolver<IKanbanTask>(UpdateUserSchema),
   })
 
-  const { handleSubmit, setValue, watch, control } = methods
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    control,
+    formState: { errors },
+  } = methods
+
+  console.log(errors)
 
   const assignee = useFieldArray({
     control,
@@ -478,9 +488,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                   <Typography variant="body2">Histórico de alterações da tarefa</Typography>
 
                   {task.history?.map((history, index) => {
-                    const { data: user } = useRequest<User>({
-                      url: endpoints.user.getUserById(history.userId),
-                    })
+                    const user = users?.find((user) => user._id === history.userId)
 
                     return (
                       <Stack key={index} direction="row" spacing={1}>
