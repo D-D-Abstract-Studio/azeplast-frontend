@@ -78,7 +78,10 @@ export const KanbanView = () => {
 
   const isUserValid = userCurrencyStorage !== 'anonymous'
 
-  const isUnreadNotification = notifications?.some((notification) => !notification.view)
+  const isUnreadNotification = notifications?.some(
+    (notification) =>
+      !notification.view && !notification.assignee?.some((id) => id.userId === user?._id)
+  )
 
   useEffect(() => {
     if (boards?.length && !selectedBoard) {
