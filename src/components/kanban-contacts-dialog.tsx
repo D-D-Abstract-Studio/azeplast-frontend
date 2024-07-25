@@ -43,22 +43,17 @@ export const KanbanContactsDialog = ({
     url: endpoints.user.getAllUsers,
   })
 
-  const userNames = users?.map((user) => user.name) || []
-
   const handleSearchContacts = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchContact(event.target.value)
 
-  const dataFiltered = applyFilter({
-    inputData: userNames,
-    query: searchContact,
-  })
+  const dataFiltered = users?.filter((user) => user.name.includes(searchContact))
 
-  const notFound = !dataFiltered.length && !!searchContact
+  const notFound = !dataFiltered?.length && !!searchContact
 
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 1 }}>
-        Usuários <Typography component="span">({userNames.length})</Typography>
+        Usuários <Typography component="span">({dataFiltered?.length})</Typography>
       </DialogTitle>
 
       <DialogContent>
@@ -82,8 +77,10 @@ export const KanbanContactsDialog = ({
                 height: ITEM_HEIGHT * 6,
               }}
             >
-              {dataFiltered.map((contact, index) => {
-                const checked = assigneeValues?.map((person) => person.userId).includes(contact)
+              {dataFiltered?.map((contact, index) => {
+                const checked = assigneeValues?.map((person) => person.userId).includes(contact._id)
+
+                console.log(assigneeValues)
 
                 return (
                   <Stack
@@ -101,12 +98,13 @@ export const KanbanContactsDialog = ({
                     }}
                   >
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      <Avatar alt={contact} color="secondary">
+                      <Avatar alt={contact.name} color="secondary">
                         <Typography variant="button">
-                          {contact.slice(0, 3).toUpperCase()}
+                          {contact.name.slice(0, 3).toUpperCase()}
                         </Typography>
                       </Avatar>
-                      {contact}
+
+                      {contact.name}
                     </Stack>
 
                     {checked ? (
@@ -124,7 +122,7 @@ export const KanbanContactsDialog = ({
                         color="primary"
                         variant="soft"
                         size="small"
-                        onClick={() => onAppend({ userId: contact })}
+                        onClick={() => onAppend({ userId: contact._id })}
                         startIcon={<Iconify icon="eva:person-add-fill" />}
                       >
                         Atribuir
@@ -139,14 +137,4 @@ export const KanbanContactsDialog = ({
       </DialogContent>
     </Dialog>
   )
-}
-
-function applyFilter({ inputData, query }: { inputData: Array<string>; query: string }) {
-  if (query) {
-    inputData = inputData.filter(
-      (contact) => contact.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    )
-  }
-
-  return inputData
 }

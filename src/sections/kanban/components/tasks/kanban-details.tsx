@@ -16,7 +16,6 @@ import { useBoolean } from '@/hooks/use-boolean'
 import { Iconify } from '@/components/iconify'
 
 import KanbanInputName from '../kanban-input-name'
-import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
 
 import {
   Autocomplete,
@@ -48,15 +47,20 @@ import { categoriesStorage, endpoints, userCurrencyStorage } from '@/constants/c
 import { PriorityValues, priorityValues } from '@/shared/priorityValues'
 import { mutate } from 'swr'
 import { isEqual } from 'lodash'
-import { RHFTextField } from '@/components/hook-form'
 import dayjs from 'dayjs'
+
+import { RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/rhf-upload'
+import { PriorityStatus } from '@/components/PriorityStatus'
+
 import { useRequest } from '@/hooks/use-request'
 import { NotificationAdd } from '@/sections/notifications/notification-add'
 
+import { Responsible } from './Responsible'
+
 import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
-import { PriorityStatus } from '@/components/PriorityStatus'
+
 import { User } from '@/types/user'
 
 const StyledLabel = styled('span')(({ theme }) => ({
@@ -287,7 +291,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               </Stack>
 
               <Responsible
-                assignee={task.assignee}
+                assignee={values.assignee}
                 onAppend={assignee.append}
                 onRemove={assignee.remove}
               />
@@ -497,63 +501,5 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
       <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} />
     </>
-  )
-}
-
-const Responsible = ({
-  assignee,
-  onAppend,
-  onRemove,
-}: {
-  assignee:
-    | {
-        _id: string
-        userId: string
-      }[]
-    | undefined
-  onAppend: (value: any) => void
-  onRemove: (index: number) => void
-}) => {
-  const viewContacts = useBoolean()
-
-  return (
-    <Stack direction="column" alignItems="left" spacing={1}>
-      <StyledLabel>Responsáveis</StyledLabel>
-
-      <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-        {assignee?.map((task, index) => (
-          <Chip
-            key={index}
-            label={task.userId}
-            variant="soft"
-            onDelete={() => onRemove(index)}
-            sx={{
-              color: 'text.primary',
-              borderRadius: 1,
-            }}
-          />
-        ))}
-
-        <Tooltip title="Adicionar responsável" arrow>
-          <IconButton
-            onClick={() => viewContacts.onTrue()}
-            sx={{
-              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-              border: (theme) => `dashed 1px ${theme.palette.divider}`,
-            }}
-          >
-            <Iconify icon="mingcute:add-line" />
-          </IconButton>
-        </Tooltip>
-
-        <KanbanContactsDialog
-          onRemove={onRemove}
-          onAppend={onAppend}
-          assigneeValues={assignee}
-          open={viewContacts.value}
-          onClose={viewContacts.onFalse}
-        />
-      </Stack>
-    </Stack>
   )
 }

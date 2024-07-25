@@ -98,9 +98,9 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
                   }}
                 >
                   {task?.assignee?.map((user, index) => (
-                    <Avatar alt={user.name} key={index} color={COLORS[index]}>
+                    <Avatar alt={user.userId} key={index} color={COLORS[index]}>
                       <Typography variant="button" sx={{ fontSize: 11 }}>
-                        {user?.name?.slice(0, 3).toUpperCase()}
+                        {user?.userId?.slice(0, 3).toUpperCase()}
                       </Typography>
                     </Avatar>
                   ))}

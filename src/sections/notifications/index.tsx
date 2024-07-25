@@ -74,7 +74,7 @@ export const Notifications = ({ notifications }: Props) => {
                     {notification.assignee?.map((notification, index) => (
                       <Chip
                         key={index}
-                        label={notification.name}
+                        label={notification.userId}
                         variant="soft"
                         sx={{
                           color: 'text.primary',
