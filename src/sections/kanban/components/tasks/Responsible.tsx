@@ -25,7 +25,7 @@ type Props = {
       }[]
     | undefined
   onAppend: (value: any) => void
-  onRemove: (index: number) => void
+  onRemove: (index: any) => void
 }
 
 export const Responsible = ({ assignee, onAppend, onRemove }: Props) => {
@@ -45,7 +45,7 @@ export const Responsible = ({ assignee, onAppend, onRemove }: Props) => {
             key={index}
             label={users?.find((user) => user._id === task.userId)?.name}
             variant="soft"
-            onDelete={() => onRemove(index)}
+            onDelete={() => onRemove(task.userId)}
             sx={{
               color: 'text.primary',
               borderRadius: 1,

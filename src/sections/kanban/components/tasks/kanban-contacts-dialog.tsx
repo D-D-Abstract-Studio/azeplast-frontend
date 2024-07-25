@@ -21,7 +21,7 @@ const ITEM_HEIGHT = 64
 type Props = {
   open: boolean
   onClose: VoidFunction
-  onRemove: (index: number) => void
+  onRemove: (index: string) => void
   onAppend: (value: { userId: string }) => void
   assigneeValues:
     | Array<{
@@ -110,7 +110,7 @@ export const KanbanContactsDialog = ({
                         color="error"
                         variant="soft"
                         size="small"
-                        onClick={() => onRemove(index)}
+                        onClick={() => onRemove(contact._id)}
                         startIcon={<Iconify icon="eva:person-remove-fill" />}
                       >
                         Remover
