@@ -76,6 +76,8 @@ type Props = {
   onCloseDetails: VoidFunction
 }
 
+type AddTask = Omit<IKanbanTask, 'history'>
+
 export default function KanbanDetails({ task, openDetails, onCloseDetails }: Props) {
   const theme = useTheme()
 
@@ -100,19 +102,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const [taskName, setTaskName] = useState(task.name)
 
-  const UpdateUserSchema = Yup.object<IKanbanTask>().shape({
+  const UpdateUserSchema = Yup.object<AddTask>().shape({
     _id: Yup.string().required(),
     name: Yup.string().required(),
     files: Yup.mixed<Array<File>>().optional(),
-    history: Yup.array()
-      .of(
-        Yup.object({
-          _id: Yup.string().required(),
-          userId: Yup.string().required(),
-          date: Yup.string().required(),
-        })
-      )
-      .optional(),
     archived: Yup.boolean().required(),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).optional(),
@@ -129,9 +122,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     userId: Yup.string().required(),
   })
 
-  const methods = useForm<IKanbanTask>({
+  const methods = useForm<AddTask>({
     defaultValues: task,
-    resolver: yupResolver<IKanbanTask>(UpdateUserSchema),
+    resolver: yupResolver<AddTask>(UpdateUserSchema),
   })
 
   const {
@@ -155,7 +148,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const isDirtyTask = isEqual(task, values)
 
-  const onUpdateTask = async (task: IKanbanTask) =>
+  const onUpdateTask = async (task: AddTask) =>
     await axios
       .put(endpoints.tasks.updateTask(task._id), {
         ...task,
@@ -195,7 +188,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       mutate(endpoints.tasks.getAllTasks)
     })
 
-  const handleSubmitForm = async (data: IKanbanTask) => {
+  const handleSubmitForm = async (data: AddTask) => {
     await axios.put(endpoints.tasks.updateTask(data._id), data).then(() => {
       enqueueSnackbar('Tarefa atualizada com sucesso')
 
