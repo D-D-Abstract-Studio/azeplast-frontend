@@ -132,7 +132,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     await axios
       .put(endpoints.tasks.updateTask(task._id), {
         ...task,
-        user: userCurrencyStorage,
+        userName: userCurrencyStorage,
       })
       .then(() => {
         enqueueSnackbar('Tarefa atualizada com sucesso')

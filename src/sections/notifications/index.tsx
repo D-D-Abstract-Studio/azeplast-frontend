@@ -4,25 +4,18 @@ import { endpoints } from '@/constants/config'
 import { useRequest } from '@/hooks/use-request'
 import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
-import { Divider, Paper, Stack, Typography } from '@mui/material'
-import dayjs from 'dayjs'
+import { axios } from '@/utils/axios'
+import { Button, Chip, Divider, Paper, Stack, styled, Typography } from '@mui/material'
 
-/*
-export type Notification = {
-  _id: string
-  title: string
-  description: string
-  reporter: string
-  view: boolean
-  taskId: string
-  assignee: Array<{
-    name?: string
-  }>
-  priority: string
-  createdAt: string
-  updatedAt: string
-}
-*/
+import dayjs from 'dayjs'
+import { mutate } from 'swr'
+
+export const StyledLabel = styled('span')(({ theme }) => ({
+  ...theme.typography.caption,
+  flexShrink: 0,
+  color: theme.palette.text.secondary,
+  fontWeight: theme.typography.fontWeightSemiBold,
+}))
 
 type Props = {
   notifications: Array<Notification> | undefined
@@ -32,6 +25,14 @@ export const Notifications = ({ notifications }: Props) => {
   const { data: tasks } = useRequest<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
   })
+
+  const handleMarkAsRead = (notification: Notification) =>
+    axios
+      .put(endpoints.notifications.deleteNotification(notification._id), {
+        ...notification,
+        view: true,
+      })
+      .then(() => mutate(endpoints.notifications.getAllNotifications))
 
   return tasks
     ?.filter((task) => notifications?.some((notification) => notification.taskId === task._id))
@@ -66,9 +67,48 @@ export const Notifications = ({ notifications }: Props) => {
 
                 <Typography variant="body2">{notification.description}</Typography>
 
+                <Stack direction="column" alignItems="left" spacing={1}>
+                  <StyledLabel>Responsáveis</StyledLabel>
+
+                  <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                    {notification.assignee?.map((notification, index) => (
+                      <Chip
+                        key={index}
+                        label={notification.name}
+                        variant="soft"
+                        sx={{
+                          color: 'text.primary',
+                          borderRadius: 1,
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+
                 <Divider />
 
                 <PriorityStatus priority={notification.priority} />
+
+                <Stack alignItems="flex-end" spacing={1}>
+                  {notification.view ? (
+                    <Button
+                      variant="soft"
+                      color="success"
+                      startIcon={<Iconify icon="charm:tick-double" />}
+                    >
+                      Já Lido
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => handleMarkAsRead(notification)}
+                      startIcon={<Iconify icon="charm:tick-double" />}
+                    >
+                      Marcar como Lido
+                    </Button>
+                  )}
+                </Stack>
               </Stack>
             </Paper>
           ))}

@@ -8,7 +8,7 @@ export const categoriesStorage: Array<string> = JSON.parse(
 
 export const userNamesStorage: Array<string> = JSON.parse(localStorage.getItem('userNames') || '[]')
 
-const urlEndpointsParams = new URLSearchParams({ user: userCurrencyStorage }).toString()
+const urlEndpointsParams = new URLSearchParams({ userName: userCurrencyStorage }).toString()
 
 export const endpoints = {
   uploads: {
@@ -19,19 +19,19 @@ export const endpoints = {
     getAllUsers: '/users',
     createUser: '/users',
     getUser: `/users/${userCurrencyStorage}`,
-    updateUser: (id: Id) => `/users/${id}`,
+    updateUser: (id: Id) => `/users/${id}?${urlEndpointsParams}`,
     deleteUser: (id: Id) => `/users/${id}`,
   },
   boards: {
     getAllBoards: `/boards?${urlEndpointsParams}`,
     createBoard: '/boards',
-    updateBoard: (id: Id) => `/boards/${id}`,
+    updateBoard: (id: Id) => `/boards/${id}?${urlEndpointsParams}`,
     deleteBoard: (id: Id) => `/boards/${id}`,
   },
   columns: {
     getAllColumns: '/columns',
     createColumn: '/columns',
-    updateColumn: (id: Id) => `/columns/${id}`,
+    updateColumn: (id: Id) => `/columns/${id}?${urlEndpointsParams}`,
     deleteColumn: (id: Id) => `/columns/${id}`,
   },
   tasks: {
@@ -45,6 +45,7 @@ export const endpoints = {
   notifications: {
     getAllNotifications: '/notifications',
     createNotification: '/notifications',
+    updateNotification: (id: Id) => `/notifications/${id}?${urlEndpointsParams}`,
     deleteNotification: (id: Id) => `/notifications/${id}`,
   },
 }
