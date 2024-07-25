@@ -7,9 +7,7 @@ export type Notification = {
   userId: string
   view: boolean
   taskId: string
-  assignee?: Array<{
-    name: string
-  }>
+  assignee?: Array<{ userId: string }>
   priority: PriorityValues
   createdAt: string
   updatedAt: string

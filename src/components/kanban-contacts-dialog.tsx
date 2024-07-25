@@ -9,10 +9,12 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import { Stack } from '@mui/material'
 
-import { userNamesStorage } from '@/constants/config'
+import { endpoints } from '@/constants/config'
 
 import { Iconify } from '@/components/iconify'
 import SearchNotFound from '@/components/search-not-found'
+import { User } from '@/types/user'
+import { useRequest } from '@/hooks/use-request'
 
 const ITEM_HEIGHT = 64
 
@@ -20,10 +22,9 @@ type Props = {
   open: boolean
   onClose: VoidFunction
   onRemove: (index: number) => void
-  onAppend: (value: { name: string }) => void
+  onAppend: (value: { userId: string }) => void
   assigneeValues:
     | Array<{
-        _id: string
         userId: string
       }>
     | undefined
@@ -38,11 +39,17 @@ export const KanbanContactsDialog = ({
 }: Props) => {
   const [searchContact, setSearchContact] = useState('')
 
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+
+  const userNames = users?.map((user) => user.name) || []
+
   const handleSearchContacts = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchContact(event.target.value)
 
   const dataFiltered = applyFilter({
-    inputData: userNamesStorage,
+    inputData: userNames,
     query: searchContact,
   })
 
@@ -51,7 +58,7 @@ export const KanbanContactsDialog = ({
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 1 }}>
-        Usuários <Typography component="span">({userNamesStorage.length})</Typography>
+        Usuários <Typography component="span">({userNames.length})</Typography>
       </DialogTitle>
 
       <DialogContent>
@@ -76,7 +83,7 @@ export const KanbanContactsDialog = ({
               }}
             >
               {dataFiltered.map((contact, index) => {
-                const checked = assigneeValues?.map((person) => person.name).includes(contact)
+                const checked = assigneeValues?.map((person) => person.userId).includes(contact)
 
                 return (
                   <Stack
@@ -117,7 +124,7 @@ export const KanbanContactsDialog = ({
                         color="primary"
                         variant="soft"
                         size="small"
-                        onClick={() => onAppend({ name: contact })}
+                        onClick={() => onAppend({ userId: contact })}
                         startIcon={<Iconify icon="eva:person-add-fill" />}
                       >
                         Atribuir

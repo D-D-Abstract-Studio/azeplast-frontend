@@ -63,7 +63,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     taskId: Yup.string().required(),
     assignee: Yup.array().of(
       Yup.object().shape({
-        name: Yup.string().required(),
+        userId: Yup.string().required(),
       })
     ),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
@@ -136,7 +136,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
                   {values?.assignee?.map((task, index) => (
                     <Chip
                       key={index}
-                      label={task.name}
+                      label={task.userId}
                       variant="soft"
                       onDelete={() => assignee.remove(index)}
                       sx={{

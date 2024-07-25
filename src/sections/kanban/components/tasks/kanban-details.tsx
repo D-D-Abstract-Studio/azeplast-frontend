@@ -82,6 +82,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const viewHistory = useBoolean()
 
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUserById(task.userId),
+  })
+
   const { data: notifications } = useRequest<Array<Notification>>({
     url: endpoints.notifications.getAllNotifications,
   })
@@ -275,11 +279,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               <Stack direction="column" alignItems="left" spacing={1}>
                 <StyledLabel>Criado por</StyledLabel>
 
-                <Avatar alt={task.userId} color="secondary">
-                  <Tooltip title={task.userId}>
-                    <Typography variant="button">
-                      {task.userId.slice(0, 3).toUpperCase()}
-                    </Typography>
+                <Avatar alt={user?.name} color="secondary">
+                  <Tooltip title={user?.name}>
+                    <Typography variant="button">{user?.name.slice(0, 3).toUpperCase()}</Typography>
                   </Tooltip>
                 </Avatar>
               </Stack>

@@ -41,6 +41,7 @@ import { ConfirmDialog } from '@/components/custom-dialog'
 import { DatePicker } from '@mui/x-date-pickers'
 import { CopyClipboard } from '@/components/CopyClipboard'
 import { priorityValues } from '@/shared/priorityValues'
+import { User } from '@/types/user'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -54,6 +55,11 @@ export const ArchivedList = () => {
   const openDetails = useBoolean()
 
   const [task, setTask] = useState<IKanbanTask>()
+
+  const { data: user } = useRequest<User>({
+    url: endpoints.user.getUserById(task?.userId || ''),
+    stopRequest: !task?.userId,
+  })
 
   const { data: columns } = useRequest<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
@@ -227,11 +233,9 @@ export const ArchivedList = () => {
               <Stack direction="column" alignItems="left" spacing={1}>
                 <StyledLabel>Criado por</StyledLabel>
 
-                <Avatar alt={task?.userId} color="secondary">
-                  <Tooltip title={task?.userId}>
-                    <Typography variant="button">
-                      {task?.userId.slice(0, 3).toUpperCase()}
-                    </Typography>
+                <Avatar alt={user?.name} color="secondary">
+                  <Tooltip title={user?.name}>
+                    <Typography variant="button">{user?.name.slice(0, 3).toUpperCase()}</Typography>
                   </Tooltip>
                 </Avatar>
               </Stack>
@@ -246,13 +250,19 @@ export const ArchivedList = () => {
                 )}
 
                 <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                  {task?.assignee.map((user, index) => (
-                    <Avatar key={index} alt={user.name} color={COLORS[index]}>
-                      <Typography variant="button">
-                        {task?.userId.slice(0, 3).toUpperCase()}
-                      </Typography>
-                    </Avatar>
-                  ))}
+                  {task?.assignee?.map(({ userId }, index) => {
+                    const { data: user } = useRequest<User>({
+                      url: endpoints.user.getUserById(userId),
+                    })
+
+                    return (
+                      <Avatar key={index} alt={user?.name} color={COLORS[index]}>
+                        <Typography variant="button">
+                          {user?.name.slice(0, 3).toUpperCase()}
+                        </Typography>
+                      </Avatar>
+                    )
+                  })}
                 </Stack>
               </Stack>
 
