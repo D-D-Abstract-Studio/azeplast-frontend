@@ -30,7 +30,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
       description: '...',
       assignee: [],
       dueDate: new Date(),
-      reporter: userCurrencyStorage,
+      userId: userCurrencyStorage,
     })
 
     await axios.put(endpoints.columns.updateColumn(column.id), {

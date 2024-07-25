@@ -114,7 +114,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       )
       .required(),
     dueDate: Yup.date().required(),
-    reporter: Yup.string().required(),
+    userId: Yup.string().required(),
   })
 
   const methods = useForm<IKanbanTask>({
