@@ -137,7 +137,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const { priority } = watch()
   const values = watch()
 
-  const isPermissionDeleteNotification = user?.permissions === 'admin'
+  const isPermissionDeleteNotification = user?.permissions === 'admin' || task.userId === user?._id
 
   const isDirtyTask = isEqual(task, values)
 
