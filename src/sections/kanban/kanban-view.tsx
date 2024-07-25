@@ -80,7 +80,8 @@ export const KanbanView = () => {
 
   const isUnreadNotification = notifications?.some(
     (notification) =>
-      !notification.view && !notification.assignee?.some((id) => id.userId === user?._id)
+      !notification.view &&
+      (!notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin)
   )
 
   useEffect(() => {
@@ -245,7 +246,12 @@ export const KanbanView = () => {
         </Stack>
 
         <DialogContent sx={{ typography: 'body2' }}>
-          <Notifications notifications={notifications} />
+          <Notifications
+            notifications={notifications?.filter(
+              (notification) =>
+                !notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin
+            )}
+          />
         </DialogContent>
       </Dialog>
     </Container>

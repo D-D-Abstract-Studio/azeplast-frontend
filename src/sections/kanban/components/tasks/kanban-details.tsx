@@ -127,15 +127,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     resolver: yupResolver<AddTask>(UpdateUserSchema),
   })
 
-  const {
-    handleSubmit,
-    setValue,
-    watch,
-    control,
-    formState: { errors },
-  } = methods
-
-  console.log(errors)
+  const { handleSubmit, setValue, watch, control } = methods
 
   const assignee = useFieldArray({
     control,
@@ -143,8 +135,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   })
 
   const { priority } = watch()
-
   const values = watch()
+
+  const isPermissionDeleteNotification = user?.permissions === 'admin'
 
   const isDirtyTask = isEqual(task, values)
 
@@ -179,6 +172,13 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
       onCloseDetails()
       mutate(endpoints.tasks.getAllTasks)
+    })
+
+  const onDeleteNotification = async (notificationId: string) =>
+    await axios.delete(endpoints.notifications.deleteNotification(notificationId)).then(() => {
+      enqueueSnackbar('Notificação deletada com sucesso')
+
+      mutate(endpoints.notifications.getAllNotifications)
     })
 
   const onUpdateFiles = async (files: Array<File>) =>
@@ -270,6 +270,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                         .map((notification) => (
                           <Chip
                             key={notification._id}
+                            {...(isPermissionDeleteNotification && {
+                              onDelete: () => onDeleteNotification(notification._id),
+                            })}
                             label={notification.title}
                             variant="soft"
                             sx={{
