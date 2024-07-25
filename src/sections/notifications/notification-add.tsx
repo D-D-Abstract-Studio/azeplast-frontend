@@ -1,17 +1,13 @@
 'use client'
 
 import {
-  alpha,
   ButtonGroup,
-  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
   Paper,
   styled,
-  Tooltip,
   Stack,
-  IconButton,
   Button,
 } from '@mui/material'
 
@@ -33,9 +29,11 @@ import { useBoolean } from '@/hooks/use-boolean'
 import FormProvider, { RHFTextField } from '@/components/hook-form'
 
 import { priorityValues, PriorityValues } from '@/shared/priorityValues'
-import { Notification } from '@/types/Notification'
-import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
+
 import { PriorityStatus } from '@/components/PriorityStatus'
+import { Responsible } from '@/sections/kanban/components/tasks/Responsible'
+
+import { Notification } from '@/types/Notification'
 
 export const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -53,8 +51,6 @@ type Props = {
 }
 
 export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
-  const viewContacts = useBoolean()
-
   const CreateNotificationSchema = Yup.object<CreateNotification>().shape({
     title: Yup.string().required(),
     description: Yup.string().required(),
@@ -129,44 +125,11 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
         <FormProvider methods={methods} onSubmit={handleSubmit(handleCreateUser)}>
           <Paper elevation={1} sx={{ py: 1 }}>
             <Stack direction="column" spacing={2}>
-              <Stack direction="column" alignItems="left" spacing={1}>
-                <StyledLabel>Responsáveis</StyledLabel>
-
-                <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                  {values?.assignee?.map((task, index) => (
-                    <Chip
-                      key={index}
-                      label={task.userId}
-                      variant="soft"
-                      onDelete={() => assignee.remove(index)}
-                      sx={{
-                        color: 'text.primary',
-                        borderRadius: 1,
-                      }}
-                    />
-                  ))}
-
-                  <Tooltip title="Adicionar responsável" arrow>
-                    <IconButton
-                      onClick={viewContacts.onTrue}
-                      sx={{
-                        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
-                        border: (theme) => `dashed 1px ${theme.palette.divider}`,
-                      }}
-                    >
-                      <Iconify icon="mingcute:add-line" />
-                    </IconButton>
-                  </Tooltip>
-
-                  <KanbanContactsDialog
-                    onRemove={assignee.remove}
-                    onAppend={assignee.append}
-                    assigneeValues={values.assignee}
-                    open={viewContacts.value}
-                    onClose={viewContacts.onFalse}
-                  />
-                </Stack>
-              </Stack>
+              <Responsible
+                assignee={values.assignee}
+                onAppend={assignee.append}
+                onRemove={assignee.remove}
+              />
 
               <PriorityStatus
                 priority={priority}

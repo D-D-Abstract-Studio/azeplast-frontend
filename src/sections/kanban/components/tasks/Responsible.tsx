@@ -1,18 +1,15 @@
+import { Chip, Stack, Tooltip, IconButton } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
 
-import Stack from '@mui/material/Stack'
-
-import Tooltip from '@mui/material/Tooltip'
-
-import IconButton from '@mui/material/IconButton'
-
 import { useBoolean } from '@/hooks/use-boolean'
+import { useRequest } from '@/hooks/use-request'
 
 import { Iconify } from '@/components/iconify'
+import { KanbanContactsDialog } from './kanban-contacts-dialog'
 
-import { KanbanContactsDialog } from '@/components/kanban-contacts-dialog'
+import { endpoints } from '@/constants/config'
 
-import { Chip } from '@mui/material'
+import { User } from '@/types/user'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -24,7 +21,6 @@ const StyledLabel = styled('span')(({ theme }) => ({
 type Props = {
   assignee:
     | {
-        _id: string
         userId: string
       }[]
     | undefined
@@ -35,6 +31,10 @@ type Props = {
 export const Responsible = ({ assignee, onAppend, onRemove }: Props) => {
   const viewContacts = useBoolean()
 
+  const { data: users } = useRequest<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+
   return (
     <Stack direction="column" alignItems="left" spacing={1}>
       <StyledLabel>Responsáveis</StyledLabel>
@@ -43,7 +43,7 @@ export const Responsible = ({ assignee, onAppend, onRemove }: Props) => {
         {assignee?.map((task, index) => (
           <Chip
             key={index}
-            label={task.userId}
+            label={users?.find((user) => user._id === task.userId)?.name}
             variant="soft"
             onDelete={() => onRemove(index)}
             sx={{
