@@ -106,7 +106,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     files: Yup.mixed<Array<File>>().optional(),
     history: Yup.array()
       .of(
-        Yup.object().shape({
+        Yup.object({
           _id: Yup.string().required(),
           userId: Yup.string().required(),
           date: Yup.string().required(),
@@ -117,12 +117,14 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).optional(),
     description: Yup.string().required(),
-    assignee: Yup.array().of(
-      Yup.object({
-        _id: Yup.string().required(),
-        userId: Yup.string().required(),
-      })
-    ),
+    assignee: Yup.array()
+      .of(
+        Yup.object({
+          _id: Yup.string().required(),
+          userId: Yup.string().required(),
+        })
+      )
+      .optional(),
     dueDate: Yup.date().required(),
     userId: Yup.string().required(),
   })
