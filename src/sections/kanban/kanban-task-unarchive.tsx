@@ -222,84 +222,88 @@ export const ArchivedList = () => {
         ]}
       />
 
-      <ConfirmDialog
-        open={openDetails.value}
-        onClose={openDetails.onFalse}
-        title=""
-        content={
-          <Container>
-            <Stack spacing={3}>
-              <Stack direction="column" alignItems="left" spacing={1}>
-                <StyledLabel>Criado por</StyledLabel>
+      {Boolean(openDetails.value) && (
+        <ConfirmDialog
+          open={openDetails.value}
+          onClose={openDetails.onFalse}
+          title={`Detalhes da tarefa ${task?.name}`}
+          content={
+            <Container>
+              <Stack spacing={3}>
+                <Stack direction="column" alignItems="left" spacing={1}>
+                  <StyledLabel>Criado por</StyledLabel>
 
-                <Avatar alt={user?.name} color="secondary">
-                  <Tooltip title={user?.name}>
-                    <Typography variant="button">{user?.name.slice(0, 3).toUpperCase()}</Typography>
-                  </Tooltip>
-                </Avatar>
-              </Stack>
-
-              <Stack direction="column" alignItems="left" spacing={1}>
-                <StyledLabel>Responsáveis</StyledLabel>
-
-                {Boolean(!task?.categories?.length) && (
-                  <Avatar sx={{ bgcolor: 'background.neutral', color: 'text.primary' }}>
-                    <Typography variant="button">N/A</Typography>
+                  <Avatar alt={user?.name} color="secondary">
+                    <Tooltip title={user?.name}>
+                      <Typography variant="button">
+                        {user?.name.slice(0, 3).toUpperCase()}
+                      </Typography>
+                    </Tooltip>
                   </Avatar>
-                )}
-
-                <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
-                  {task?.assignee?.map(({ userId }, index) => {
-                    const { data: user } = useRequest<User>({
-                      url: endpoints.user.getUserById(userId),
-                    })
-
-                    return (
-                      <Avatar key={index} alt={user?.name} color={COLORS[index]}>
-                        <Typography variant="button">
-                          {user?.name.slice(0, 3).toUpperCase()}
-                        </Typography>
-                      </Avatar>
-                    )
-                  })}
                 </Stack>
+
+                <Stack direction="column" alignItems="left" spacing={1}>
+                  <StyledLabel>Responsáveis</StyledLabel>
+
+                  {Boolean(!task?.categories?.length) && (
+                    <Avatar sx={{ bgcolor: 'background.neutral', color: 'text.primary' }}>
+                      <Typography variant="button">N/A</Typography>
+                    </Avatar>
+                  )}
+
+                  <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+                    {task?.assignee?.map(({ userId }, index) => {
+                      const { data: user } = useRequest<User>({
+                        url: endpoints.user.getUserById(userId),
+                      })
+
+                      return (
+                        <Avatar key={index} alt={user?.name} color={COLORS[index]}>
+                          <Typography variant="button">
+                            {user?.name.slice(0, 3).toUpperCase()}
+                          </Typography>
+                        </Avatar>
+                      )
+                    })}
+                  </Stack>
+                </Stack>
+
+                <DatePicker
+                  disabled
+                  value={task?.dueDate ? new Date(task.dueDate) : new Date()}
+                  label="Data de vencimento"
+                  slotProps={{
+                    actionBar: {
+                      actions: ['today', 'accept'],
+                    },
+                  }}
+                />
+
+                <PriorityStatus priority={task?.priority || 'baixa'} />
+
+                <Stack direction="row" flexWrap="wrap" spacing={1}>
+                  <StyledLabel>Categorias</StyledLabel>
+
+                  {task?.categories?.map((category, index) => (
+                    <Chip key={index} variant="soft" label={category} />
+                  ))}
+
+                  {Boolean(!task?.categories?.length) && (
+                    <Chip variant="soft" label="Sem categoria" />
+                  )}
+                </Stack>
+
+                <CopyClipboard
+                  fullWidth
+                  multiline
+                  label="Descrição"
+                  value={task?.description || ''}
+                />
               </Stack>
-
-              <DatePicker
-                disabled
-                value={task?.dueDate ? new Date(task.dueDate) : new Date()}
-                label="Data de vencimento"
-                slotProps={{
-                  actionBar: {
-                    actions: ['today', 'accept'],
-                  },
-                }}
-              />
-
-              <PriorityStatus priority={task?.priority || 'baixa'} />
-
-              <Stack direction="row" flexWrap="wrap" spacing={1}>
-                <StyledLabel>Categorias</StyledLabel>
-
-                {task?.categories?.map((category, index) => (
-                  <Chip key={index} variant="soft" label={category} />
-                ))}
-
-                {Boolean(!task?.categories?.length) && (
-                  <Chip variant="soft" label="Sem categoria" />
-                )}
-              </Stack>
-
-              <CopyClipboard
-                fullWidth
-                multiline
-                label="Descrição"
-                value={task?.description || ''}
-              />
-            </Stack>
-          </Container>
-        }
-      />
+            </Container>
+          }
+        />
+      )}
     </>
   )
 }
