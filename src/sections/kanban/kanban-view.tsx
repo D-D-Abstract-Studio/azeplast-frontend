@@ -81,7 +81,7 @@ export const KanbanView = () => {
   const isUnreadNotification = notifications?.some(
     (notification) =>
       !notification.view &&
-      (!notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin)
+      (notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin)
   )
 
   useEffect(() => {
@@ -249,7 +249,7 @@ export const KanbanView = () => {
           <Notifications
             notifications={notifications?.filter(
               (notification) =>
-                !notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin
+                notification.assignee?.some((id) => id.userId === user?._id) || isPermissionAdmin
             )}
           />
         </DialogContent>
