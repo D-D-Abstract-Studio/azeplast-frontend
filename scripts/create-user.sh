@@ -14,7 +14,7 @@ declare -A users=(
 for name in "${!users[@]}"; do
   permissions=${users[$name]}
 
-  curl --location 'http://localhost:8000/user' \
+  curl --location 'http://192.168.2.15:8000/user' \
   --header 'Content-Type: application/json' \
   --data "{
     \"name\": \"$name\",
