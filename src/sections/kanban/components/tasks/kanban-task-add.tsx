@@ -10,8 +10,12 @@ import { enqueueSnackbar } from 'notistack'
 
 import { priorityValues } from '@/shared/priorityValues'
 
-import { endpoints, userCurrencyStorage } from '@/constants/config'
+import { endpoints } from '@/constants/config'
+
+import { useRequestSWR } from '@/hooks/use-request'
+
 import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { User } from '@/types/user'
 
 type Props = {
   onCloseAddTask: VoidFunction
@@ -19,6 +23,10 @@ type Props = {
 }
 
 export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
+  const { data: user } = useRequestSWR<User>({
+    url: endpoints.user.getUser,
+  })
+
   const [name, setName] = useState('')
 
   const handleAddTask = async (name: string) => {
@@ -30,7 +38,7 @@ export const KanbanTaskAdd = ({ onCloseAddTask, column }: Props) => {
       description: '...',
       assignee: [],
       dueDate: new Date(),
-      userId: userCurrencyStorage,
+      userId: user?._id,
     })
 
     await axios.put(endpoints.columns.updateColumn(column.id), {
