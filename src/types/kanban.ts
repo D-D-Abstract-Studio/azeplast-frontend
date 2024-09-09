@@ -13,7 +13,7 @@ export type IKanbanTask = {
     date: string
   }>
   assignee?: Array<{
-    _id: string
+    _id?: string
     userId: string
   }>
   dueDate: Date

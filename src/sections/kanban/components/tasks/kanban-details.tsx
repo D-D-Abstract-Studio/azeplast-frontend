@@ -113,7 +113,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     assignee: Yup.array()
       .of(
         Yup.object({
-          _id: Yup.string().required(),
           userId: Yup.string().required(),
         })
       )
