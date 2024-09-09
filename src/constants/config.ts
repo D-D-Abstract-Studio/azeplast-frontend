@@ -51,6 +51,6 @@ export const endpoints = {
   },
 }
 
-export const HOST_API = 'http://localhost:8001'
+export const HOST_API = 'http://192.168.2.15:8000'
 
 export const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const
