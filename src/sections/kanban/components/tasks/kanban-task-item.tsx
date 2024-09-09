@@ -16,9 +16,12 @@ import KanbanDetails from './kanban-details'
 
 import { bgBlur } from '@/theme/css'
 
-import { COLORS } from '@/constants/config'
+import { COLORS, endpoints } from '@/constants/config'
+
+import { useRequestSWR } from '@/hooks/use-request'
 
 import { IKanbanTask } from '@/types/kanban'
+import { User } from '@/types/user'
 
 type Props = PaperProps & {
   index: number
@@ -26,6 +29,10 @@ type Props = PaperProps & {
 }
 
 export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
+  const { data: users } = useRequestSWR<Array<User>>({
+    url: endpoints.user.getAllUsers,
+  })
+
   const theme = useTheme()
 
   const openDetails = useBoolean()
@@ -97,10 +104,13 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
                     },
                   }}
                 >
-                  {task?.assignee?.map((user, index) => (
-                    <Avatar alt={user.userId} key={index} color={COLORS[index]}>
+                  {task?.assignee?.map((assignee, index) => (
+                    <Avatar alt={assignee.userId} key={index} color={COLORS[index]}>
                       <Typography variant="button" sx={{ fontSize: 11 }}>
-                        {user?.userId?.slice(0, 3).toUpperCase()}
+                        {users
+                          ?.find((user) => user._id === assignee.userId)
+                          ?.name.slice(0, 3)
+                          .toUpperCase()}
                       </Typography>
                     </Avatar>
                   ))}
