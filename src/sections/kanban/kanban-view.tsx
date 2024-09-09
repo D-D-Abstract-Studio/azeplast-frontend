@@ -102,8 +102,6 @@ export const KanbanView = () => {
         </Stack>
       )}
 
-      <h1>{String(isPermissionAdmin)}</h1>
-
       {!isLoading && !isUserValid && (
         <Stack p={2}>
           <Alert severity="warning" sx={{ mb: 2 }}>
