@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 import createCache from '@emotion/cache'
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react'

@@ -1,5 +1,3 @@
-'use client'
-
 import { m, MotionProps } from 'framer-motion'
 import { ReactNode } from 'react'
 

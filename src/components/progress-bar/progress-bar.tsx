@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect } from 'react'
 import NProgress from 'nprogress'
 import StyledProgressBar from './styles'

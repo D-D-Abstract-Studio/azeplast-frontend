@@ -1,5 +1,3 @@
-'use client'
-
 import { useRef } from 'react'
 import { SnackbarProvider as NotistackProvider, closeSnackbar } from 'notistack'
 

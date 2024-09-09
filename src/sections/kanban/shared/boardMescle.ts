@@ -1,5 +1,3 @@
-'use client'
-
 import { useMemo } from 'react'
 
 import { IKanban, IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'

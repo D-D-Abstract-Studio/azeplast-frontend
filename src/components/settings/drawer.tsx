@@ -1,5 +1,3 @@
-'use client'
-
 import { mutate } from 'swr'
 
 import { useTheme } from '@mui/material/styles'

@@ -1,5 +1,3 @@
-'use client'
-
 import { m } from 'framer-motion'
 import { forwardRef, ReactNode } from 'react'
 

@@ -1,5 +1,3 @@
-'use client'
-
 import { enqueueSnackbar } from 'notistack'
 
 import { useCopyToClipboard } from 'react-use'

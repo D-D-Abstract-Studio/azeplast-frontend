@@ -1,5 +1,3 @@
-'use client'
-
 import { m, AnimatePresence } from 'framer-motion'
 
 import { DialogProps, Dialog, Box, Paper } from '@mui/material'
