@@ -504,7 +504,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
         </Drawer>
       </FormProvider>
 
-      <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} />
+      {user?._id && (
+        <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} user={user} />
+      )}
     </>
   )
 }

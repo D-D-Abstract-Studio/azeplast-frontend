@@ -16,7 +16,7 @@ import { enqueueSnackbar } from 'notistack'
 
 import { Iconify } from '@/components/iconify'
 
-import { endpoints, userCurrencyStorage } from '@/constants/config'
+import { endpoints } from '@/constants/config'
 
 import { useFieldArray, useForm } from 'react-hook-form'
 
@@ -34,6 +34,7 @@ import { PriorityStatus } from '@/components/PriorityStatus'
 import { Responsible } from '@/sections/kanban/components/tasks/Responsible'
 
 import { Notification } from '@/types/Notification'
+import { User } from '@/types/user'
 
 export const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -46,11 +47,12 @@ export const StyledLabel = styled('span')(({ theme }) => ({
 type CreateNotification = Omit<Notification, '_id' | 'createdAt' | 'updatedAt'>
 
 type Props = {
+  user: User
   taskId: string
   openAddNotification: ReturnType<typeof useBoolean>
 }
 
-export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
+export const NotificationAdd = ({ taskId, user, openAddNotification }: Props) => {
   const CreateNotificationSchema = Yup.object<CreateNotification>().shape({
     title: Yup.string().required(),
     description: Yup.string().required(),
@@ -71,7 +73,7 @@ export const NotificationAdd = ({ taskId, openAddNotification }: Props) => {
     description: '',
     view: false,
     priority: priorityValues[0],
-    userId: userCurrencyStorage,
+    userId: user._id,
   }
 
   const methods = useForm<CreateNotification>({
