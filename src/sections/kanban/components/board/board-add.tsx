@@ -15,13 +15,13 @@ import { endpoints } from '@/constants/config'
 
 import { IKanbanBoard } from '@/types/kanban'
 
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 import { User } from '@/types/user'
 
 export const KanbanBoardAdd = () => {
   const [boardName, setBoardName] = useState('')
 
-  const { data: user } = useRequest<User>({
+  const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUser,
   })
 

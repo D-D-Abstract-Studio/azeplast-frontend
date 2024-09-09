@@ -20,7 +20,7 @@ import { DataGridCustom } from '@/components/data-grid-custom'
 import { MenuPopover } from '@/components/MenuPopover'
 import { Iconify } from '@/components/iconify'
 
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 
 import { COLORS, endpoints } from '@/constants/config'
 
@@ -55,16 +55,16 @@ export const ArchivedList = () => {
 
   const [task, setTask] = useState<IKanbanTask>()
 
-  const { data: user } = useRequest<User>({
+  const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUserById(task?.userId || ''),
     stopRequest: !task?.userId,
   })
 
-  const { data: columns } = useRequest<Array<IKanbanColumn>>({
+  const { data: columns } = useRequestSWR<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
 
-  const { data: tasks } = useRequest<Array<IKanbanTask>>({
+  const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
   })
 
@@ -253,7 +253,7 @@ export const ArchivedList = () => {
 
                   <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
                     {task?.assignee?.map(({ userId }, index) => {
-                      const { data: user } = useRequest<User>({
+                      const { data: user } = useRequestSWR<User>({
                         url: endpoints.user.getUserById(userId),
                       })
 

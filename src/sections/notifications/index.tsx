@@ -1,7 +1,7 @@
 import { Iconify } from '@/components'
 import { PriorityStatus } from '@/components/PriorityStatus'
 import { endpoints } from '@/constants/config'
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
 import { User } from '@/types/user'
@@ -23,11 +23,11 @@ type Props = {
 }
 
 export const Notifications = ({ notifications }: Props) => {
-  const { data: tasks } = useRequest<Array<IKanbanTask>>({
+  const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
   })
 
-  const { data: users } = useRequest<Array<User>>({
+  const { data: users } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 

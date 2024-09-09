@@ -34,7 +34,7 @@ export type UseRequestProps = SWRConfiguration & {
  * @param {boolean} silent - If the request should show a snackbar with the response message
  * @param {Method} method - The method to make the request
  */
-export function useRequest<T>({
+export function useRequestSWR<T>({
   url,
   method = 'GET',
   silent = false,

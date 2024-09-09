@@ -19,7 +19,7 @@ import * as Yup from 'yup'
 import { enqueueSnackbar } from 'notistack'
 import { IKanbanBoard } from '@/types/kanban'
 import { mutate } from 'swr'
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 import { User } from '@/types/user'
 
 type Props = {
@@ -28,7 +28,7 @@ type Props = {
 }
 
 export const UpdateBoard = ({ board, dialogEdit }: Props) => {
-  const { data: users } = useRequest<Array<User>>({
+  const { data: users } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 

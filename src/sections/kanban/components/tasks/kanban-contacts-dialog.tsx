@@ -14,7 +14,7 @@ import { endpoints } from '@/constants/config'
 import { Iconify } from '@/components/iconify'
 import SearchNotFound from '@/components/search-not-found'
 import { User } from '@/types/user'
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 
 const ITEM_HEIGHT = 64
 
@@ -39,7 +39,7 @@ export const KanbanContactsDialog = ({
 }: Props) => {
   const [searchContact, setSearchContact] = useState('')
 
-  const { data: users } = useRequest<Array<User>>({
+  const { data: users } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 

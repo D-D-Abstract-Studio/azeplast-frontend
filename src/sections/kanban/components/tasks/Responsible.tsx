@@ -2,7 +2,7 @@ import { Chip, Stack, Tooltip, IconButton } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
 
 import { useBoolean } from '@/hooks/use-boolean'
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 
 import { Iconify } from '@/components/iconify'
 import { KanbanContactsDialog } from './kanban-contacts-dialog'
@@ -31,7 +31,7 @@ type Props = {
 export const Responsible = ({ assignee, onAppend, onRemove }: Props) => {
   const viewContacts = useBoolean()
 
-  const { data: users } = useRequest<Array<User>>({
+  const { data: users } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 

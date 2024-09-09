@@ -20,7 +20,7 @@ import { paper } from '@/theme/css'
 
 import { Iconify } from '@/components/iconify'
 
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 
 import { SettingsContextProps } from '.'
 import { endpoints, userCurrencyStorage, userNamesStorage } from '@/constants/config'
@@ -44,7 +44,7 @@ import { User } from '@/types/user'
 export const DrawerUser = ({ drawer }: { drawer: SettingsContextProps }) => {
   const theme = useTheme()
 
-  const { data, mutate } = useRequest<Array<User>>({
+  const { data, mutate } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 

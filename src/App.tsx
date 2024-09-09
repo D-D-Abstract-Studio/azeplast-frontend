@@ -21,12 +21,12 @@ import { Stack } from '@mui/material'
 import { endpoints } from './constants/config'
 
 import { SettingsButton } from './components/settings'
-import { useRequest } from './hooks/use-request'
+import { useRequestSWR } from './hooks/use-request'
 
 import { User } from './types/user'
 
 export const App = () => {
-  const { data: user } = useRequest<User>({
+  const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUser,
   })
 
@@ -41,7 +41,7 @@ export const App = () => {
   return (
     <ThemeProvider
       settings={{
-        themeMode: 'light',
+        themeMode: 'dark',
         themeDirection: 'ltr',
         themeContrast: 'default',
         themeLayout: 'vertical',

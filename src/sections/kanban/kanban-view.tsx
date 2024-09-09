@@ -7,9 +7,7 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
 
-import { hideScroll } from '@/theme/css'
-
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 
 import { endpoints, userCurrencyStorage } from '@/constants/config'
 
@@ -52,23 +50,23 @@ export const KanbanView = () => {
   const [showArchived, setShowArchived] = useState(false)
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null)
 
-  const { data: user } = useRequest<User>({
+  const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUser,
   })
 
-  const { data: boards, isLoading } = useRequest<Array<IKanbanBoard>>({
+  const { data: boards, isLoading } = useRequestSWR<Array<IKanbanBoard>>({
     url: endpoints.boards.getAllBoards,
   })
 
-  const { data: columns } = useRequest<Array<IKanbanColumn>>({
+  const { data: columns } = useRequestSWR<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
 
-  const { data: tasks } = useRequest<Array<IKanbanTask>>({
+  const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({
     url: endpoints.tasks.getAllTasks,
   })
 
-  const { data: notifications } = useRequest<Array<Notification>>({
+  const { data: notifications } = useRequestSWR<Array<Notification>>({
     url: endpoints.notifications.getAllNotifications,
   })
 
@@ -104,7 +102,9 @@ export const KanbanView = () => {
         </Stack>
       )}
 
-      {!isUserValid && (
+      <h1>{String(isPermissionAdmin)}</h1>
+
+      {!isLoading && !isUserValid && (
         <Stack p={2}>
           <Alert severity="warning" sx={{ mb: 2 }}>
             <Typography variant="body2">
@@ -115,7 +115,7 @@ export const KanbanView = () => {
         </Stack>
       )}
 
-      {(isLoading || isUserValid) && (
+      {!isLoading && isUserValid && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} alignItems="center">
             <Paper
@@ -201,7 +201,6 @@ export const KanbanView = () => {
                       p: 0.25,
                       height: 1,
                       overflowY: 'hidden',
-                      ...hideScroll.x,
                     }}
                   >
                     {board?.ordered?.map(

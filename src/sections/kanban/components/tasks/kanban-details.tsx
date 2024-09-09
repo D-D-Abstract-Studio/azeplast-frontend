@@ -53,7 +53,7 @@ import { RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/rhf-upload'
 import { PriorityStatus } from '@/components/PriorityStatus'
 
-import { useRequest } from '@/hooks/use-request'
+import { useRequestSWR } from '@/hooks/use-request'
 import { NotificationAdd } from '@/sections/notifications/notification-add'
 
 import { Responsible } from './Responsible'
@@ -88,15 +88,15 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const viewHistory = useBoolean()
 
-  const { data: user } = useRequest<User>({
+  const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUserById(task.userId),
   })
 
-  const { data: users } = useRequest<Array<User>>({
+  const { data: users } = useRequestSWR<Array<User>>({
     url: endpoints.user.getAllUsers,
   })
 
-  const { data: notifications } = useRequest<Array<Notification>>({
+  const { data: notifications } = useRequestSWR<Array<Notification>>({
     url: endpoints.notifications.getAllNotifications,
   })
 
