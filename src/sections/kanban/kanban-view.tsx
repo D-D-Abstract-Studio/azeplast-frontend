@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react'
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 
-import Stack from '@mui/material/Stack'
-import Container from '@mui/material/Container'
-
 import { useRequestSWR } from '@/hooks/use-request'
 
 import { endpoints, userCurrencyStorage } from '@/constants/config'
@@ -12,7 +9,9 @@ import { endpoints, userCurrencyStorage } from '@/constants/config'
 import {
   Alert,
   Badge,
+  Box,
   Button,
+  Stack,
   ButtonGroup,
   Dialog,
   DialogContent,
@@ -91,7 +90,7 @@ export const KanbanView = () => {
   }, [boards, user])
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 1 }}>
+    <Box p={1}>
       {isLoading && (
         <Stack direction="row" alignItems="flex-start" spacing={3}>
           {[...Array(4)].map((_, index) => (
@@ -249,6 +248,6 @@ export const KanbanView = () => {
           />
         </DialogContent>
       </Dialog>
-    </Container>
+    </Box>
   )
 }

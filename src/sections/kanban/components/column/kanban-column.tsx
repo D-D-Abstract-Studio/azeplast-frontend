@@ -51,10 +51,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                     ref={dropProvided.innerRef}
                     {...dropProvided.droppableProps}
                     spacing={2}
-                    sx={{
-                      py: 3,
-                      width: 280,
-                    }}
+                    sx={{ py: 3 }}
                   >
                     {column.taskIds.map((taskId, taskIndex) => {
                       if (!tasks) return null
