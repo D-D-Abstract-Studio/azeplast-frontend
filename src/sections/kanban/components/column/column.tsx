@@ -8,9 +8,9 @@ import { Box } from '@mui/material'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { KanbanTaskAdd } from '../tasks/kanban-task-add'
-import { KanbanTaskItem } from '../tasks/kanban-task-item'
-import { KanbanColumnToolBar } from './kanban-column-tool-bar'
+import { KanbanTaskAdd } from '../tasks/task-add'
+import { KanbanTaskItem } from '../tasks/task-item'
+import { KanbanColumnToolBar } from './column-tool-bar'
 
 import { Iconify } from '@/components/iconify'
 

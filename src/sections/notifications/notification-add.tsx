@@ -29,7 +29,7 @@ import FormProvider, { RHFTextField } from '@/components/hook-form'
 import { priorityValues, PriorityValues } from '@/shared/priorityValues'
 
 import { PriorityStatus } from '@/components/PriorityStatus'
-import { Responsible } from '@/sections/kanban/components/tasks/Responsible'
+import { Responsible } from '@/sections/kanban/components/tasks/responsible'
 
 import { Notification } from '@/types/Notification'
 import { User } from '@/types/user'

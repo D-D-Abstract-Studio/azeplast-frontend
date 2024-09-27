@@ -8,7 +8,7 @@ import ProgressBar from './components/progress-bar'
 import { MotionLazy } from './components/animate/motion-lazy'
 import SnackbarProvider from './contexts/snackbar/snackbar-provider'
 
-import { KanbanView } from '@/sections/kanban/kanban-view'
+import { KanbanView } from '@/sections/kanban/view'
 
 import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'

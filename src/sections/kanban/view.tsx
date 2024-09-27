@@ -22,22 +22,22 @@ import {
   Typography,
 } from '@mui/material'
 
-import { KanbanColumnSkeleton } from './components/kanban-skeleton'
-import { KanbanColumnAdd } from './components/column/kanban-column-add'
-import { KanbanColumn } from './components/column/kanban-column'
+import { KanbanColumnSkeleton } from './components/skeleton'
+import { KanbanColumnAdd } from './components/column/column-add'
+import { KanbanColumn } from './components/column/column'
 
 import { onDragEnd } from './shared/onDragEnd'
 import { boardMescle } from './shared/boardMescle'
 
-import { ArchivedList } from './kanban-task-unarchive'
+import { ArchivedList } from './task-unarchive'
 
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 
 import { User } from '@/types/user'
 import { Notification } from '@/types/Notification'
 
-import { KanbanBoardAdd } from '@/sections/kanban/components/board/board-add'
-import { BoardActions } from '@/sections/kanban/components/board/board-actions'
+import { KanbanBoardAdd } from '@/sections/kanban/components/board/add'
+import { BoardActions } from '@/sections/kanban/components/board/actions'
 import { Iconify } from '@/components'
 import { useBoolean } from '@/hooks/use-boolean'
 import { Notifications } from '@/sections/notifications'

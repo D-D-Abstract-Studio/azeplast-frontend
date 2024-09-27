@@ -14,7 +14,7 @@ import { endpoints } from '@/constants/config'
 import { enqueueSnackbar } from 'notistack'
 
 import { handleTouchStart } from './shared/handleTouchStart'
-import { UpdateBoard } from './board-update'
+import { UpdateBoard } from './update'
 import { mutate } from 'swr'
 import { Iconify } from '@/components/iconify'
 import { useRequestSWR } from '@/hooks/use-request'

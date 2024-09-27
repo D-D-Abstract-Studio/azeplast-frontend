@@ -15,7 +15,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { Iconify } from '@/components/iconify'
 
-import KanbanInputName from '../kanban-input-name'
+import KanbanInputName from '../input-name'
 
 import {
   Autocomplete,
@@ -55,7 +55,7 @@ import { PriorityStatus } from '@/components/PriorityStatus'
 import { useRequestSWR } from '@/hooks/use-request'
 import { NotificationAdd } from '@/sections/notifications/notification-add'
 
-import { Responsible } from './Responsible'
+import { Responsible } from './responsible'
 
 import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'

@@ -5,7 +5,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 import { useRequestSWR } from '@/hooks/use-request'
 
 import { Iconify } from '@/components/iconify'
-import { KanbanContactsDialog } from './kanban-contacts-dialog'
+import { KanbanContactsDialog } from './contacts-dialog'
 
 import { endpoints } from '@/constants/config'
 
