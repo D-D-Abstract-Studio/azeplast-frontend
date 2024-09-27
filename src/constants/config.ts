@@ -51,6 +51,7 @@ export const endpoints = {
   },
 }
 
-export const HOST_API = 'https://backend-plugin-kanban-production.up.railway.app'
+// export const HOST_API = 'https://backend-plugin-kanban-production.up.railway.app'
+export const HOST_API = 'http://localhost:8000'
 
 export const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const

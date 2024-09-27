@@ -1,20 +1,17 @@
-import { useState } from 'react'
-
 import { Editor as PrimeReactEditor } from 'primereact/editor'
 
 import { Theme, SxProps, alpha } from '@mui/material/styles'
 import { StyledEditor, StyledEditorToolbar } from './styles'
 
 export interface EditorProps {
+  value: string
+  onChange: (...event: any[]) => void
   error?: boolean
-  simple?: boolean
   helperText?: React.ReactNode
   sx?: SxProps<Theme>
 }
 
-export const Editor = ({ error, helperText, sx }: EditorProps) => {
-  const [text, setText] = useState('')
-
+export const Editor = ({ value, error, helperText, sx, onChange }: EditorProps) => {
   return (
     <>
       <StyledEditor
@@ -30,9 +27,9 @@ export const Editor = ({ error, helperText, sx }: EditorProps) => {
       >
         <StyledEditorToolbar>
           <PrimeReactEditor
-            value={text}
-            onTextChange={(e) => setText(e.htmlValue || '')}
-            style={{ height: '320px' }}
+            value={value}
+            onTextChange={(event) => onChange(event.htmlValue)}
+            style={{ height: 200 }}
           />
         </StyledEditorToolbar>
       </StyledEditor>
