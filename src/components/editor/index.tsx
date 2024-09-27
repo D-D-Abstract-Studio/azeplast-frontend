@@ -13,7 +13,7 @@ export interface EditorProps {
   helperText?: React.ReactNode
   sx?: SxProps<Theme>
   slotProps?: {
-    PrimeReactEditor?: React.ComponentProps<typeof PrimeReactEditor>
+    Editor?: React.ComponentProps<typeof PrimeReactEditor>
     sx?: CSSProperties | undefined
   }
 }
@@ -45,7 +45,7 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
             value={value}
             onTextChange={handleEditorChange}
             style={slotProps?.sx}
-            {...slotProps?.PrimeReactEditor}
+            {...slotProps?.Editor}
           />
         </StyledEditorToolbar>
       </StyledEditor>

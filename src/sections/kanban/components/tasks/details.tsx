@@ -388,7 +388,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
               <Conversations children={values.description} />
 
-              <RHFEditor name="description" slotProps={{ sx: { height: 200 } }} />
+              <RHFEditor name="description" slotProps={{ sx: { height: 150 } }} />
             </Stack>
 
             <Stack

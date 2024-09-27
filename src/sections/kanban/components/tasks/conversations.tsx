@@ -2,9 +2,7 @@ import { Stack, Typography } from '@mui/material'
 
 import { Editor } from '@/components/editor'
 
-export const Conversations = ({ children = '<p>ola mundo</p>' }: { children: string }) => {
-  console.log(children)
-
+export const Conversations = ({ children }: { children: string }) => {
   return (
     <Stack
       direction="column"
@@ -35,7 +33,7 @@ export const Conversations = ({ children = '<p>ola mundo</p>' }: { children: str
           },
         }}
         slotProps={{
-          PrimeReactEditor: {
+          Editor: {
             readOnly: true,
             showHeader: false,
           },
