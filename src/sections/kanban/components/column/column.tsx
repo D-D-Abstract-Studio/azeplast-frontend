@@ -10,7 +10,7 @@ import { useBoolean } from '@/hooks/use-boolean'
 
 import { KanbanTaskAdd } from '../tasks/add'
 import { KanbanTaskItem } from '../tasks/item'
-import { KanbanColumnToolBar } from './column-tool-bar'
+import { KanbanColumnToolBar } from './tool-bar'
 
 import { Iconify } from '@/components/iconify'
 

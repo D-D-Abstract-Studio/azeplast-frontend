@@ -23,13 +23,13 @@ import {
 } from '@mui/material'
 
 import { KanbanColumnSkeleton } from './components/skeleton'
-import { KanbanColumnAdd } from './components/column/column-add'
+import { KanbanColumnAdd } from './components/column/add'
 import { KanbanColumn } from './components/column/column'
 
 import { onDragEnd } from './shared/onDragEnd'
 import { boardMescle } from './shared/boardMescle'
 
-import { ArchivedList } from './task-unarchive'
+import { ArchivedList } from './unarchive'
 
 import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 

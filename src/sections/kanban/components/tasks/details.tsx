@@ -500,8 +500,3 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     </>
   )
 }
-
-const mock = {
-  user: 'kapa',
-  message: 'teste',
-}
