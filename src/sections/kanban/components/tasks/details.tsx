@@ -61,6 +61,7 @@ import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
 
 import { User } from '@/types/user'
+import { Conversations } from './conversations'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -385,7 +386,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
               <Divider />
 
-              <RHFEditor name="description" />
+              <Conversations children={values.description} />
+
+              <RHFEditor name="description" slotProps={{ sx: { height: 200 } }} />
             </Stack>
 
             <Stack

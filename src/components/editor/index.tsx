@@ -4,22 +4,27 @@ import { Theme, SxProps, alpha } from '@mui/material/styles'
 import { StyledEditor, StyledEditorToolbar } from './styles'
 
 import { replaceBase64WithUrl } from './shared'
+import { CSSProperties } from 'react'
 
 export interface EditorProps {
   value: string
-  onChange: (...event: any[]) => void
+  onChange?: (...event: any[]) => void
   error?: boolean
   helperText?: React.ReactNode
   sx?: SxProps<Theme>
+  slotProps?: {
+    PrimeReactEditor?: React.ComponentProps<typeof PrimeReactEditor>
+    sx?: CSSProperties | undefined
+  }
 }
 
-export const Editor = ({ value, error, helperText, sx, onChange }: EditorProps) => {
+export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: EditorProps) => {
   const handleEditorChange = async (event: EditorTextChangeEvent) => {
     const editorContent = event.htmlValue
 
     const updatedContent = await replaceBase64WithUrl(editorContent)
 
-    onChange(updatedContent)
+    onChange?.(updatedContent)
   }
 
   return (
@@ -39,7 +44,8 @@ export const Editor = ({ value, error, helperText, sx, onChange }: EditorProps) 
           <PrimeReactEditor
             value={value}
             onTextChange={handleEditorChange}
-            style={{ height: 200 }}
+            style={slotProps?.sx}
+            {...slotProps?.PrimeReactEditor}
           />
         </StyledEditorToolbar>
       </StyledEditor>

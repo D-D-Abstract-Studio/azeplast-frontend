@@ -1,6 +1,6 @@
 import { axios } from '@/utils/axios'
 
-import { endpoints } from '@/constants/config'
+import { endpoints, HOST_API } from '@/constants/config'
 
 export const replaceBase64WithUrl = async (content: string | null) => {
   const imgTagRegex = /<img[^>]+src="data:image\/[^;]+;base64[^"]+"[^>]*>/g
@@ -34,6 +34,7 @@ type Files = Array<{
   destination: string
   filename: string
   path: string
+  preview: string
   size: number
 }>
 
@@ -44,7 +45,7 @@ const handleImageUpload = async (file: File) => {
   try {
     const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
 
-    return response.data.map((file) => file.path)[0]
+    return response.data.map((file) => HOST_API + file.preview)[0]
   } catch (error) {
     console.error('Erro no upload da imagem', error)
     return null
