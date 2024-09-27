@@ -1,7 +1,9 @@
-import { Editor as PrimeReactEditor } from 'primereact/editor'
+import { EditorTextChangeEvent, Editor as PrimeReactEditor } from 'primereact/editor'
 
 import { Theme, SxProps, alpha } from '@mui/material/styles'
 import { StyledEditor, StyledEditorToolbar } from './styles'
+
+import { replaceBase64WithUrl } from './shared'
 
 export interface EditorProps {
   value: string
@@ -12,6 +14,14 @@ export interface EditorProps {
 }
 
 export const Editor = ({ value, error, helperText, sx, onChange }: EditorProps) => {
+  const handleEditorChange = async (event: EditorTextChangeEvent) => {
+    const editorContent = event.htmlValue
+
+    const updatedContent = await replaceBase64WithUrl(editorContent)
+
+    onChange(updatedContent)
+  }
+
   return (
     <>
       <StyledEditor
@@ -28,7 +38,7 @@ export const Editor = ({ value, error, helperText, sx, onChange }: EditorProps) 
         <StyledEditorToolbar>
           <PrimeReactEditor
             value={value}
-            onTextChange={(event) => onChange(event.htmlValue)}
+            onTextChange={handleEditorChange}
             style={{ height: 200 }}
           />
         </StyledEditorToolbar>

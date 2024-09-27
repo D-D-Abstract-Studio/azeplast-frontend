@@ -135,8 +135,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const { priority } = watch()
   const values = watch()
 
-  console.log(values.description)
-
   const isPermissionDeleteNotification = user?.permissions === 'admin' || task.userId === user?._id
 
   const isDirtyTask = isEqual(task, values)
@@ -501,4 +499,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       )}
     </>
   )
+}
+
+const mock = {
+  user: 'kapa',
+  message: 'teste',
 }
