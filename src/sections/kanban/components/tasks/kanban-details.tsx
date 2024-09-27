@@ -363,16 +363,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 }}
               />
 
-              <RHFEditor simple name="description" />
-
-              {/* 
-                <RHFTextField fullWidth multiline name="description" label="Descrição" />
-
-                <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} /> 
-              */}
-
-              <Divider />
-
               <ButtonGroup fullWidth>
                 <Button
                   fullWidth
@@ -394,6 +384,10 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                   Ver histórico
                 </Button>
               </ButtonGroup>
+
+              <Divider />
+
+              <RHFEditor name="description" />
             </Stack>
 
             <Stack

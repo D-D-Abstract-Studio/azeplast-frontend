@@ -4,7 +4,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 
 import { Editor, EditorProps } from '../editor'
 
-interface Props extends EditorProps {
+type Props = Partial<EditorProps> & {
   name: string
 }
 
