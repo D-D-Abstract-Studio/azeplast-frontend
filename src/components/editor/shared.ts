@@ -1,5 +1,7 @@
 import { axios } from '@/utils/axios'
 
+import { endpoints } from '@/constants/config'
+
 export const replaceBase64WithUrl = async (content: string | null) => {
   const imgTagRegex = /<img[^>]+src="data:image\/[^;]+;base64[^"]+"[^>]*>/g
   const matches = content?.match(imgTagRegex)
@@ -35,12 +37,12 @@ type Files = Array<{
   size: number
 }>
 
-export const handleImageUpload = async (file: File) => {
+const handleImageUpload = async (file: File) => {
   const formData = new FormData()
   formData.append('files', file)
 
   try {
-    const response = await axios.post<Files>('http://localhost:8000/uploads', formData)
+    const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
 
     return response.data.map((file) => file.path)[0]
   } catch (error) {
