@@ -1,41 +1,19 @@
-import '@/utils/highlight'
+import { useState } from 'react'
 
-import ReactQuill, { ReactQuillProps } from 'react-quill'
+import { Editor as PrimeReactEditor } from 'primereact/editor'
 
 import { Theme, SxProps, alpha } from '@mui/material/styles'
+import { StyledEditor, StyledEditorToolbar } from './styles'
 
-import { StyledEditor } from './styles'
-import Toolbar, { formats } from './toolbar'
-
-export interface EditorProps extends ReactQuillProps {
+export interface EditorProps {
   error?: boolean
   simple?: boolean
   helperText?: React.ReactNode
   sx?: SxProps<Theme>
 }
 
-export const Editor = ({
-  id = 'minimal-quill',
-  error,
-  simple = false,
-  helperText,
-  sx,
-  ...other
-}: EditorProps) => {
-  const modules = {
-    toolbar: {
-      container: `#${id}`,
-    },
-    history: {
-      delay: 500,
-      maxStack: 100,
-      userOnly: true,
-    },
-    syntax: true,
-    clipboard: {
-      matchVisual: false,
-    },
-  }
+export const Editor = ({ error, helperText, sx }: EditorProps) => {
+  const [text, setText] = useState('')
 
   return (
     <>
@@ -50,14 +28,13 @@ export const Editor = ({
           ...sx,
         }}
       >
-        <Toolbar id={id} isSimple={simple} />
-
-        <ReactQuill
-          modules={modules}
-          formats={formats}
-          placeholder="Write something awesome..."
-          {...other}
-        />
+        <StyledEditorToolbar>
+          <PrimeReactEditor
+            value={text}
+            onTextChange={(e) => setText(e.htmlValue || '')}
+            style={{ height: '320px' }}
+          />
+        </StyledEditorToolbar>
       </StyledEditor>
 
       {helperText && helperText}
