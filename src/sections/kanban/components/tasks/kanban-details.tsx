@@ -49,8 +49,7 @@ import { mutate } from 'swr'
 import { isEqual } from 'lodash'
 import dayjs from 'dayjs'
 
-import { RHFTextField } from '@/components/hook-form'
-import { RHFUpload } from '@/components/hook-form/rhf-upload'
+import RHFEditor from '@/components/hook-form/rhf-editor'
 import { PriorityStatus } from '@/components/PriorityStatus'
 
 import { useRequestSWR } from '@/hooks/use-request'
@@ -136,6 +135,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const { priority } = watch()
   const values = watch()
 
+  console.log(values.description)
+
   const isPermissionDeleteNotification = user?.permissions === 'admin' || task.userId === user?._id
 
   const isDirtyTask = isEqual(task, values)
@@ -178,13 +179,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       enqueueSnackbar('Notificação deletada com sucesso')
 
       mutate(endpoints.notifications.getAllNotifications)
-    })
-
-  const onUpdateFiles = async (files: Array<File>) =>
-    await axios.put(endpoints.tasks.updateTask(task._id), { ...task, files }).then(() => {
-      enqueueSnackbar('Arquivo deletado com sucesso')
-
-      mutate(endpoints.tasks.getAllTasks)
     })
 
   const handleSubmitForm = async (data: AddTask) => {
@@ -369,9 +363,13 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 }}
               />
 
-              <RHFTextField fullWidth multiline name="description" label="Descrição" />
+              <RHFEditor simple name="description" />
 
-              <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} />
+              {/* 
+                <RHFTextField fullWidth multiline name="description" label="Descrição" />
+
+                <RHFUpload multiple name="files" onUpdateFiles={onUpdateFiles} /> 
+              */}
 
               <Divider />
 
