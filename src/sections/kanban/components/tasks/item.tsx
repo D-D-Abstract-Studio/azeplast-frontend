@@ -57,6 +57,23 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
     />
   )
 
+  const renderCommentCount = ((isConversation) =>
+    Boolean(isConversation) && (
+      <Typography
+        variant="subtitle2"
+        sx={{
+          color: 'text.secondary',
+          fontSize: 12,
+          maxWidth: 300,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {isConversation} comentários
+      </Typography>
+    ))(task.conversations?.length)
+
   return (
     <>
       <Draggable draggableId={task._id} index={index}>
@@ -117,19 +134,7 @@ export const KanbanTaskItem = ({ task, index, sx, ...other }: Props) => {
                 </AvatarGroup>
               </Stack>
 
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  color: 'text.secondary',
-                  fontSize: 12,
-                  maxWidth: 300,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {task.description}
-              </Typography>
+              {renderCommentCount}
             </Stack>
           </Paper>
         )}

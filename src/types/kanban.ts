@@ -1,12 +1,19 @@
 import { PriorityValues } from '@/shared/priorityValues'
 
+export type ConversationsType = {
+  _id: string
+  userId: string
+  date: string
+  message: string
+}
+
 export type IKanbanTask = {
   _id: string
   name: string
   archived: boolean
   priority: PriorityValues
   categories?: string[]
-  description: string
+  conversations?: Array<ConversationsType>
   history?: Array<{
     _id: string
     userId: string
@@ -18,7 +25,6 @@ export type IKanbanTask = {
   }>
   dueDate: Date
   userId: string
-  files?: File[]
 }
 
 export type IKanbanColumn = {

@@ -61,7 +61,7 @@ import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
 
 import { User } from '@/types/user'
-import { Conversations } from './conversations'
+import { Conversations } from './components/conversations'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -96,20 +96,23 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     url: endpoints.user.getAllUsers,
   })
 
+  const { data: userCurrency } = useRequestSWR<User>({
+    url: endpoints.user.getUser,
+  })
+
   const { data: notifications } = useRequestSWR<Array<Notification>>({
     url: endpoints.notifications.getAllNotifications,
   })
 
   const [taskName, setTaskName] = useState(task.name)
 
-  const UpdateUserSchema = Yup.object<AddTask>().shape({
+  const UpdateUserSchema = Yup.object().shape({
     _id: Yup.string().required(),
     name: Yup.string().required(),
-    files: Yup.mixed<Array<File>>().optional(),
     archived: Yup.boolean().required(),
     priority: Yup.mixed<PriorityValues>().oneOf(priorityValues).required(),
     categories: Yup.array().of(Yup.string().required()).optional(),
-    description: Yup.string().required(),
+    conversations: Yup.string().optional(),
     assignee: Yup.array()
       .of(
         Yup.object({
@@ -119,11 +122,11 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       .optional(),
     dueDate: Yup.date().required(),
     userId: Yup.string().required(),
-  })
+  }) as Yup.ObjectSchema<AddTask>
 
   const methods = useForm<AddTask>({
-    defaultValues: task,
-    resolver: yupResolver<AddTask>(UpdateUserSchema),
+    defaultValues: { ...task, conversations: [] },
+    resolver: yupResolver(UpdateUserSchema),
   })
 
   const { handleSubmit, setValue, watch, control } = methods
@@ -181,7 +184,16 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
     })
 
   const handleSubmitForm = async (data: AddTask) => {
-    await axios.put(endpoints.tasks.updateTask(data._id), data).then(() => {
+    const conversations = [
+      ...(task.conversations || []),
+      {
+        date: dayjs().toISOString(),
+        message: data.conversations,
+        userId: userCurrency?._id,
+      },
+    ]
+
+    await axios.put(endpoints.tasks.updateTask(data._id), { ...data, conversations }).then(() => {
       enqueueSnackbar('Tarefa atualizada com sucesso')
 
       mutate(endpoints.tasks.getAllTasks)
@@ -386,9 +398,26 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
               <Divider />
 
-              <Conversations children={values.description} />
+              <Stack direction="column" spacing={1}>
+                {task.conversations?.map((conversation, index) => {
+                  const user = users?.find((user) => user._id === conversation.userId)
 
-              <RHFEditor name="description" slotProps={{ sx: { height: 150 } }} />
+                  const isUserCurrent = userCurrency?._id === user?._id
+
+                  return (
+                    <Conversations
+                      key={index}
+                      isUserCurrent={isUserCurrent}
+                      conversation={{
+                        ...conversation,
+                        userId: user?.name || '',
+                      }}
+                    />
+                  )
+                })}
+              </Stack>
+
+              <RHFEditor name="conversations" slotProps={{ sx: { height: 150 } }} />
             </Stack>
 
             <Stack
