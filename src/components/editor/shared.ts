@@ -20,8 +20,6 @@ export const replaceBase64WithUrl = async (content: string | null) => {
     return file
   })
 
-  console.log(uploadPromises)
-
   const files = await Promise.all(uploadPromises)
 
   const imageUrls = await handleImageUploads(files)
