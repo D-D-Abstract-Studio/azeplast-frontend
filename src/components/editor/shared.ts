@@ -1,5 +1,4 @@
 import { axios } from '@/utils/axios'
-
 import { endpoints, HOST_API } from '@/constants/config'
 
 export const replaceBase64WithUrl = async (content: string | null) => {
@@ -8,20 +7,30 @@ export const replaceBase64WithUrl = async (content: string | null) => {
 
   if (!matches) return content
 
+  const base64ToFileMap: { [key: string]: File } = {}
+
   const uploadPromises = matches.map(async (match) => {
     const base64Match = match.match(/src="([^"]+)"/)
     const base64String = base64Match ? base64Match[1] : ''
 
     const file = base64ToFile(base64String, 'image.png')
 
-    const imageUrl = await handleImageUpload(file)
+    base64ToFileMap[base64String] = file
 
-    if (imageUrl) {
-      content = content?.replace(base64String, imageUrl) || ''
-    }
+    return file
   })
 
-  await Promise.all(uploadPromises)
+  console.log(uploadPromises)
+
+  const files = await Promise.all(uploadPromises)
+
+  const imageUrls = await handleImageUploads(files)
+
+  if (imageUrls && imageUrls.length > 0) {
+    Object.keys(base64ToFileMap).forEach((base64, index) => {
+      content = content?.replace(base64, imageUrls[index]) || ''
+    })
+  }
 
   return content
 }
@@ -38,17 +47,18 @@ type Files = Array<{
   size: number
 }>
 
-const handleImageUpload = async (file: File) => {
+const handleImageUploads = async (files: File[]) => {
   const formData = new FormData()
-  formData.append('files', file)
+
+  files.forEach((file) => formData.append('files', file))
 
   try {
     const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
 
-    return response.data.map((file) => HOST_API + file.preview)[0]
+    return response.data.map((file) => HOST_API + file.preview)
   } catch (error) {
     console.error('Erro no upload da imagem', error)
-    return null
+    return []
   }
 }
 
