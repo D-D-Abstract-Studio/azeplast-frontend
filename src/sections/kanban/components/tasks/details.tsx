@@ -193,6 +193,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
       },
     ]
 
+    setValue('conversations', [])
+
     await axios.put(endpoints.tasks.updateTask(data._id), { ...data, conversations }).then(() => {
       enqueueSnackbar('Tarefa atualizada com sucesso')
 

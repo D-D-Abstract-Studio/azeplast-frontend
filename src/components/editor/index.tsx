@@ -5,6 +5,7 @@ import { StyledEditor, StyledEditorToolbar } from './styles'
 
 import { replaceBase64WithUrl } from './shared'
 import { CSSProperties } from 'react'
+import { Toolbar } from './toolbar'
 
 export interface EditorProps {
   value: string
@@ -45,6 +46,7 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
             value={value}
             onTextChange={handleEditorChange}
             style={slotProps?.sx}
+            headerTemplate={<Toolbar />}
             {...slotProps?.Editor}
           />
         </StyledEditorToolbar>
