@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import { Theme, SxProps } from '@mui/material/styles'
 import { Link } from '@mui/material'
 
+import { HOST_API } from '@/constants/config'
 import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './download-button'
 
@@ -25,7 +26,7 @@ export default function FileThumbnail({ file, imageView, onDownload, sx, imgSx }
     format === 'image' && imageView ? (
       <Box
         component="img"
-        src={preview}
+        src={`${HOST_API}${file.preview}`}
         sx={{
           width: 1,
           height: 1,
@@ -48,7 +49,7 @@ export default function FileThumbnail({ file, imageView, onDownload, sx, imgSx }
     )
 
   return (
-    <Link href={file.preview} target="_blank">
+    <Link href={`${HOST_API}${file.preview}`} target="_blank">
       <Stack
         flexShrink={0}
         component="span"

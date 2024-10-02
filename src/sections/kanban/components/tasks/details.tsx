@@ -51,6 +51,7 @@ import dayjs from 'dayjs'
 
 import RHFEditor from '@/components/hook-form/rhf-editor'
 import { PriorityStatus } from '@/components/PriorityStatus'
+import { Conversations } from './components/conversations'
 
 import { useRequestSWR } from '@/hooks/use-request'
 import { NotificationAdd } from '@/sections/notifications/notification-add'
@@ -61,7 +62,6 @@ import { IKanbanTask } from '@/types/kanban'
 import { Notification } from '@/types/Notification'
 
 import { User } from '@/types/user'
-import { Conversations } from './components/conversations'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -138,6 +138,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const { priority } = watch()
   const values = watch()
+
+  console.log(values.conversations)
 
   const isPermissionDeleteNotification = user?.permissions === 'admin' || task.userId === user?._id
 

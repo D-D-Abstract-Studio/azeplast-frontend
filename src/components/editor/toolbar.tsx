@@ -26,7 +26,7 @@ export const formats = [
   'video',
 ]
 
-export const Toolbar = () => {
+export const Toolbar = ({ children }: React.PropsWithChildren<{}>) => {
   return (
     <div>
       <div className="ql-formats">
@@ -57,13 +57,12 @@ export const Toolbar = () => {
         <select className="ql-align" />
       </div>
 
-      <div className="ql-formats">
+      <div className="ql-formats" style={{ display: 'flex' }}>
         <button type="button" className="ql-link" />
         <button type="button" className="ql-image" />
-        <button type="button" className="ql-video" />
-      </div>
 
-      <div className="ql-formats">
+        {children}
+
         <button type="button" className="ql-clean" />
       </div>
     </div>

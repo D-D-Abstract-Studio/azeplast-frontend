@@ -15,20 +15,23 @@ export default function RHFEditor({ name, helperText, ...other }: Props) {
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
-        <Editor
-          error={!!error}
-          helperText={
-            (!!error || helperText) && (
-              <FormHelperText error={!!error} sx={{ px: 2 }}>
-                {error ? error?.message : helperText}
-              </FormHelperText>
-            )
-          }
-          {...field}
-          {...other}
-        />
-      )}
+      render={({ field: { value, onChange }, fieldState: { error } }) => {
+        return (
+          <Editor
+            error={!!error}
+            value={value}
+            onChange={onChange}
+            helperText={
+              (!!error || helperText) && (
+                <FormHelperText error={!!error} sx={{ px: 2 }}>
+                  {error ? error?.message : helperText}
+                </FormHelperText>
+              )
+            }
+            {...other}
+          />
+        )
+      }}
     />
   )
 }
