@@ -28,7 +28,7 @@ export const formats = [
 
 export const Toolbar = ({ children }: React.PropsWithChildren<{}>) => {
   return (
-    <div className="ql-formats">
+    <div className="ql-formats" style={{ display: 'flex' }}>
       <select className="ql-header" defaultValue="">
         {HEADINGS.map((heading, index) => (
           <option key={heading} value={index + 1}>

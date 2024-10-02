@@ -41,6 +41,7 @@ export const replaceBase64WithUrl = async (content: string | null) => {
 type Files = Array<{
   fieldname: string
   originalname: string
+  name: string
   encoding: string
   mimetype: string
   destination: string
@@ -57,7 +58,7 @@ const handleImageUploads = async (files: File[]) => {
 
   const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
 
-  return response.data.map((file) => HOST_API + file.preview)
+  return response.data.map(({ name }) => `${HOST_API}/uploads/${name}`)
 }
 
 const base64ToFile = (base64: string, filename: string) => {
@@ -114,12 +115,12 @@ export const processFiles = async ({ value, filesDrop, onChange }: ProcessType) 
   )
 
   const newContent = `${value}${data.map((file) => {
-    const { path = '', preview = '', name } = fileData(file)
-    const format = fileThumb(path || preview)
+    const { preview = '', name } = fileData(file)
+    const format = fileThumb(name || preview)
 
     const thumbnailURL = `${window.location.origin}${fileThumb(format)}`
 
-    return `<a href='${HOST_API}${path}' target='_blank' rel='noopener noreferrer'><img src='${thumbnailURL}' alt='${name}' /></a>`
+    return `<a href='${HOST_API}/uploads/${name}' target='_blank' rel='noopener noreferrer'><img src='${thumbnailURL}' alt='${name}' /></a>`
   })}`
 
   onChange?.(newContent)
