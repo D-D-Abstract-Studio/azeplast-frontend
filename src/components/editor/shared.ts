@@ -1,11 +1,15 @@
 import { axios } from '@/utils/axios'
+
 import { endpoints, HOST_API } from '@/constants/config'
+import { fileData, fileThumb } from '../file-thumbnail'
 
 export const replaceBase64WithUrl = async (content: string | null) => {
   const imgTagRegex = /<img[^>]+src="data:image\/[^;]+;base64[^"]+"[^>]*>/g
   const matches = content?.match(imgTagRegex)
 
-  if (!matches) return content
+  if (!matches) {
+    return String(content)
+  }
 
   const base64ToFileMap: { [key: string]: File } = {}
 
@@ -24,13 +28,10 @@ export const replaceBase64WithUrl = async (content: string | null) => {
 
   const imageUrls = await handleImageUploads(files)
 
-  if (imageUrls && imageUrls.length > 0) {
-    Object.keys(base64ToFileMap).forEach((base64, index) => {
-      content = content?.replace(base64, imageUrls[index]) || ''
-    })
-  }
+  const transformedContent =
+    imageUrls.map((url, index) => content?.replace(matches[index], `<img src="${url}" />`)) || []
 
-  return content
+  return transformedContent.join('')
 }
 
 type Files = Array<{
@@ -50,14 +51,9 @@ const handleImageUploads = async (files: File[]) => {
 
   files.forEach((file) => formData.append('files', file))
 
-  try {
-    const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
+  const response = await axios.post<Files>(endpoints.uploads.createUploads, formData)
 
-    return response.data.map((file) => HOST_API + file.preview)
-  } catch (error) {
-    console.error('Erro no upload da imagem', error)
-    return []
-  }
+  return response.data.map((file) => HOST_API + file.preview)
 }
 
 const base64ToFile = (base64: string, filename: string) => {
@@ -73,4 +69,54 @@ const base64ToFile = (base64: string, filename: string) => {
   }
 
   return new File([u8arr], filename, { type: mime })
+}
+
+const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => resolve(reader.result as ArrayBuffer)
+    reader.onerror = reject
+    reader.readAsArrayBuffer(file)
+  })
+}
+
+type ProcessType = {
+  value: string
+  filesDrop: Array<File & { preview?: string }>
+  onChange: any
+}
+export const processFiles = async ({ value, filesDrop, onChange }: ProcessType) => {
+  const formData = new FormData()
+
+  await Promise.all(
+    filesDrop.map(async (file) => {
+      const binaryData = await readFileAsArrayBuffer(file)
+      const blob = new Blob([binaryData], { type: file.type })
+      formData.append('files', blob, file.name)
+
+      file.preview = URL.createObjectURL(file)
+    })
+  )
+
+  const { data } = await axios.post<Array<File & { preview?: string }>>(
+    endpoints.uploads.createUploads,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  )
+
+  const newContent = `${value}${data.map((file) => {
+    const { path = '', preview = '', name } = fileData(file)
+    const format = fileThumb(path || preview)
+
+    const thumbnailURL = `${window.location.origin}${fileThumb(format)}`
+
+    return `<a href='${HOST_API}${path}' target='_blank' rel='noopener noreferrer'><img src='${thumbnailURL}' alt='${name}' /></a>`
+  })}`
+
+  onChange?.(newContent)
 }

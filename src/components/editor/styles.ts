@@ -1,6 +1,8 @@
 import { styled, alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
+import 'quill/dist/quill.snow.css'
+
 export const StyledEditor = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',

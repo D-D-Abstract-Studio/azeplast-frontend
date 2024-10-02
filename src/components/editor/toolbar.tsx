@@ -28,43 +28,32 @@ export const formats = [
 
 export const Toolbar = ({ children }: React.PropsWithChildren<{}>) => {
   return (
-    <div>
-      <div className="ql-formats">
-        <select className="ql-header" defaultValue="">
-          {HEADINGS.map((heading, index) => (
-            <option key={heading} value={index + 1}>
-              {heading}
-            </option>
-          ))}
-          <option value="">Normal</option>
-        </select>
-      </div>
+    <div className="ql-formats">
+      <select className="ql-header" defaultValue="">
+        {HEADINGS.map((heading, index) => (
+          <option key={heading} value={index + 1}>
+            {heading}
+          </option>
+        ))}
+        <option value="">Normal</option>
+      </select>
 
-      <div className="ql-formats">
-        <button type="button" className="ql-bold" />
-        <button type="button" className="ql-italic" />
-        <button type="button" className="ql-underline" />
-        <button type="button" className="ql-strike" />
-      </div>
+      <button type="button" className="ql-bold" />
+      <button type="button" className="ql-italic" />
+      <button type="button" className="ql-underline" />
+      <button type="button" className="ql-strike" />
 
-      <div className="ql-formats">
-        <button type="button" className="ql-list" value="ordered" />
-        <button type="button" className="ql-list" value="bullet" />
-      </div>
+      <button type="button" className="ql-list" value="ordered" />
+      <button type="button" className="ql-list" value="bullet" />
 
-      <div className="ql-formats">
-        <button type="button" className="ql-direction" value="rtl" />
-        <select className="ql-align" />
-      </div>
+      <button type="button" className="ql-direction" value="rtl" />
+      <select className="ql-align" />
 
-      <div className="ql-formats" style={{ display: 'flex' }}>
-        <button type="button" className="ql-link" />
-        <button type="button" className="ql-image" />
+      <button type="button" className="ql-link" />
 
-        {children}
+      {children}
 
-        <button type="button" className="ql-clean" />
-      </div>
+      <button type="button" className="ql-clean" />
     </div>
   )
 }
