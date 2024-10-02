@@ -28,8 +28,12 @@ export const replaceBase64WithUrl = async (content: string | null) => {
 
   const imageUrls = await handleImageUploads(files)
 
-  const transformedContent =
-    imageUrls.map((url, index) => content?.replace(matches[index], `<img src="${url}" />`)) || []
+  const transformedContent = imageUrls.map((url, index) =>
+    content?.replace(
+      matches[index],
+      `<a href='${url}' target='_blank' rel='noopener noreferrer'><img src="${url}" /></a>`
+    )
+  )
 
   return transformedContent.join('')
 }
