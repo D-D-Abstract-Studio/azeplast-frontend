@@ -14,7 +14,7 @@ declare -A users=(
 for name in "${!users[@]}"; do
   permissions=${users[$name]}
 
-  curl --location 'http://localhost:8000/users' \
+  curl --location 'https://backend-plugin-kanban-production.up.railway.app/users' \
   --header 'Content-Type: application/json' \
   --data "{
     \"name\": \"$name\",
