@@ -19,6 +19,7 @@ import KanbanInputName from '../input-name'
 
 import {
   Autocomplete,
+  Box,
   ButtonGroup,
   Chip,
   Divider,
@@ -420,6 +421,33 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                   )
                 })}
               </Stack>
+
+              <Box
+                sx={{
+                  width: '100%',
+                  ...theme.typography.body2,
+                  color: theme.palette.text.secondary,
+                  '& > :not(style) ~ :not(style)': {
+                    marginTop: theme.spacing(2),
+                  },
+                }}
+              >
+                <Divider>
+                  <Button
+                    variant="soft"
+                    onClick={() => {
+                      mutate(endpoints.tasks.getAllTasks)
+                      mutate(endpoints.tasks.getTask(task._id))
+                    }}
+                  >
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <Typography>Recarregar</Typography>
+
+                      <Iconify icon="mdi:reload" />
+                    </Stack>
+                  </Button>
+                </Divider>
+              </Box>
 
               <RHFEditor name="conversations" slotProps={{ sx: { height: 150 } }} />
             </Stack>
