@@ -1,9 +1,8 @@
-import { useDropzone } from 'react-dropzone'
 import { EditorTextChangeEvent, Editor as PrimeReactEditor } from 'primereact/editor'
 
 import { axios } from '@/utils/axios'
 
-import { Button } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import { Toolbar } from './toolbar'
 
 import { Iconify } from '../iconify'
@@ -80,8 +79,13 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
     )
   }
 
-  const onDrop = async (acceptedFiles: UploadFile) => await processFiles(acceptedFiles)
-  const { getRootProps, getInputProps } = useDropzone({ multiple: true, onDrop })
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+
+    if (files) {
+      await processFiles(Array.from(files) as UploadFile)
+    }
+  }
 
   return (
     <>
@@ -103,10 +107,32 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
             style={slotProps?.sx}
             headerTemplate={
               <Toolbar>
-                <Button variant="outlined" color="primary" {...getRootProps()}>
-                  <input {...getInputProps()} />
+                <style>
+                  {`
+                    .KfQe9 {
+                      border-radius: 4px;
+                      padding: 4px;
+                      margin-right: 8px;
+                      display: flex;
+                      align-items: center;
+                      cursor: pointer;
+                      "&:hover": {
+                        color: #e0e0e0;
+                      }
+                    }
+                  `}
+                </style>
+                <label htmlFor="file-upload" className="KfQe9">
                   <Iconify icon="mdi:upload" />
-                </Button>
+                </label>
+
+                <input
+                  type="file"
+                  id="file-upload"
+                  color="primary"
+                  style={{ display: 'none' }}
+                  onChange={handleFileUpload}
+                />
               </Toolbar>
             }
             {...slotProps?.Editor}
