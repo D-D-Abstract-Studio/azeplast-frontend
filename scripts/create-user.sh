@@ -2,6 +2,7 @@
 
 declare -A users=(
   ["glpi"]="admin"
+  ["adm - gianluca"]="admin"
   ["post-only"]="user"
   ["tech"]="user"
   ["normal"]="user"
