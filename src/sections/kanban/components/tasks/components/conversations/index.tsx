@@ -43,7 +43,9 @@ export const Conversations = ({ conversation, isUserCurrent }: Props) => {
       />
 
       <Stack spacing={2} direction="row" justifyContent="space-between" justifyItems="center">
-        <Typography variant="subtitle2">{conversation.userId}</Typography>
+        <Typography variant="subtitle2" color="text.primary">
+          {conversation.userId}
+        </Typography>
 
         <Typography variant="inherit" color="textSecondary" fontSize="0.80rem">
           {dayjs(conversation.date).format('DD/MM/YYYY HH:mm')}

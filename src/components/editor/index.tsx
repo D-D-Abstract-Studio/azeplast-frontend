@@ -64,6 +64,7 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
   return (
     <StyledEditor
       sx={{
+        color: 'text.primary',
         ...(error && {
           border: (theme) => `solid 1px ${theme.palette.error.main}`,
           '& .ql-editor': {

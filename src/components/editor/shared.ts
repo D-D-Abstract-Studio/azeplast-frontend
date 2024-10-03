@@ -118,7 +118,9 @@ export const processFiles = async ({ value, filesDrop, onChange }: ProcessType) 
     const { preview = '', name } = fileData(file)
     const format = fileThumb(name || preview)
 
-    const thumbnailURL = `${window.location.origin}${fileThumb(format)}`
+    const thumbnailURL = `${window.location.origin}/plugins/azeplast-frontend/public/${fileThumb(
+      format
+    )}`
 
     return `<a href='${HOST_API}/uploads/${name}' target='_blank' rel='noopener noreferrer'><img src='${thumbnailURL}' alt='${name}' /></a>`
   })}`
