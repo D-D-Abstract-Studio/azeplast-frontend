@@ -37,10 +37,10 @@ import { useState } from 'react'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { DatePicker } from '@mui/x-date-pickers'
-import { CopyClipboard } from '@/components/CopyClipboard'
 
 import { User } from '@/types/user'
 import { PriorityStatus } from '@/components/PriorityStatus'
+import { Conversations } from './components/tasks/components/conversations'
 
 const StyledLabel = styled('span')(({ theme }) => ({
   ...theme.typography.caption,
@@ -55,18 +55,20 @@ export const ArchivedList = () => {
 
   const [task, setTask] = useState<IKanbanTask>()
 
+  const { data: userCurrency } = useRequestSWR<User>({ url: endpoints.user.getUser })
+
   const { data: user } = useRequestSWR<User>({
     url: endpoints.user.getUserById(task?.userId || ''),
     stopRequest: !task?.userId,
   })
 
+  const { data: users } = useRequestSWR<Array<User>>({ url: endpoints.user.getAllUsers })
+
   const { data: columns } = useRequestSWR<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
 
-  const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({
-    url: endpoints.tasks.getAllTasks,
-  })
+  const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({ url: endpoints.tasks.getAllTasks })
 
   const row = tasks
     ?.filter((task) => task.archived)
@@ -113,11 +115,9 @@ export const ArchivedList = () => {
         row={row || []}
         columns={[
           {
-            field: '_id',
-          },
-          {
             field: 'name',
             headerName: 'Nome',
+            flex: 1,
           },
           {
             field: 'priority',
@@ -131,13 +131,14 @@ export const ArchivedList = () => {
           {
             field: 'status',
             headerName: 'Status',
+            flex: 1,
           },
           {
             field: 'categories',
             headerName: 'Categorias',
-            width: 200,
+            flex: 1,
             renderCell: ({ row }) => (
-              <Grid container columnSpacing={0.5} justifyContent="center">
+              <Grid container spacing={0.5} justifyContent="center" p={1}>
                 {row?.categories?.map((category, index) => {
                   return (
                     <Grid key={index} item xs="auto" p={0}>
@@ -160,12 +161,6 @@ export const ArchivedList = () => {
               </Grid>
             ),
           },
-          {
-            field: 'description',
-            headerName: 'Descrição',
-            flex: 1,
-          },
-
           {
             field: 'dueDate',
             headerName: 'Data de entrega',
@@ -224,6 +219,7 @@ export const ArchivedList = () => {
 
       {Boolean(openDetails.value) && (
         <ConfirmDialog
+          maxWidth="md"
           open={openDetails.value}
           onClose={openDetails.onFalse}
           title={`Detalhes da tarefa ${task?.name}`}
@@ -236,7 +232,7 @@ export const ArchivedList = () => {
                   <Avatar alt={user?.name} color="secondary">
                     <Tooltip title={user?.name}>
                       <Typography variant="button">
-                        {user?.name.slice(0, 3).toUpperCase()}
+                        {user?.name?.slice(0, 3).toUpperCase()}
                       </Typography>
                     </Tooltip>
                   </Avatar>
@@ -260,7 +256,7 @@ export const ArchivedList = () => {
                       return (
                         <Avatar key={index} alt={user?.name} color={COLORS[index]}>
                           <Typography variant="button">
-                            {user?.name.slice(0, 3).toUpperCase()}
+                            {user?.name?.slice(0, 3).toUpperCase()}
                           </Typography>
                         </Avatar>
                       )
@@ -293,12 +289,24 @@ export const ArchivedList = () => {
                   )}
                 </Stack>
 
-                <CopyClipboard
-                  fullWidth
-                  multiline
-                  label="Descrição"
-                  value={task?.description || ''}
-                />
+                <Stack direction="column" spacing={1}>
+                  {task?.conversations?.map((conversation, index) => {
+                    const user = users?.find((user) => user._id === conversation.userId)
+
+                    const isUserCurrent = userCurrency?._id === user?._id
+
+                    return (
+                      <Conversations
+                        key={index}
+                        isUserCurrent={isUserCurrent}
+                        conversation={{
+                          ...conversation,
+                          userId: user?.name || '',
+                        }}
+                      />
+                    )
+                  })}
+                </Stack>
               </Stack>
             </Container>
           }

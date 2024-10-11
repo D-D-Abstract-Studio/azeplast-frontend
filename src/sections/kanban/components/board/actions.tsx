@@ -21,12 +21,18 @@ import { useRequestSWR } from '@/hooks/use-request'
 import { User } from '@/types/user'
 
 type Props = {
+  setShowArchived: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBoard: React.Dispatch<React.SetStateAction<string | null>>
   selectedBoard: string | null
   board: IKanbanBoard
 }
 
-export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) => {
+export const BoardActions = ({
+  setShowArchived,
+  setSelectedBoard,
+  selectedBoard,
+  board,
+}: Props) => {
   const confirmDialogDelete = useBoolean()
   const dialogEdit = useBoolean()
 
@@ -52,6 +58,8 @@ export const BoardActions = ({ setSelectedBoard, selectedBoard, board }: Props) 
         isPermissionAdmin && setAnchorEl(event.currentTarget)
         break
     }
+
+    setShowArchived(false)
   }
 
   const handleClose = () => setAnchorEl(null)

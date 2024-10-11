@@ -41,7 +41,7 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
             backgroundColor: 'background.neutral',
           }}
         >
-          <Stack {...provided.dragHandleProps} spacing={2} py={1}>
+          <Stack {...provided.dragHandleProps} spacing={2} py={1} width={300}>
             <KanbanColumnToolBar columnName={column.name} column={column} tasks={tasks} />
 
             <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 255px)' }}>
@@ -58,7 +58,9 @@ export const KanbanColumn = ({ column, tasks, index }: Props) => {
                       if (!tasks[taskId]) return null
                       if (tasks[taskId].archived) return null
 
-                      return <KanbanTaskItem key={taskId} index={taskIndex} task={tasks[taskId]} />
+                      return (
+                        <KanbanTaskItem key={taskIndex} index={taskIndex} task={tasks[taskId]} />
+                      )
                     })}
 
                     {openAddTask.value && (

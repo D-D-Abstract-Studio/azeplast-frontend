@@ -140,8 +140,6 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
   const { priority } = watch()
   const values = watch()
 
-  console.log(values.conversations)
-
   const isPermissionDeleteNotification = user?.permissions === 'admin' || task.userId === user?._id
 
   const isDirtyTask = isEqual(task, values)
@@ -221,6 +219,35 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   const isNotification = notifications?.some(({ taskId }) => taskId === task._id)
 
+  const reloadButtonContainer = (
+    <Box
+      sx={{
+        width: '100%',
+        ...theme.typography.body2,
+        color: theme.palette.text.secondary,
+        '& > :not(style) ~ :not(style)': {
+          marginTop: theme.spacing(2),
+        },
+      }}
+    >
+      <Divider>
+        <Button
+          variant="soft"
+          onClick={() => {
+            mutate(endpoints.tasks.getAllTasks)
+            mutate(endpoints.tasks.getTask(task._id))
+          }}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography>Recarregar</Typography>
+
+            <Iconify icon="mdi:reload" />
+          </Stack>
+        </Button>
+      </Divider>
+    </Box>
+  )
+
   return (
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
@@ -236,7 +263,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
             sx: {
               width: {
                 xs: 1,
-                sm: 480,
+                sm: '90%',
               },
             },
           }}
@@ -244,6 +271,7 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
           <Stack direction="row" alignItems="center" spacing={1} p={2}>
             <KanbanInputName
               fullWidth
+              multiline
               placeholder="Nome da tarefa"
               value={taskName}
               onChange={handleChangeTaskName}
@@ -422,34 +450,9 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
                 })}
               </Stack>
 
-              <Box
-                sx={{
-                  width: '100%',
-                  ...theme.typography.body2,
-                  color: theme.palette.text.secondary,
-                  '& > :not(style) ~ :not(style)': {
-                    marginTop: theme.spacing(2),
-                  },
-                }}
-              >
-                <Divider>
-                  <Button
-                    variant="soft"
-                    onClick={() => {
-                      mutate(endpoints.tasks.getAllTasks)
-                      mutate(endpoints.tasks.getTask(task._id))
-                    }}
-                  >
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Typography>Recarregar</Typography>
+              {reloadButtonContainer}
 
-                      <Iconify icon="mdi:reload" />
-                    </Stack>
-                  </Button>
-                </Divider>
-              </Box>
-
-              <RHFEditor name="conversations" slotProps={{ sx: { height: 150 } }} />
+              <RHFEditor name="conversations" slotProps={{ sx: { height: 300 } }} />
             </Stack>
 
             <Stack

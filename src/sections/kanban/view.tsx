@@ -89,6 +89,74 @@ export const KanbanView = () => {
     }
   }, [boards, user])
 
+  const boardHeader = (
+    <Stack direction="row" spacing={1} alignItems="center">
+      <Paper
+        sx={{
+          p: 1,
+          borderRadius: 1,
+          backgroundColor: 'background.neutral',
+        }}
+      >
+        <ButtonGroup>
+          <Button
+            variant="soft"
+            color="inherit"
+            onClick={() => setShowArchived((prevState) => !prevState)}
+          >
+            {showArchived ? 'Quadros' : 'Arquivados'}
+          </Button>
+
+          <Button
+            variant="soft"
+            color="inherit"
+            onClick={() => isUnreadNotification && dialogNotifications.onTrue()}
+          >
+            <Badge
+              {...(isUnreadNotification && {
+                badgeContent: <Iconify icon="codicon:circle-filled" color="warning.main" />,
+              })}
+            >
+              <Iconify icon="mdi:bell" />
+            </Badge>
+          </Button>
+        </ButtonGroup>
+      </Paper>
+
+      <Stack
+        direction="row"
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          p: 1,
+          width: '100%',
+          backgroundColor: 'background.neutral',
+          borderRadius: 1,
+        }}
+      >
+        <KanbanBoardAdd />
+
+        <Grid container sx={{ borderRadius: '0 0 10px 10px', width: '100%' }}>
+          <Grid item xs={12} sx={{ width: 100 }}>
+            <Stack sx={{ width: '100%', maxHeight: 500 }}>
+              <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
+                {boards
+                  ?.filter((board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin)
+                  .map((board, index) => (
+                    <BoardActions
+                      key={index}
+                      {...{ setSelectedBoard, setShowArchived, selectedBoard, board }}
+                    />
+                  ))}
+              </Stack>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Stack>
+    </Stack>
+  )
+
   return (
     <Box p={1}>
       {isLoading && (
@@ -112,73 +180,7 @@ export const KanbanView = () => {
 
       {!isLoading && isUserValid && (
         <Stack direction="column" spacing={1}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Paper
-              sx={{
-                p: 1,
-                borderRadius: 1,
-                backgroundColor: 'background.neutral',
-              }}
-            >
-              <ButtonGroup>
-                <Button
-                  variant="soft"
-                  color="inherit"
-                  onClick={() => setShowArchived((prevState) => !prevState)}
-                >
-                  {showArchived ? 'Quadros' : 'Arquivados'}
-                </Button>
-
-                <Button
-                  variant="soft"
-                  color="inherit"
-                  onClick={() => isUnreadNotification && dialogNotifications.onTrue()}
-                >
-                  <Badge
-                    {...(isUnreadNotification && {
-                      badgeContent: <Iconify icon="codicon:circle-filled" color="warning.main" />,
-                    })}
-                  >
-                    <Iconify icon="mdi:bell" />
-                  </Badge>
-                </Button>
-              </ButtonGroup>
-            </Paper>
-
-            <Stack
-              direction="row"
-              spacing={1}
-              justifyContent="center"
-              alignItems="center"
-              sx={{
-                p: 1,
-                width: '100%',
-                backgroundColor: 'background.neutral',
-                borderRadius: 1,
-              }}
-            >
-              <KanbanBoardAdd />
-
-              <Grid container sx={{ borderRadius: '0 0 10px 10px', width: '100%' }}>
-                <Grid item xs={12} sx={{ width: 100 }}>
-                  <Stack sx={{ width: '100%', maxHeight: 500 }}>
-                    <Stack direction="row" sx={{ overflowX: 'auto' }} spacing={1}>
-                      {boards
-                        ?.filter(
-                          (board) => board.usersIds.includes(user?._id || '') || isPermissionAdmin
-                        )
-                        .map((board, index) => (
-                          <BoardActions
-                            key={index}
-                            {...{ setSelectedBoard, selectedBoard, board }}
-                          />
-                        ))}
-                    </Stack>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </Stack>
-          </Stack>
+          {boardHeader}
 
           <DragDropContext onDragEnd={onDragEnd(board)}>
             {showArchived ? (
