@@ -31,7 +31,7 @@ import { axios } from '@/utils/axios'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { IKanbanColumn, IKanbanTask } from '@/types/kanban'
+import { IKanbanBoard, IKanbanColumn, IKanbanTask } from '@/types/kanban'
 import { LabelColor } from '@/components/label/types'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/custom-dialog'
@@ -66,6 +66,10 @@ export const ArchivedList = () => {
 
   const { data: columns } = useRequestSWR<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
+  })
+
+  const { data: boards } = useRequestSWR<Array<IKanbanBoard>>({
+    url: endpoints.boards.getAllBoards,
   })
 
   const { data: tasks } = useRequestSWR<Array<IKanbanTask>>({ url: endpoints.tasks.getAllTasks })
@@ -126,6 +130,18 @@ export const ArchivedList = () => {
               const priorityColor = priorityColorMap[row?.priority || 'baixa']
 
               return <Label color={priorityColor}>{row?.priority}</Label>
+            },
+          },
+          {
+            field: '_id',
+            headerName: 'Quadro',
+            flex: 1,
+            renderCell: ({ row }) => {
+              const boardId = row?._id
+                ? columns?.find((column) => column.taskIds.includes(row._id))?.boardId || ''
+                : ''
+
+              return boards?.find((board) => board.id === boardId)?.name || ''
             },
           },
           {

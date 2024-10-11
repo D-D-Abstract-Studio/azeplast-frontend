@@ -51,6 +51,7 @@ export const DataGridCustom = <T,>({ row, columns }: Props<T>) => {
       <DataGrid
         disableRowSelectionOnClick
         rows={row || []}
+        density="comfortable"
         columns={columns as MuiGridColDef[]}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={handleChangeColumnVisibilityModel}
@@ -67,12 +68,7 @@ export const DataGridCustom = <T,>({ row, columns }: Props<T>) => {
         }}
         slots={{
           toolbar: () => (
-            <GridToolbar
-              sx={{
-                backgroundColor: 'background.paper',
-                borderRadius: '10px 0px',
-              }}
-            />
+            <GridToolbar sx={{ backgroundColor: 'background.paper', borderRadius: '10px 0px' }} />
           ),
         }}
       />
