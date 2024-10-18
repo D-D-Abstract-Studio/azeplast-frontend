@@ -188,19 +188,15 @@ export const KanbanView = () => {
                     spacing={1}
                     direction="row"
                     alignItems="flex-start"
-                    sx={{
-                      p: 0.25,
-                      height: 1,
-                      overflowY: 'hidden',
-                    }}
+                    sx={{ p: 0.25, height: 1, overflowY: 'hidden' }}
                   >
                     {board?.ordered?.map(
                       (columnId, index) =>
-                        !board?.columns[columnId]?.archived && (
+                        !board?.columns?.[columnId]?.archived && (
                           <KanbanColumn
                             key={columnId}
                             index={index}
-                            column={board?.columns[columnId]}
+                            column={board?.columns?.[columnId]}
                             tasks={board?.tasks}
                           />
                         )
