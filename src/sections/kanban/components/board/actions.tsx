@@ -5,7 +5,7 @@ import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { useBoolean } from '@/hooks/use-boolean'
 
-import { IKanbanBoard } from '@/types/kanban'
+import { IKanbanBoard, IKanbanColumn } from '@/types/kanban'
 
 import { axios } from '@/utils/axios'
 
@@ -36,7 +36,7 @@ export const BoardActions = ({
   const confirmDialogDelete = useBoolean()
   const dialogEdit = useBoolean()
 
-  const { data: columns } = useRequestSWR<Array<any>>({
+  const { data: columns } = useRequestSWR<Array<IKanbanColumn>>({
     url: endpoints.columns.getAllColumns,
   })
 

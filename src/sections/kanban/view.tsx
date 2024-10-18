@@ -91,13 +91,7 @@ export const KanbanView = () => {
 
   const boardHeader = (
     <Stack direction="row" spacing={1} alignItems="center">
-      <Paper
-        sx={{
-          p: 1,
-          borderRadius: 1,
-          backgroundColor: 'background.neutral',
-        }}
-      >
+      <Paper sx={{ p: 1, borderRadius: 1, bgcolor: 'background.neutral' }}>
         <ButtonGroup>
           <Button
             variant="soft"
