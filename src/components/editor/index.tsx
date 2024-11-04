@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { EditorTextChangeEvent, Editor as PrimeReactEditor } from 'primereact/editor'
+import { Editor as PrimeReactEditor } from 'primereact/editor'
 
 import { Box } from '@mui/material'
 import { Toolbar } from './toolbar'
@@ -7,7 +7,7 @@ import { Toolbar } from './toolbar'
 import { Iconify } from '../iconify'
 
 import { Theme, SxProps, alpha } from '@mui/material/styles'
-import { processFiles, replaceBase64WithUrl } from './shared'
+import { processFiles } from './shared'
 
 import { StyledEditor, StyledEditorToolbar } from './styles'
 
@@ -27,13 +27,6 @@ export interface EditorProps {
 
 export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: EditorProps) => {
   const [mount, setMount] = useState(0)
-
-  const handleEditorChange = async (event: EditorTextChangeEvent) => {
-    const newContent = event.htmlValue || ''
-    const updatedContent = await replaceBase64WithUrl(newContent)
-
-    onChange?.(updatedContent)
-  }
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -81,7 +74,7 @@ export const Editor = ({ value, error, helperText, slotProps, sx, onChange }: Ed
           children={null}
           style={slotProps?.sx}
           headerTemplate={uploadToolbar}
-          onTextChange={handleEditorChange}
+          onTextChange={(event) => onChange?.(event.htmlValue)}
           {...slotProps?.Editor}
         />
       </StyledEditorToolbar>

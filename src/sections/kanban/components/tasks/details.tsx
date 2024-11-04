@@ -250,24 +250,23 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
 
   return (
     <>
-      <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
-        <Drawer
-          disablePortal
-          open={openDetails}
-          onClose={onCloseDetails}
-          anchor="right"
-          slotProps={{
-            backdrop: { invisible: true },
-          }}
-          PaperProps={{
-            sx: {
-              width: {
-                xs: 1,
-                sm: '90%',
-              },
+      <Drawer
+        open={openDetails}
+        onClose={onCloseDetails}
+        anchor="right"
+        slotProps={{
+          backdrop: { invisible: true },
+        }}
+        PaperProps={{
+          sx: {
+            width: {
+              xs: 1,
+              sm: '90%',
             },
-          }}
-        >
+          },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitForm)}>
           <Stack direction="row" alignItems="center" spacing={1} p={2}>
             <KanbanInputName
               fullWidth
@@ -558,8 +557,8 @@ export default function KanbanDetails({ task, openDetails, onCloseDetails }: Pro
               </>
             }
           />
-        </Drawer>
-      </FormProvider>
+        </FormProvider>
+      </Drawer>
 
       {user?._id && (
         <NotificationAdd openAddNotification={openAddNotification} taskId={task._id} user={user} />
