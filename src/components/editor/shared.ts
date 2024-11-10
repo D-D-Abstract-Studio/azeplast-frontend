@@ -24,20 +24,15 @@ export const processFiles = async ({ value, filesDrop, onChange }: ProcessType) 
   const { data } = await axios.post<Array<File & { preview?: string }>>(
     endpoints.uploads.createUploads,
     formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
+    { headers: { 'Content-Type': 'multipart/form-data' } }
   )
 
   const newContent = `${value}${data.map((file) => {
     const { preview = '', name } = fileData(file)
     const format = fileThumb(name || preview)
 
-    const thumbnailURL = `${window.location.origin}/plugins/azeplast-frontend/public/${fileThumb(
-      format
-    )}`
+    const originUrl = window.location.origin
+    const thumbnailURL = `${originUrl}/plugins/azeplast-frontend/public/${fileThumb(format)}`
 
     return `<a href='${HOST_API}/uploads/${name}' target='_blank' rel='noopener noreferrer'><img src='${thumbnailURL}' alt='${name}' /></a>`
   })}`

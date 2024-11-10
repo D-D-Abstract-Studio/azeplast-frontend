@@ -1,6 +1,5 @@
-import { useState, MouseEvent, useEffect } from 'react'
-
-import { Box, Button, Menu, MenuItem, Stack, Typography } from '@mui/material'
+import { useState, MouseEvent } from 'react'
+import { Box, Menu, MenuItem, Stack, Typography, Button } from '@mui/material'
 import { ConfirmDialog } from '@/components/custom-dialog'
 
 import { useBoolean } from '@/hooks/use-boolean'
@@ -13,10 +12,9 @@ import { endpoints } from '@/constants/config'
 
 import { enqueueSnackbar } from 'notistack'
 
-import { handleTouchStart } from './shared/handleTouchStart'
+import { Iconify } from '@/components/iconify'
 import { UpdateBoard } from './update'
 import { mutate } from 'swr'
-import { Iconify } from '@/components/iconify'
 import { useRequestSWR } from '@/hooks/use-request'
 import { User } from '@/types/user'
 
@@ -45,81 +43,22 @@ export const BoardActions = ({
   })
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [lastTap, setLastTap] = useState<number>(0)
 
   const isPermissionAdmin = user?.permissions === 'admin'
 
-  const handleMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
-    switch (event.button) {
-      case 0:
-        setSelectedBoard(board.id)
-        break
-      case 2:
-        isPermissionAdmin && setAnchorEl(event.currentTarget)
-        break
-    }
-
-    setShowArchived(false)
-  }
-
   const handleClose = () => setAnchorEl(null)
-
-  const deleteBoardData = async (board: IKanbanBoard) => {
-    const columnDeletionPromises = board.columnIds.map(async (columnId: string) => {
-      columns?.map(async (column) => {
-        if (column.id === columnId) await axios.delete(endpoints.tasks.updateTask(columnId))
-      })
-
-      await axios.delete(endpoints.columns.updateColumn(columnId))
-    })
-
-    await Promise.all(columnDeletionPromises).then(() => {
-      mutate(endpoints.columns.getAllColumns)
-      mutate(endpoints.tasks.getAllTasks)
-    })
-
-    await axios.delete(endpoints.boards.updateBoard(board.id)).then(() => {
-      enqueueSnackbar('Quadro deletado com sucesso')
-      setSelectedBoard(null)
-
-      mutate(endpoints.boards.getAllBoards)
-      confirmDialogDelete.onFalse()
-    })
-  }
-
-  const handleContextMenu = (event: Event) => event.preventDefault()
-
-  // Prevent context menu default on touch devices
-  useEffect(() => {
-    document.addEventListener('contextmenu', handleContextMenu)
-    document.addEventListener(
-      'touchstart',
-      (event) => handleTouchStart(lastTap, setLastTap, setAnchorEl, event),
-      { passive: false }
-    )
-
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu)
-      document.removeEventListener('touchstart', (event) =>
-        handleTouchStart(lastTap, setLastTap, setAnchorEl, event)
-      )
-    }
-  }, [lastTap])
 
   return (
     <>
-      <Button
-        variant="soft"
-        onMouseDown={handleMouseDown}
-        onContextMenu={(event) => event.preventDefault()}
-        sx={{
-          minWidth: '150px',
-          border: '1px solid',
-          borderColor: selectedBoard === board.id ? 'text.secondary' : 'transparent',
+      <ContextMenuButton
+        selected={selectedBoard === board.id}
+        onClick={(event) => handleMouseDown(event)}
+        onRightClick={(event) => {
+          setAnchorEl(event.currentTarget)
         }}
       >
         {board.name}
-      </Button>
+      </ContextMenuButton>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem
@@ -172,5 +111,76 @@ export const BoardActions = ({
         }
       />
     </>
+  )
+
+  function handleMouseDown(event: MouseEvent<HTMLButtonElement>) {
+    switch (event.button) {
+      case 0:
+        setSelectedBoard(board.id)
+        break
+      case 2:
+        isPermissionAdmin && setAnchorEl(event.currentTarget)
+        break
+    }
+
+    setShowArchived(false)
+  }
+
+  async function deleteBoardData(board: IKanbanBoard) {
+    const columnDeletionPromises = board.columnIds.map(async (columnId: string) => {
+      columns?.map(async (column) => {
+        if (column.id === columnId) await axios.delete(endpoints.tasks.updateTask(columnId))
+      })
+
+      await axios.delete(endpoints.columns.updateColumn(columnId))
+    })
+
+    await Promise.all(columnDeletionPromises).then(() => {
+      mutate(endpoints.columns.getAllColumns)
+      mutate(endpoints.tasks.getAllTasks)
+    })
+
+    await axios.delete(endpoints.boards.updateBoard(board.id)).then(() => {
+      enqueueSnackbar('Quadro deletado com sucesso')
+      setSelectedBoard(null)
+
+      mutate(endpoints.boards.getAllBoards)
+      confirmDialogDelete.onFalse()
+    })
+  }
+}
+
+type ContextMenuButtonProps = {
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void
+  onRightClick: (event: MouseEvent<HTMLButtonElement>) => void
+  children: React.ReactNode
+}
+
+const ContextMenuButton = ({
+  onClick,
+  selected,
+  onRightClick,
+  children,
+}: ContextMenuButtonProps & {
+  selected: boolean
+}) => {
+  const handleContextMenu = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    onRightClick(event)
+  }
+
+  return (
+    <Button
+      variant="soft"
+      sx={{
+        minWidth: '150px',
+        border: '1px solid',
+        borderColor: selected ? 'text.secondary' : 'transparent',
+      }}
+      onClick={onClick}
+      onContextMenu={handleContextMenu}
+    >
+      {children}
+    </Button>
   )
 }
